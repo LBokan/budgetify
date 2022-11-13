@@ -14,7 +14,7 @@ Please provide a brief description of the changes you have made in your PR.
 
 - [ ] Synced up with latest from the main branch/Code is linted
 - [ ] Description of the changes has been added (Screenshots/Video)
-- [ ] Chakra components/constants/hooks have been used wherever possible
+- [ ] Material UI components/constants/hooks have been used wherever possible
 
 > If not explain here
 
@@ -23,7 +23,7 @@ Please provide a brief description of the changes you have made in your PR.
 
 #### Screenshots/Video before change
 
-Add screenshots from the [current deployed state](https://sandbox-money-app.herokuapp.com/) of the changed components here.
+Add screenshots of the changed components here.
 
 #### Screenshots/Video after change
 
