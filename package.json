@@ -1,12 +1,18 @@
 {
-  "name": "budgetify",
+  "name": "SmartHome",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --mode development",
-    "build": "webpack --mode production",
+    "start": "cross-env NODE_ENV=development webpack-dev-server",
+    "build:dev": "cross-env NODE_ENV=development webpack",
+    "build:prod": "cross-env NODE_ENV=production webpack",
+    "clear": "rd /s /q dist",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet --fix --cache",
     "format": "prettier --write \"src/**/*.{js,jsx,json,html,css}\"",
     "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": "npm run lint",
+    "*.{js,jsx,json,html,css}": "npm run format"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -20,6 +26,8 @@
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
     "babel-loader": "^9.1.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
@@ -29,9 +37,14 @@
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
-    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.2",
+    "image-webpack-loader": "^8.1.0",
+    "lint-staged": "^13.0.3",
+    "mini-css-extract-plugin": "^2.6.1",
+    "postcss": "^8.4.19",
+    "postcss-loader": "^7.0.1",
+    "postcss-preset-env": "^7.8.3",
     "prettier": "^2.7.1",
     "sass": "^1.56.1",
     "sass-loader": "^13.2.0",

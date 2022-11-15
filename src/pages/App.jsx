@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Test1 } from './Test1';
 import { Test2 } from './Test2';
 
-export const App = () => {
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -14,3 +14,5 @@ export const App = () => {
     </BrowserRouter>
   );
 };
+
+export default App;
