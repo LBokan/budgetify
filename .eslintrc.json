@@ -1,59 +1,72 @@
 {
-    "extends": [
-      "eslint:recommended",
-      "plugin:import/errors",
-      "plugin:react/recommended",
-      "plugin:react-hooks/recommended",
-      "prettier"
-    ],
-    "rules": {
-      "react/prop-types": 0,
-      "react/react-in-jsx-scope": 0,
-      "import/no-unresolved": 0,
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error"
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "max-len": ["error", 80, { "ignoreUrls": true }],
+    "prettier/prettier": "error",
+    "arrow-body-style": "off",
+    "prefer-arrow-callback": "off",
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": 0,
+    "import/no-unresolved": 0,
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+    "jest/no-identical-title": "error",
+    "jest/prefer-to-have-length": "warn",
+    "jest/valid-expect": "error"
+  },
+  "plugins": ["react", "import", "simple-import-sort", "prettier", "jest"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "requireConfigFile": false,
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jest/globals": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
     },
-    "plugins": ["react", "import", "simple-import-sort"],
-    "parserOptions": {
-      "ecmaVersion": 2022,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"]
       }
-    },
-    "env": {
-      "es6": true,
-      "browser": true,
-      "node": true
-    },
-    "settings": {
-      "react": {
-        "version": "detect"
-      },
-      "import/resolver": {
-        "node": {
-          "extensions": [".js", ".jsx"]
-        }
+    }
+  },
+  "overrides": [
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+          {
+            "groups": [
+              ["^react", "^@?\\w"],
+              ["^(@|components)(/.*|$)"],
+              ["^\\u0000"],
+              ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+              ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+              ["^.+\\.?(css)$"]
+            ]
+          }
+        ]
       }
-    },
-    "overrides": [
-      {
-        "files": ["*.js", "*.jsx"],
-        "rules": {
-          "simple-import-sort/imports": [
-            "error",
-            {
-              "groups": [
-                ["^react", "^@?\\w"],
-                ["^(@|components)(/.*|$)"],
-                ["^\\u0000"],
-                ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-                ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
-                ["^.+\\.?(css)$"]
-              ]
-            }
-          ]
-        }
-      }
-    ]
-  }
+    }
+  ]
+}
