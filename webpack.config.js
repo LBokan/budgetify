@@ -16,7 +16,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
     filename: '[name].[contenthash].js',
-    assetModuleFilename: 'assets/img/[hash][ext][query]'
+    assetModuleFilename: 'assets/[hash][ext][query]'
   },
   mode,
   target,
@@ -81,16 +81,16 @@ module.exports = {
             }
           }
         ],
-        type: 'asset/resource'
+        type: 'asset',
+        generator: {
+          filename: 'assets/img/[hash][ext][query]'
+        }
       },
       {
-        test: /\.(js|jsx)$/i,
+        test: /\.jsx?$/i,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-react', '@babel/preset-env']
-          }
+          loader: 'babel-loader'
         }
       }
     ]

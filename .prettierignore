@@ -1,5 +1,6 @@
 # Files which we don't need to format
 dist
+build
 node_modules
 package-lock.json
 yarn.lock
