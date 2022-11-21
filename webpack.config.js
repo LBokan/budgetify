@@ -30,6 +30,11 @@ module.exports = {
     open: true,
     hot: isModeDev
   },
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.json']
   },
@@ -62,29 +67,6 @@ module.exports = {
       },
       {
         test: /\.(?:ico|jpe?g|png|svg|webp|gif)$/i,
-        use: [
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              mozjpeg: {
-                progressive: true
-              },
-              optipng: {
-                enabled: false
-              },
-              pngquant: {
-                quality: [0.65, 0.9],
-                speed: 4
-              },
-              gifsicle: {
-                interlaced: false
-              },
-              webp: {
-                quality: 75
-              }
-            }
-          }
-        ],
         type: 'asset',
         generator: {
           filename: 'assets/img/[hash][ext][query]'
