@@ -23,6 +23,10 @@ module.exports = {
   devtool,
   devServer: {
     port: 3000,
+    static: {
+      directory: path.resolve(__dirname, 'dist')
+    },
+    historyApiFallback: { index: '/', disableDotRule: true },
     open: true,
     hot: isModeDev
   },
