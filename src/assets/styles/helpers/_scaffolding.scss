@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'LexendDeca', sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  height: 100vh;
+  background-color: $app-background-color;
+}

@@ -36,7 +36,10 @@ module.exports = {
     maxAssetSize: 512000
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json']
+    extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
   },
   plugins: [
     new HTMLWebpackPlugin({
@@ -63,13 +66,23 @@ module.exports = {
             }
           },
           'sass-loader'
-        ]
+        ],
+        generator: {
+          filename: 'assets/styles/[hash][ext][query]'
+        }
       },
       {
         test: /\.(?:ico|jpe?g|png|svg|webp|gif)$/i,
         type: 'asset',
         generator: {
           filename: 'assets/img/[hash][ext][query]'
+        }
+      },
+      {
+        test: /\.woff(2)?|ttf$/,
+        type: 'asset',
+        generator: {
+          filename: 'assets/fonts/[hash][ext][query]'
         }
       },
       {
