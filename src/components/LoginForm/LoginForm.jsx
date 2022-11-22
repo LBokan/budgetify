@@ -61,6 +61,7 @@ export const LoginForm = () => {
           <InputLabel
             htmlFor="email"
             size="small"
+            sx={{ top: '2px' }}
             error={formik.touched.email && Boolean(formik.errors.email)}
           >
             Email
@@ -95,6 +96,7 @@ export const LoginForm = () => {
           <InputLabel
             htmlFor="password"
             size="small"
+            sx={{ top: '2px' }}
             error={formik.touched.password && Boolean(formik.errors.password)}
           >
             Password
