@@ -1,0 +1,39 @@
+@font-face {
+  font-family: 'LexendDeca';
+  src: local('LexendDeca-Bold'),
+    url('./LexendDeca/lexendDeca-bold-700.woff2') format('woff2'),
+    url('./LexendDeca/lexendDeca-bold-700.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LexendDeca';
+  src: local('LexendDeca-Regular'),
+    url('./LexendDeca/lexendDeca-regular-400.woff2') format('woff2'),
+    url('./LexendDeca/lexendDeca-regular-400.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LexendDeca';
+  src: local('LexendDeca-Light'),
+    url('./LexendDeca/lexendDeca-light-300.woff2') format('woff2'),
+    url('./LexendDeca/lexendDeca-light-300.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LexendDeca';
+  src: local('LexendDeca-Thin'),
+    url('./LexendDeca/lexendDeca-thin-100.woff2') format('woff2'),
+    url('./LexendDeca/lexendDeca-thin-100.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
