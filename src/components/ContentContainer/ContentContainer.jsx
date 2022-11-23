@@ -9,7 +9,7 @@ export const ContentContainer = ({ children, isLoginPage = false }) => {
         flexDirection: 'column',
         alignItems: isLoginPage ? 'center' : 'flex-start',
         justifyContent: isLoginPage ? 'center' : 'flex-start',
-        padding: 0,
+        p: 0,
         maxWidth: '1200px',
         height: '100%'
       }}

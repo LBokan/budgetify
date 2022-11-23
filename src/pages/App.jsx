@@ -3,7 +3,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { Layout } from '@/components/Layout';
 
+import { Devices } from './Devices';
+import { Landing } from './Landing';
 import { Login } from './Login';
+import { Logs } from './Logs';
 import { Test2 } from './Test2';
 
 const App = () => {
@@ -14,7 +17,9 @@ const App = () => {
         {/* <Route path="*" element={<Fallback />} /> */}
 
         <Route path="/" element={<Layout />}>
-          <Route index element={<Login />} />
+          <Route index element={<Landing />} />
+          <Route path="devices" element={<Devices />} />
+          <Route path="logs" element={<Logs />} />
           <Route path="test2" element={<Test2 />} />
         </Route>
       </Routes>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-export const ContentWrapper = ({ children, type = 'div' }) => {
+export const ContentWrapper = ({ children, type = 'div', stylesObj = {} }) => {
   const properties = {
+    ...stylesObj,
     position: 'relative',
     flexDirection: 'column',
     alignItems: 'center',

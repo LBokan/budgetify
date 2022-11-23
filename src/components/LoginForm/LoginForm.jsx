@@ -77,8 +77,7 @@ export const LoginForm = () => {
           <FormHelperText
             sx={{
               position: 'absolute',
-              bottom: '20px',
-              fontSize: '10px'
+              bottom: '20px'
             }}
             error={formik.touched.email && Boolean(formik.errors.email)}
           >
@@ -123,7 +122,7 @@ export const LoginForm = () => {
             }
           />
           <FormHelperText
-            sx={{ position: 'absolute', bottom: '10px', fontSize: '10px' }}
+            sx={{ position: 'absolute', bottom: '10px' }}
             error={formik.touched.password && Boolean(formik.errors.password)}
           >
             {formik.touched.password && formik.errors.password}
