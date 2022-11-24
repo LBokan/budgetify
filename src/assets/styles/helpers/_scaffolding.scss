@@ -9,7 +9,6 @@ body {
 #root {
   display: flex;
   flex-direction: column;
-  min-width: 320px;
+  min-width: $min-content-width;
   height: 100vh;
-  background-color: $app-background-color;
 }

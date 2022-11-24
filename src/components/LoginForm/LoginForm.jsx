@@ -111,7 +111,7 @@ export const LoginForm = () => {
             <InputAdornment position="end">
               <IconButton
                 sx={{ color: grey[50] }}
-                aria-label="toggle password visibility"
+                aria-label="Toggle password visibility"
                 onClick={handleClickShowPassword}
                 edge="end"
               >

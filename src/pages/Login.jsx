@@ -1,31 +1,30 @@
 import React from 'react';
 import { RoomPreferences } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
-import { teal } from '@mui/material/colors';
+import { Box, Icon, Typography } from '@mui/material';
 
-import { ContentContainer, ContentWrapper, LoginForm } from '@/components';
+import { ContentWrapper, LoginForm } from '@/components';
 
 import imgWaves from '../assets/img/login-waves.png';
 
 export const Login = () => {
   return (
-    <ContentWrapper type="main">
-      <ContentContainer isLoginPage>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <ContentWrapper type="main" isLoginPage>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Icon sx={{ mr: '5px', width: '45px', height: '45px' }}>
           <RoomPreferences
-            sx={{ mr: '5px', width: '45px', height: '45px', color: teal[800] }}
+            sx={{ width: '100%', height: '100%' }}
             aria-label="SmartHome logo"
           />
-          <Typography variant="h1" sx={{ fontSize: '46px' }}>
-            SmartHome
-          </Typography>
-        </Box>
-        <Typography sx={{ mt: '40px', mb: '35px' }}>
-          Sign in and start managing your house!
+        </Icon>
+        <Typography variant="h1" sx={{ fontSize: '46px' }}>
+          SmartHome
         </Typography>
+      </Box>
+      <Typography sx={{ mt: '40px', mb: '35px' }}>
+        Sign in and start managing your house!
+      </Typography>
 
-        <LoginForm />
-      </ContentContainer>
+      <LoginForm />
 
       <Box
         component="img"

@@ -3,6 +3,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server",
+    "start:prod": "cross-env NODE_ENV=production webpack-dev-server",
     "build:dev": "cross-env NODE_ENV=development webpack",
     "build:prod": "cross-env NODE_ENV=production webpack",
     "build:babel": "babel src -d build",

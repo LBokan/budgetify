@@ -3,6 +3,14 @@ import { createTheme } from '@mui/material/styles';
 
 import '../assets/styles/fonts/fonts.css';
 
+const MuiAvatar = {
+  styleOverrides: {
+    root: {
+      backgroundColor: yellow[700]
+    }
+  }
+};
+
 const MuiButton = {
   styleOverrides: {
     root: {
@@ -17,9 +25,20 @@ const MuiButton = {
 const MuiIconButton = {
   styleOverrides: {
     root: {
+      color: teal[800],
       '&:hover': {
         color: yellow[700]
       }
+    }
+  }
+};
+
+const MuiIcon = {
+  styleOverrides: {
+    root: {
+      width: '30px',
+      height: '30px',
+      color: teal[800]
     }
   }
 };
@@ -129,8 +148,10 @@ export const lightTheme = createTheme({
     }
   },
   components: {
+    MuiAvatar,
     MuiButton,
     MuiIconButton,
+    MuiIcon,
     MuiInputBase,
     MuiInputLabel,
     MuiFormHelperText,

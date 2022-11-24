@@ -1,7 +1,6 @@
 import React from 'react';
 import { RoomPreferences } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
-import { grey, teal } from '@mui/material/colors';
+import { Icon, Typography } from '@mui/material';
 
 import { RouterLink } from '../RouterLink';
 
@@ -15,21 +14,11 @@ export const Header = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        px: '25px',
-        height: '100%',
-        boxShadow: `0 0 10px ${grey[300]}`
-      }}
-    >
+    <>
       <RouterLink linkPath="/" stylesObj={linkStyles}>
-        <RoomPreferences
-          sx={{ mr: '3px', width: '30px', height: '30px', color: teal[800] }}
-          aria-label="SmartHome logo"
-        />
+        <Icon sx={{ mr: '3px' }} aria-label="SmartHome logo">
+          <RoomPreferences sx={{ width: '100%', height: '100%' }} />
+        </Icon>
         <Typography variant="h1" sx={{ fontSize: '26px' }}>
           SmartHome
         </Typography>
@@ -38,6 +27,6 @@ export const Header = () => {
       <Navbar />
 
       <UserPanel />
-    </Box>
+    </>
   );
 };
