@@ -1,6 +1,5 @@
 import React from 'react';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Notifications, Settings } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 import { teal } from '@mui/material/colors';
 
@@ -12,11 +11,11 @@ export const UserPanel = () => {
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
     >
       <IconButton sx={{ mr: '5px', color: teal[800] }}>
-        <SettingsIcon />
+        <Settings />
       </IconButton>
 
       <IconButton sx={{ mr: '20px', color: teal[800] }}>
-        <NotificationsIcon />
+        <Notifications />
       </IconButton>
 
       <UserInfo />

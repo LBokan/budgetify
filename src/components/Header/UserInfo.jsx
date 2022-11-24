@@ -5,6 +5,17 @@ import { yellow } from '@mui/material/colors';
 import userImage from '../../assets/img/cat.jpg';
 
 export const UserInfo = () => {
+  const { data } = {
+    data: {
+      imageSrc: userImage,
+      fullName: 'Ivan Ivanov',
+      position: 'Software Engineer'
+    },
+    loading: false,
+    error: false
+  };
+  const { imageSrc, fullName, position } = data;
+
   return (
     <Box
       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -16,8 +27,8 @@ export const UserInfo = () => {
           height: '40px',
           bgcolor: yellow[700]
         }}
-        alt="Ivan Ivanov"
-        src={userImage}
+        alt="Profile image"
+        src={imageSrc}
       />
 
       <Box
@@ -28,9 +39,9 @@ export const UserInfo = () => {
           justifyContent: 'center'
         }}
       >
-        <Typography variant="h3">Ivan Ivanov</Typography>
+        <Typography variant="h3">{fullName}</Typography>
         <Typography variant="subtitle1" sx={{ mt: '3px' }}>
-          Software Engineer
+          {position}
         </Typography>
       </Box>
     </Box>

@@ -1,5 +1,5 @@
 import React from 'react';
-import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
+import { RoomPreferences } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 import { teal } from '@mui/material/colors';
 
@@ -12,7 +12,7 @@ export const Login = () => {
     <ContentWrapper type="main">
       <ContentContainer isLoginPage>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <RoomPreferencesIcon
+          <RoomPreferences
             sx={{ mr: '5px', width: '45px', height: '45px', color: teal[800] }}
             aria-label="SmartHome logo"
           />

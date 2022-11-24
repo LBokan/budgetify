@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container } from '@mui/material';
+import PropTypes from 'prop-types';
 
 export const ContentContainer = ({ children, isLoginPage = false }) => {
   return (
@@ -17,4 +18,9 @@ export const ContentContainer = ({ children, isLoginPage = false }) => {
       {children}
     </Container>
   );
+};
+
+ContentContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+  isLoginPage: PropTypes.bool
 };
