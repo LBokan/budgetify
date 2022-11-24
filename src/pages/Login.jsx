@@ -1,6 +1,7 @@
 import React from 'react';
-import RoomPreferencesIcon from '@mui/icons-material/RoomPreferences';
+import { RoomPreferences } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
+import { teal } from '@mui/material/colors';
 
 import { ContentContainer, ContentWrapper, LoginForm } from '@/components';
 
@@ -10,20 +11,19 @@ export const Login = () => {
   return (
     <ContentWrapper type="main">
       <ContentContainer isLoginPage>
-        <Typography
-          variant="h1"
-          sx={{ fontSize: '46px', fontWeight: '400', lineHeight: '0' }}
-        >
-          <RoomPreferencesIcon
-            fontSize="large"
-            sx={{ mr: '5px', verticalAlign: 'middle' }}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <RoomPreferences
+            sx={{ mr: '5px', width: '45px', height: '45px', color: teal[800] }}
             aria-label="SmartHome logo"
           />
-          SmartHome
-        </Typography>
-        <Typography sx={{ mt: '40px', mb: '35px', fontSize: '16px' }}>
+          <Typography variant="h1" sx={{ fontSize: '46px' }}>
+            SmartHome
+          </Typography>
+        </Box>
+        <Typography sx={{ mt: '40px', mb: '35px' }}>
           Sign in and start managing your house!
         </Typography>
+
         <LoginForm />
       </ContentContainer>
 

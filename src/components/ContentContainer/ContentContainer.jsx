@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container } from '@mui/material';
+import PropTypes from 'prop-types';
 
 export const ContentContainer = ({ children, isLoginPage = false }) => {
   return (
@@ -9,7 +10,7 @@ export const ContentContainer = ({ children, isLoginPage = false }) => {
         flexDirection: 'column',
         alignItems: isLoginPage ? 'center' : 'flex-start',
         justifyContent: isLoginPage ? 'center' : 'flex-start',
-        padding: 0,
+        p: 0,
         maxWidth: '1200px',
         height: '100%'
       }}
@@ -17,4 +18,9 @@ export const ContentContainer = ({ children, isLoginPage = false }) => {
       {children}
     </Container>
   );
+};
+
+ContentContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+  isLoginPage: PropTypes.bool
 };

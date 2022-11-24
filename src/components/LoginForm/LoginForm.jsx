@@ -45,100 +45,97 @@ export const LoginForm = () => {
   };
 
   return (
-    <>
-      <Box
-        component="form"
-        sx={{ position: 'relative', zIndex: '1', maxWidth: '300px' }}
-        onSubmit={formik.handleSubmit}
+    <Box
+      component="form"
+      sx={{ position: 'relative', zIndex: '1', maxWidth: '300px' }}
+      onSubmit={formik.handleSubmit}
+    >
+      <FormControl
+        sx={{
+          position: 'relative',
+          pb: '40px'
+        }}
+        fullWidth
       >
-        <FormControl
+        <InputLabel
+          htmlFor="email"
+          size="small"
+          sx={{ top: '2px' }}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+        >
+          Email
+        </InputLabel>
+        <InputBase
+          id="email"
+          size="medium"
+          sx={{ minHeight: '45px' }}
+          value={formik.values.email}
+          onChange={formik.handleChange}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+        />
+        <FormHelperText
           sx={{
-            position: 'relative',
-            pb: '40px'
+            position: 'absolute',
+            bottom: '20px'
           }}
-          fullWidth
+          error={formik.touched.email && Boolean(formik.errors.email)}
         >
-          <InputLabel
-            htmlFor="email"
-            size="small"
-            sx={{ top: '2px' }}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-          >
-            Email
-          </InputLabel>
-          <InputBase
-            id="email"
-            size="medium"
-            sx={{ minHeight: '45px' }}
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-          />
-          <FormHelperText
-            sx={{
-              position: 'absolute',
-              bottom: '20px',
-              fontSize: '10px'
-            }}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-          >
-            {formik.touched.email && formik.errors.email}
-          </FormHelperText>
-        </FormControl>
+          {formik.touched.email && formik.errors.email}
+        </FormHelperText>
+      </FormControl>
 
-        <FormControl
-          sx={{
-            position: 'relative',
-            pb: '30px'
-          }}
-          fullWidth
+      <FormControl
+        sx={{
+          position: 'relative',
+          pb: '30px'
+        }}
+        fullWidth
+      >
+        <InputLabel
+          htmlFor="password"
+          size="small"
+          sx={{ top: '2px' }}
+          error={formik.touched.password && Boolean(formik.errors.password)}
         >
-          <InputLabel
-            htmlFor="password"
-            size="small"
-            sx={{ top: '2px' }}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-          >
-            Password
-          </InputLabel>
-          <InputBase
-            id="password"
-            size="medium"
-            sx={{ minHeight: '45px' }}
-            type={showPassword ? 'text' : 'password'}
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  sx={{ color: grey[50] }}
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-          <FormHelperText
-            sx={{ position: 'absolute', bottom: '10px', fontSize: '10px' }}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-          >
-            {formik.touched.password && formik.errors.password}
-          </FormHelperText>
-        </FormControl>
+          Password
+        </InputLabel>
+        <InputBase
+          id="password"
+          size="medium"
+          sx={{ minHeight: '45px' }}
+          type={showPassword ? 'text' : 'password'}
+          value={formik.values.password}
+          onChange={formik.handleChange}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                sx={{ color: grey[50] }}
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+        />
+        <FormHelperText
+          sx={{ position: 'absolute', bottom: '10px' }}
+          error={formik.touched.password && Boolean(formik.errors.password)}
+        >
+          {formik.touched.password && formik.errors.password}
+        </FormHelperText>
+      </FormControl>
 
-        <Button
-          sx={{ height: '45px' }}
-          variant="contained"
-          fullWidth
-          type="submit"
-        >
-          Login
-        </Button>
-      </Box>
-    </>
+      <Button
+        sx={{ height: '45px' }}
+        variant="contained"
+        fullWidth
+        type="submit"
+      >
+        Login
+      </Button>
+    </Box>
   );
 };
