@@ -1,6 +1,5 @@
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
-import { yellow } from '@mui/material/colors';
 
 import userImage from '../../assets/img/cat.jpg';
 
@@ -24,8 +23,7 @@ export const UserInfo = () => {
         sx={{
           mr: '10px',
           width: '40px',
-          height: '40px',
-          bgcolor: yellow[700]
+          height: '40px'
         }}
         alt="Profile image"
         src={imageSrc}
