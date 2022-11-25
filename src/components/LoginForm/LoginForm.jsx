@@ -11,10 +11,26 @@ import {
   InputLabel
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { useColorScheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 export const LoginForm = () => {
+  const { mode } = useColorScheme();
+
+  const setIconColor = (mode) => {
+    switch (mode) {
+      case 'light':
+        return `${grey[50]}`;
+
+      case 'dark':
+        return `${grey[300]}`;
+
+      default:
+        return '#fff';
+    }
+  };
+
   const validationSchema = yup.object({
     email: yup
       .string('Enter your email')
@@ -87,7 +103,7 @@ export const LoginForm = () => {
       <FormControl
         sx={{
           position: 'relative',
-          pb: '30px'
+          pb: '40px'
         }}
         fullWidth
       >
@@ -110,7 +126,7 @@ export const LoginForm = () => {
           endAdornment={
             <InputAdornment position="end">
               <IconButton
-                sx={{ color: grey[50] }}
+                sx={{ color: setIconColor(mode) }}
                 aria-label="Toggle password visibility"
                 onClick={handleClickShowPassword}
                 edge="end"
@@ -121,7 +137,7 @@ export const LoginForm = () => {
           }
         />
         <FormHelperText
-          sx={{ position: 'absolute', bottom: '10px' }}
+          sx={{ position: 'absolute', bottom: '20px' }}
           error={formik.touched.password && Boolean(formik.errors.password)}
         >
           {formik.touched.password && formik.errors.password}
