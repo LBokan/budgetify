@@ -61,7 +61,7 @@ export const ThemeButton = ({
 };
 
 ThemeButton.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   isListItemButton: PropTypes.bool,
   setModeTheme: PropTypes.func,
   stylesObj: PropTypes.objectOf(
