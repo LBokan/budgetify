@@ -1,15 +1,40 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { RoomPreferences } from '@mui/icons-material';
 import { Box, Icon, Typography } from '@mui/material';
+import { teal } from '@mui/material/colors';
 
-import { ContentWrapper, LoginForm } from '@/components';
+import { ContentWrapper, LoginForm, ThemeButton } from '@/components';
 
-import imgWaves from '../assets/img/login-waves.png';
+import imgWavesDark from '../assets/img/login-waves-dark.png';
+import imgWavesLight from '../assets/img/login-waves-light.png';
 
 export const Login = () => {
+  const themeMode = useSelector((state) => state.theme).mode;
+
+  const setIconBorderColor = (mode) => {
+    switch (mode) {
+      case 'light':
+        return `${teal[800]}`;
+
+      case 'dark':
+        return `${teal[100]}`;
+
+      default:
+        return '#fff';
+    }
+  };
+
+  const themeSwitcherStyles = {
+    position: 'absolute',
+    top: 'auto',
+    left: '-150px',
+    border: `2px solid ${setIconBorderColor(themeMode)}`
+  };
+
   return (
     <ContentWrapper type="main" isLoginPage>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
         <Icon sx={{ mr: '5px', width: '45px', height: '45px' }}>
           <RoomPreferences
             sx={{ width: '100%', height: '100%' }}
@@ -19,6 +44,8 @@ export const Login = () => {
         <Typography variant="h1" sx={{ fontSize: '46px' }}>
           SmartHome
         </Typography>
+
+        <ThemeButton stylesObj={themeSwitcherStyles} />
       </Box>
       <Typography sx={{ mt: '40px', mb: '35px' }}>
         Sign in and start managing your house!
@@ -35,7 +62,7 @@ export const Login = () => {
           maxHeight: '111px'
         }}
         alt="Waves image"
-        src={imgWaves}
+        src={themeMode === 'light' ? imgWavesLight : imgWavesDark}
       />
     </ContentWrapper>
   );

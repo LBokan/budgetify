@@ -1,9 +1,5 @@
 import React from 'react';
 
 export const Devices = () => {
-  return (
-    <>
-      <p>DEVICES PAGE</p>
-    </>
-  );
+  return <p>DEVICES PAGE</p>;
 };
