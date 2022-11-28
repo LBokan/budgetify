@@ -24,13 +24,13 @@ export const ThemeButton = ({
             maxHeight: '45px',
             ...stylesObj
           }}
+          onClick={toggleThemeMode}
         >
           <ListItemIcon
             sx={{
               justifyContent: 'center',
               minWidth: '0'
             }}
-            onClick={toggleThemeMode}
             aria-label="Theme toggle button"
           >
             {themeMode === 'light' ? <DarkMode /> : <LightMode />}
