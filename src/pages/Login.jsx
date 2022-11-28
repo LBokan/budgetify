@@ -1,8 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { RoomPreferences } from '@mui/icons-material';
 import { Box, Icon, Typography } from '@mui/material';
 import { teal } from '@mui/material/colors';
-import { useColorScheme } from '@mui/material/styles';
 
 import { ContentWrapper, LoginForm, ThemeButton } from '@/components';
 
@@ -10,7 +10,7 @@ import imgWavesDark from '../assets/img/login-waves-dark.png';
 import imgWavesLight from '../assets/img/login-waves-light.png';
 
 export const Login = () => {
-  const { mode } = useColorScheme();
+  const themeMode = useSelector((state) => state.theme).mode;
 
   const setIconBorderColor = (mode) => {
     switch (mode) {
@@ -29,7 +29,7 @@ export const Login = () => {
     position: 'absolute',
     top: 'auto',
     left: '-150px',
-    border: `2px solid ${setIconBorderColor(mode)}`
+    border: `2px solid ${setIconBorderColor(themeMode)}`
   };
 
   return (
@@ -62,7 +62,7 @@ export const Login = () => {
           maxHeight: '111px'
         }}
         alt="Waves image"
-        src={mode === 'light' ? imgWavesLight : imgWavesDark}
+        src={themeMode === 'light' ? imgWavesLight : imgWavesDark}
       />
     </ContentWrapper>
   );

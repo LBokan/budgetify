@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { blueGrey, grey } from '@mui/material/colors';
-import { useColorScheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
+import { useThemeMode } from '@/hooks';
+
 export const ContentWrapper = ({ children, type = 'div', isLoginPage }) => {
-  const { mode } = useColorScheme();
+  const { themeMode } = useThemeMode();
 
   type = type.toLocaleLowerCase();
 
@@ -47,7 +48,7 @@ export const ContentWrapper = ({ children, type = 'div', isLoginPage }) => {
         ? 'center'
         : 'flex-start',
     width: '100%',
-    backgroundColor: setBgColor(mode)
+    backgroundColor: setBgColor(themeMode)
   };
 
   const setProperties = () => {
@@ -62,7 +63,7 @@ export const ContentWrapper = ({ children, type = 'div', isLoginPage }) => {
         properties.zIndex = '9';
         properties.px = '25px';
         properties.minHeight = '70px';
-        properties.boxShadow = `0 0 10px ${setBoxShadowColor(mode)}`;
+        properties.boxShadow = `0 0 10px ${setBoxShadowColor(themeMode)}`;
         return properties;
 
       default:

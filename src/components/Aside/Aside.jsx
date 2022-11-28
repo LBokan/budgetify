@@ -15,11 +15,14 @@ import {
   ListItemText
 } from '@mui/material';
 
+import { useThemeMode } from '@/hooks';
+
 import { ThemeButton } from '../ThemeButton';
 
 export const Aside = () => {
   const [openAside, setOpenAside] = React.useState(false);
-  const [modeTheme, setModeTheme] = React.useState('');
+
+  const { themeMode } = useThemeMode();
 
   const handleDrawer = () => {
     setOpenAside(!openAside);
@@ -63,9 +66,9 @@ export const Aside = () => {
         </ListItem>
 
         <ListItem disablePadding sx={{ display: 'block', mt: '20px' }}>
-          <ThemeButton isListItemButton setModeTheme={setModeTheme}>
+          <ThemeButton isListItemButton>
             <ListItemText
-              primary={modeTheme === 'light' ? 'Dark mode' : 'Light mode'}
+              primary={themeMode === 'light' ? 'Dark mode' : 'Light mode'}
               sx={{
                 display: openAside ? 'inline' : 'none',
                 ml: '5px'

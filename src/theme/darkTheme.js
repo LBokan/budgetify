@@ -1,3 +1,4 @@
+import { createTheme } from '@mui/material';
 import { blueGrey, green, grey, yellow } from '@mui/material/colors';
 
 import '../assets/styles/fonts/fonts.css';
@@ -118,7 +119,7 @@ const MuiDrawer = {
   }
 };
 
-export const darkTheme = {
+export const darkTheme = createTheme({
   palette: {
     primary: {
       main: yellow[900],
@@ -191,4 +192,4 @@ export const darkTheme = {
     MuiLink,
     MuiDrawer
   }
-};
+});

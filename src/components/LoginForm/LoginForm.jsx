@@ -11,12 +11,13 @@ import {
   InputLabel
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import { useColorScheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
+import { useThemeMode } from '@/hooks';
+
 export const LoginForm = () => {
-  const { mode } = useColorScheme();
+  const { themeMode } = useThemeMode();
 
   const setIconColor = (mode) => {
     switch (mode) {
@@ -126,7 +127,7 @@ export const LoginForm = () => {
           endAdornment={
             <InputAdornment position="end">
               <IconButton
-                sx={{ color: setIconColor(mode) }}
+                sx={{ color: setIconColor(themeMode) }}
                 aria-label="Toggle password visibility"
                 onClick={handleClickShowPassword}
                 edge="end"

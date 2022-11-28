@@ -1,26 +1,16 @@
 import React from 'react';
 import { DarkMode, LightMode } from '@mui/icons-material';
 import { IconButton, ListItemButton, ListItemIcon } from '@mui/material';
-import { useColorScheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+
+import { useThemeMode } from '@/hooks';
 
 export const ThemeButton = ({
   children,
   isListItemButton = false,
-  setModeTheme = null,
   stylesObj = {}
 }) => {
-  const { mode, setMode } = useColorScheme();
-
-  const handleMode = () => {
-    if (mode === 'light') {
-      setMode('dark');
-      isListItemButton && setModeTheme('dark');
-    } else {
-      setMode('light');
-      isListItemButton && setModeTheme('light');
-    }
-  };
+  const { themeMode, toggleThemeMode } = useThemeMode();
 
   return (
     <>
@@ -40,20 +30,20 @@ export const ThemeButton = ({
               justifyContent: 'center',
               minWidth: '0'
             }}
-            onClick={handleMode}
+            onClick={toggleThemeMode}
             aria-label="Theme toggle button"
           >
-            {mode === 'light' ? <DarkMode /> : <LightMode />}
+            {themeMode === 'light' ? <DarkMode /> : <LightMode />}
             {children}
           </ListItemIcon>
         </ListItemButton>
       ) : (
         <IconButton
           sx={stylesObj}
-          onClick={handleMode}
+          onClick={toggleThemeMode}
           aria-label="Theme toggle button"
         >
-          {mode === 'light' ? <DarkMode /> : <LightMode />}
+          {themeMode === 'light' ? <DarkMode /> : <LightMode />}
         </IconButton>
       )}
     </>
@@ -63,7 +53,6 @@ export const ThemeButton = ({
 ThemeButton.propTypes = {
   children: PropTypes.node,
   isListItemButton: PropTypes.bool,
-  setModeTheme: PropTypes.func,
   stylesObj: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number])
   )
