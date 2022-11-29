@@ -24,8 +24,8 @@ ChartJS.register(
   Tooltip
 );
 
-export const ChartLine = ({ data, options = {}, styles = {} }) => {
-  return <Line style={styles} data={data} options={options} />;
+export const ChartLine = ({ data, options = {}, stylesObj = {} }) => {
+  return <Line style={stylesObj} data={data} options={options} />;
 };
 
 ChartLine.propTypes = {

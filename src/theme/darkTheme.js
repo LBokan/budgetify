@@ -119,6 +119,14 @@ const MuiDrawer = {
   }
 };
 
+const MuiPaginationItem = {
+  styleOverrides: {
+    text: {
+      color: grey[50]
+    }
+  }
+};
+
 export const darkTheme = createTheme({
   palette: {
     primary: {
@@ -197,6 +205,7 @@ export const darkTheme = createTheme({
     MuiInputLabel,
     MuiFormHelperText,
     MuiLink,
-    MuiDrawer
+    MuiDrawer,
+    MuiPaginationItem
   }
 });

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Pagination, Stack, Typography } from '@mui/material';
 import { yellow } from '@mui/material/colors';
 import PropTypes from 'prop-types';
 
 import { DeviceItem } from '@/components';
 import { useThemeMode } from '@/hooks';
 
-export const DeviceList = ({ devicesData }) => {
+export const DeviceList = ({ devicesData, pagesQty }) => {
   const { themeMode } = useThemeMode();
 
   const setBgColor = (mode) => {
@@ -48,14 +48,15 @@ export const DeviceList = ({ devicesData }) => {
         bgcolor={setBgColor(themeMode)}
         boxShadow={setBoxShadowColor(themeMode)}
       >
-        <Box sx={{ width: '50px' }}>
+        <Box sx={{ width: '80px', textAlign: 'center' }}>
           <Typography>Image</Typography>
         </Box>
 
         <Box
           sx={{
             maxWidth: '15%',
-            width: '100%'
+            width: '100%',
+            textAlign: 'center'
           }}
         >
           <Typography variant="h3">Device name</Typography>
@@ -96,7 +97,7 @@ export const DeviceList = ({ devicesData }) => {
         <Box
           sx={{
             mt: '30px',
-            minHeight: '250px',
+            minHeight: '200px',
             textAlign: 'center'
           }}
         >
@@ -105,11 +106,7 @@ export const DeviceList = ({ devicesData }) => {
       ) : (
         <Box
           sx={{
-            mt: '10px',
-            mr: '-20px',
-            pr: '5px',
-            maxHeight: '250px',
-            overflowY: 'scroll'
+            mt: '10px'
           }}
         >
           {devicesData.map((device) => (
@@ -117,10 +114,23 @@ export const DeviceList = ({ devicesData }) => {
           ))}
         </Box>
       )}
+
+      {!!pagesQty && pagesQty > 1 && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            mt: '10px'
+          }}
+        >
+          <Pagination count={pagesQty} />
+        </Box>
+      )}
     </>
   );
 };
 
 DeviceList.propTypes = {
-  devicesData: PropTypes.arrayOf(PropTypes.object).isRequired
+  devicesData: PropTypes.arrayOf(PropTypes.object).isRequired,
+  pagesQty: PropTypes.number
 };

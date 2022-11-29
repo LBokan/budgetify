@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export const getDateToday = () => {
-  return new Date().toISOString().split('T')[0];
+  return moment().get().format('YYYY-MM-DD');
 };
 
 export const getCurrentWeekDaysArr = () => {
@@ -21,16 +21,4 @@ export const getCurrentWeekDaysArr = () => {
   }
 
   return weekDaysArr;
-};
-
-export const createWeekLogsQtyArr = (logsArr) => {
-  const weekDaysArr = getCurrentWeekDaysArr();
-
-  return weekDaysArr.map((day) => {
-    const logDataArr = logsArr.filter(
-      (log) => day == +moment(log.date).format('DD')
-    );
-
-    return logDataArr.length ? logDataArr[0].logs.total_count : 0;
-  });
 };

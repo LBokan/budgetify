@@ -2,9 +2,10 @@ import React from 'react';
 import { ExpandMore } from '@mui/icons-material';
 import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { blueGrey, green, grey, red, teal, yellow } from '@mui/material/colors';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import { createWeekLogsQtyArr } from '@/helpers/chartsHelpers';
+import { getDateToday } from '@/helpers/chartsHelpers';
 import { useThemeMode } from '@/hooks';
 
 import { ChartLine } from '../ChartLine';
@@ -15,9 +16,7 @@ export const DeviceItem = ({ deviceData }) => {
   const open = Boolean(anchorEl);
 
   const { themeMode } = useThemeMode();
-  const dateToday = new Date().toISOString().split('T')[0];
-
-  const weekLogsQtyArr = createWeekLogsQtyArr(deviceData.logs);
+  const dateToday = getDateToday();
 
   const todayLogsArr = deviceData.logs.filter(
     (log) => log.date == dateToday
@@ -76,22 +75,20 @@ export const DeviceItem = ({ deviceData }) => {
   };
 
   const dataCharts = {
-    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    labels: deviceData.logs.map((log) => moment(log.date).format('YYYY-MM-DD')),
     datasets: [
       {
-        label: "Week's logs",
-        data: weekLogsQtyArr,
-        borderWidth: 4,
+        label: 'Logs',
+        data: deviceData.logs.map((log) => log.logs.total_count),
+        borderWidth: 2,
         borderColor: setLineChartColor(themeMode),
-        pointBorderWidth: 0,
+        pointBorderWidth: 1,
         pointBackgroundColor: 'transparent'
       }
     ]
   };
 
   const optionsCharts = {
-    responsive: false,
-    events: [],
     scales: {
       y: {
         display: false
@@ -99,13 +96,15 @@ export const DeviceItem = ({ deviceData }) => {
       x: {
         border: {
           color: setGridXChartColor(themeMode),
-          width: 2
+          width: 1
         },
         grid: {
           display: false
         },
         ticks: {
-          display: false
+          callback(value) {
+            return `${moment(this.getLabelForValue(value)).format('MM/DD')}`;
+          }
         }
       }
     },
@@ -113,8 +112,6 @@ export const DeviceItem = ({ deviceData }) => {
       legend: { display: false }
     }
   };
-
-  const stylesCharts = { width: '100%', height: '50px' };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -139,7 +136,7 @@ export const DeviceItem = ({ deviceData }) => {
       >
         <Box
           component="img"
-          sx={{ width: '50px', height: '50px' }}
+          sx={{ width: '80px', height: '80px' }}
           src={deviceData.device_image}
           alt="Device image"
         />
@@ -209,17 +206,15 @@ export const DeviceItem = ({ deviceData }) => {
 
         <Box
           sx={{
+            display: 'flex',
+            justifyContent: 'center',
             maxWidth: '20%',
             width: '100%',
-            maxHeight: '50px',
+            maxHeight: '120px',
             textAlign: 'center'
           }}
         >
-          <ChartLine
-            data={dataCharts}
-            options={optionsCharts}
-            styles={stylesCharts}
-          />
+          <ChartLine data={dataCharts} options={optionsCharts} />
         </Box>
       </Stack>
 

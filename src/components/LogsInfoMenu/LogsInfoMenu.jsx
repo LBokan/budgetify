@@ -13,7 +13,7 @@ export const LogsInfoMenu = ({ anchorEl, open, handleClose, logsData }) => {
         'aria-labelledby': 'logs-button'
       }}
     >
-      {!!logsData.issues.length &&
+      {!!logsData?.issues.length &&
         logsData.issues.map((log) => (
           <MenuItem key={log.name} onClick={handleClose}>
             <ListItemText>{`${log.name} (${log.count})`}</ListItemText>
