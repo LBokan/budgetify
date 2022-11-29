@@ -5,13 +5,13 @@ import { blueGrey, green, grey, red, teal, yellow } from '@mui/material/colors';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import { getDateToday } from '@/helpers/chartsHelpers';
+import { getCurrentWeekDaysArr, getDateToday } from '@/helpers/chartsHelpers';
 import { useThemeMode } from '@/hooks';
 
 import { ChartLine } from '../ChartLine';
 import { LogsInfoMenu } from '../LogsInfoMenu';
 
-export const DeviceItem = ({ deviceData }) => {
+export const DeviceItem = ({ deviceData, maxLogsQty }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -75,7 +75,7 @@ export const DeviceItem = ({ deviceData }) => {
   };
 
   const dataCharts = {
-    labels: deviceData.logs.map((log) => moment(log.date).format('YYYY-MM-DD')),
+    labels: getCurrentWeekDaysArr(),
     datasets: [
       {
         label: 'Logs',
@@ -91,7 +91,9 @@ export const DeviceItem = ({ deviceData }) => {
   const optionsCharts = {
     scales: {
       y: {
-        display: false
+        display: false,
+        suggestedMin: 0,
+        suggestedMax: maxLogsQty
       },
       x: {
         border: {
@@ -102,8 +104,11 @@ export const DeviceItem = ({ deviceData }) => {
           display: false
         },
         ticks: {
-          callback(value) {
-            return `${moment(this.getLabelForValue(value)).format('MM/DD')}`;
+          color: setGridXChartColor(themeMode),
+          callback(value, index) {
+            return index % 2 === 0
+              ? `${moment(this.getLabelForValue(value)).format('MM/DD')}`
+              : '';
           }
         }
       }
@@ -229,5 +234,6 @@ export const DeviceItem = ({ deviceData }) => {
 };
 
 DeviceItem.propTypes = {
-  deviceData: PropTypes.object.isRequired
+  deviceData: PropTypes.object.isRequired,
+  maxLogsQty: PropTypes.number.isRequired
 };

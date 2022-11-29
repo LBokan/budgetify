@@ -4,10 +4,12 @@ import { yellow } from '@mui/material/colors';
 import PropTypes from 'prop-types';
 
 import { DeviceItem } from '@/components';
+import { getMaxLogsQty } from '@/helpers/chartsHelpers';
 import { useThemeMode } from '@/hooks';
 
 export const DeviceList = ({ devicesData, pagesQty }) => {
   const { themeMode } = useThemeMode();
+  const maxLogsQty = getMaxLogsQty(devicesData);
 
   const setBgColor = (mode) => {
     switch (mode) {
@@ -110,7 +112,11 @@ export const DeviceList = ({ devicesData, pagesQty }) => {
           }}
         >
           {devicesData.map((device) => (
-            <DeviceItem key={device.unique_number} deviceData={device} />
+            <DeviceItem
+              key={device.unique_number}
+              deviceData={device}
+              maxLogsQty={maxLogsQty}
+            />
           ))}
         </Box>
       )}
