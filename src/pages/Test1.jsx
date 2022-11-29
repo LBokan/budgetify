@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import _ from 'lodash';
 
-import imgCat from '../assets/img/cat.jpg';
+import imgCat from '../assets/img/fromServer/cat.jpg';
 import { TestComp } from '../components/TestComp';
 
 import { Test2 } from './Test2';

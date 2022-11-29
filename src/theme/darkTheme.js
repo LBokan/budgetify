@@ -144,8 +144,15 @@ export const darkTheme = createTheme({
     },
     h3: {
       fontFamily: "'LexendDeca', sans-serif",
-      fontWeight: '700',
+      fontWeight: '400',
       fontSize: '14px',
+      lineHeight: '1',
+      color: grey[300]
+    },
+    h4: {
+      fontFamily: "'LexendDeca', sans-serif",
+      fontWeight: '400',
+      fontSize: '12px',
       lineHeight: '1',
       color: grey[300]
     },

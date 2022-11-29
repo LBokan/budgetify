@@ -42,11 +42,7 @@ export const ContentWrapper = ({ children, type = 'div', isLoginPage }) => {
     flexDirection: isLoginPage ? 'column' : 'row',
     alignItems: type === 'header' || isLoginPage ? 'center' : 'flex-start',
     justifyContent:
-      type === 'header'
-        ? 'space-between'
-        : isLoginPage
-        ? 'center'
-        : 'flex-start',
+      type === 'header' ? 'space-between' : isLoginPage ? 'center' : 'flex-end',
     width: '100%',
     backgroundColor: setBgColor(themeMode)
   };
