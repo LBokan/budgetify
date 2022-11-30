@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Box, Typography } from '@mui/material';
 
-import userImage from '../../assets/img/cat.jpg';
+import userImage from '../../assets/img/fromServer/cat.jpg';
 
 export const UserInfo = () => {
   const { data } = {

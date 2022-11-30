@@ -143,8 +143,15 @@ export const lightTheme = createTheme({
     },
     h3: {
       fontFamily: "'LexendDeca', sans-serif",
-      fontWeight: '700',
+      fontWeight: '400',
       fontSize: '14px',
+      lineHeight: '1',
+      color: teal[800]
+    },
+    h4: {
+      fontFamily: "'LexendDeca', sans-serif",
+      fontWeight: '400',
+      fontSize: '12px',
       lineHeight: '1',
       color: teal[800]
     },

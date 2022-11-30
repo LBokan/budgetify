@@ -1,0 +1,1 @@
+export { LogsInfoMenu } from './LogsInfoMenu';

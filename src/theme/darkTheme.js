@@ -119,6 +119,14 @@ const MuiDrawer = {
   }
 };
 
+const MuiPaginationItem = {
+  styleOverrides: {
+    text: {
+      color: grey[50]
+    }
+  }
+};
+
 export const darkTheme = createTheme({
   palette: {
     primary: {
@@ -144,8 +152,15 @@ export const darkTheme = createTheme({
     },
     h3: {
       fontFamily: "'LexendDeca', sans-serif",
-      fontWeight: '700',
+      fontWeight: '400',
       fontSize: '14px',
+      lineHeight: '1',
+      color: grey[300]
+    },
+    h4: {
+      fontFamily: "'LexendDeca', sans-serif",
+      fontWeight: '400',
+      fontSize: '12px',
       lineHeight: '1',
       color: grey[300]
     },
@@ -190,6 +205,7 @@ export const darkTheme = createTheme({
     MuiInputLabel,
     MuiFormHelperText,
     MuiLink,
-    MuiDrawer
+    MuiDrawer,
+    MuiPaginationItem
   }
 });
