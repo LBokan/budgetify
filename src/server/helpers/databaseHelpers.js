@@ -38,9 +38,9 @@ const getCurrentWeekLogsArr = (logsArr) => {
       ) {
         return true;
       }
-
-      return false;
     }
+
+    return false;
   });
 };
 
