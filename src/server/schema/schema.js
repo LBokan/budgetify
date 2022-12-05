@@ -9,7 +9,12 @@ const {
   GraphQLList
 } = require('graphql');
 
-const { DeviceType, LogType, TypeType } = require('./types');
+const {
+  DeviceType,
+  DevicesResponseType,
+  LogType,
+  TypeType
+} = require('./types');
 
 const Devices = require('../models/device');
 const Logs = require('../models/log');
@@ -19,12 +24,17 @@ const Query = new GraphQLObjectType({
   name: 'Query',
   fields: {
     getAllDevices: {
-      type: new GraphQLList(DeviceType),
+      type: DevicesResponseType,
       args: { offset: { type: GraphQLInt }, limit: { type: GraphQLInt } },
       resolve(parent, args) {
-        return Devices.find()
-          .limit(args.limit)
-          .skip(args.offset * args.limit);
+        return {
+          devices: Devices.find()
+            .limit(args.limit)
+            .skip(args.offset * args.limit),
+          page_size: args.limit,
+          page_number: args.offset,
+          total_count: Devices.count()
+        };
       }
     },
     getDevice: {

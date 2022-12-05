@@ -38,6 +38,16 @@ const DeviceType = new GraphQLObjectType({
   })
 });
 
+const DevicesResponseType = new GraphQLObjectType({
+  name: 'DevicesResponse',
+  fields: () => ({
+    devices: { type: new GraphQLList(DeviceType) },
+    page_size: { type: GraphQLInt },
+    page_number: { type: GraphQLInt },
+    total_count: { type: GraphQLInt }
+  })
+});
+
 const LogType = new GraphQLObjectType({
   name: 'Log',
   fields: () => ({
@@ -72,4 +82,4 @@ const TypeType = new GraphQLObjectType({
   })
 });
 
-module.exports = { DeviceType, LogType, TypeType };
+module.exports = { DeviceType, DevicesResponseType, LogType, TypeType };
