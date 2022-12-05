@@ -86,7 +86,6 @@ export const DeviceList = ({
         <Box
           sx={{
             mt: '30px',
-            minHeight: '310px',
             textAlign: 'center'
           }}
         >
@@ -95,8 +94,7 @@ export const DeviceList = ({
       ) : (
         <Box
           sx={{
-            mt: '10px',
-            minHeight: '330px'
+            mt: '10px'
           }}
         >
           {devicesData.map((device) => (
