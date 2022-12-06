@@ -1,0 +1,60 @@
+type Device {
+  id: ID
+  deviceName: String!
+  deviceType: String!
+  isActive: Boolean!
+  allDeviceLogs: [DeviceLog]
+  currentWeekLogs: [DeviceLog]
+}
+
+type DevicesResponse {
+  devices: [Device]
+  page_size: Int
+  page_number: Int
+  total_count: Int
+}
+
+type Log {
+  id: ID
+  deviceId: String
+  deviceLogs: [DeviceLog]
+}
+
+type DeviceLog {
+  date: String
+  totalIssuesCount: Int
+  issues: [Issue]
+}
+
+type Issue {
+  name: String
+  count: Int
+}
+
+type Type {
+  id: ID
+  name: String
+}
+
+type Query {
+  getAllDevices(offset: Int, limit: Int): [DevicesResponse]
+  getDevice(id: ID): [Device]
+  getAllLogs: [Log]
+  getDeviceLogs(id: ID): [Log]
+  getAllDeviceTypes: [Type]
+}
+
+type Mutation {
+  createDevice(
+    deviceName: String!
+    deviceType: String!
+    isActive: Boolean!
+  ): Device
+  editDevice(
+    id: ID
+    deviceName: String!
+    deviceType: String!
+    isActive: Boolean!
+  ): Device
+  deleteDevice(id: ID): Device
+}
