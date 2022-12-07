@@ -112,13 +112,26 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
           }}
         >
           {deviceData?.deviceName.length > 20 ? (
-            <Tooltip title={deviceData?.deviceName} sx={{ cursor: 'pointer' }}>
-              <Typography variant="h3">
-                {`${deviceData?.deviceName.slice(0, 20)}...`}
+            <>
+              <Tooltip
+                title={deviceData?.deviceName}
+                sx={{ cursor: 'pointer' }}
+              >
+                <Typography variant="h3">
+                  {`${deviceData?.deviceName.slice(0, 20)}...`}
+                </Typography>
+              </Tooltip>
+              <Typography variant="subtitle1" sx={{ mt: '5px' }}>
+                {deviceData.deviceType}
               </Typography>
-            </Tooltip>
+            </>
           ) : (
-            <Typography variant="h3">{deviceData?.deviceName}</Typography>
+            <>
+              <Typography variant="h3">{deviceData?.deviceName}</Typography>
+              <Typography variant="subtitle1" sx={{ mt: '5px' }}>
+                {deviceData.deviceType}
+              </Typography>
+            </>
           )}
         </Box>
 

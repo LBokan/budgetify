@@ -19,6 +19,7 @@ const {
 const Devices = require('../models/device');
 const Logs = require('../models/log');
 const Types = require('../models/type');
+const { createLogs } = require('../helpers/databaseHelpers');
 
 const Query = new GraphQLObjectType({
   name: 'Query',
@@ -30,7 +31,8 @@ const Query = new GraphQLObjectType({
         return {
           devices: Devices.find()
             .limit(args.limit)
-            .skip(args.offset * args.limit),
+            .skip(args.offset * args.limit)
+            .sort({ dateOfCreate: -1 }),
           page_size: args.limit,
           page_number: args.offset,
           total_count: Devices.count()
@@ -60,7 +62,7 @@ const Query = new GraphQLObjectType({
     getAllDeviceTypes: {
       type: new GraphQLList(TypeType),
       resolve() {
-        return Types.find();
+        return Types.find().sort({ name: 1 });
       }
     }
   }
@@ -76,12 +78,22 @@ const Mutation = new GraphQLObjectType({
         deviceType: { type: new GraphQLNonNull(GraphQLString) },
         isActive: { type: new GraphQLNonNull(GraphQLBoolean) }
       },
-      resolve(parent, args) {
+      resolve: (parent, args) => {
         const device = new Devices({
+          dateOfCreate: Date.now().toString(),
           deviceName: args.deviceName,
           deviceType: args.deviceType,
-          isActive: args.isActive
+          isActive: args.isActive,
+          allDeviceLogs: [],
+          currentWeekLogs: []
         });
+
+        const deviceLogs = new Logs({
+          deviceLogs: createLogs(),
+          deviceId: device.id
+        });
+
+        deviceLogs.save();
 
         return device.save();
       }

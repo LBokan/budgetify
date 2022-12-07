@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material';
-import { green, grey, teal, yellow } from '@mui/material/colors';
+import { green, grey, red, teal, yellow } from '@mui/material/colors';
 
 import '@/assets/styles/fonts/fonts.css';
 
@@ -17,7 +17,22 @@ const MuiButton = {
       borderRadius: '10px',
       color: teal[800],
       backgroundColor: green['A400'],
-      boxShadow: `0 4px 4px ${grey[500]}`
+      boxShadow: `0 1px 4px ${grey[500]}`
+    },
+    outlined: {
+      border: `1px solid ${teal[800]}`,
+      backgroundColor: 'transparent',
+      '&:hover': {
+        backgroundColor: yellow[700]
+      }
+    },
+    danger: {
+      color: grey[50],
+      backgroundColor: red[700],
+      '&:hover': {
+        color: teal[800],
+        backgroundColor: yellow[700]
+      }
     }
   }
 };
@@ -70,6 +85,22 @@ const MuiInputBase = {
       fontSize: '14px',
       color: grey[50],
       backgroundColor: teal[800]
+    }
+  }
+};
+
+const MuiSelect = {
+  styleOverrides: {
+    root: {
+      padding: '0 8px',
+      maxHeight: '45px',
+      borderRadius: '10px',
+      fontSize: '14px',
+      color: grey[50],
+      backgroundColor: teal[800]
+    },
+    icon: {
+      color: grey[50]
     }
   }
 };
@@ -145,7 +176,7 @@ export const lightTheme = createTheme({
       fontFamily: "'LexendDeca', sans-serif",
       fontWeight: '400',
       fontSize: '14px',
-      lineHeight: '1',
+      lineHeight: '1.2',
       color: teal[800]
     },
     h4: {
@@ -193,6 +224,7 @@ export const lightTheme = createTheme({
     MuiIcon,
     MuiListItemIcon,
     MuiInputBase,
+    MuiSelect,
     MuiInputLabel,
     MuiFormHelperText,
     MuiLink,
