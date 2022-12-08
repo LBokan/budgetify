@@ -27,6 +27,15 @@ import { ConfirmationModal } from '../ConfirmationModal';
 
 import { setBgColor, setBorder } from './styles';
 
+const validationSchema = yup.object({
+  deviceName: yup
+    .string('Enter a name of device')
+    .required('Device name is required'),
+  deviceType: yup
+    .string('Select a type of device')
+    .required('Type of device is required')
+});
+
 export const CreateDeviceModal = ({
   deviceTypesData,
   isOpen,
@@ -37,15 +46,6 @@ export const CreateDeviceModal = ({
     React.useState(false);
 
   const { themeMode } = useThemeMode();
-
-  const validationSchema = yup.object({
-    deviceName: yup
-      .string('Enter a name of device')
-      .required('Device name is required'),
-    deviceType: yup
-      .string('Select a type of device')
-      .required('Type of device is required')
-  });
 
   const formik = useFormik({
     initialValues: {

@@ -2,9 +2,9 @@ import React from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { Box, Button } from '@mui/material';
 
-import { CREATE_DEVICE } from '@/api/mutation/Device';
-import { GET_ALL_DEVICES } from '@/api/query/Device';
-import { GET_ALL_DEVICE_TYPES } from '@/api/query/DeviceType';
+import { CREATE_DEVICE } from '@/api/mutation/device';
+import { GET_ALL_DEVICES } from '@/api/query/device';
+import { GET_ALL_DEVICE_TYPES } from '@/api/query/device';
 import { CreateDeviceModal, DeviceList } from '@/components';
 import { getQtyOfPages } from '@/helpers';
 
