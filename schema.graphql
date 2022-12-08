@@ -1,5 +1,6 @@
 type Device {
   id: ID
+  dateOfCreate: String
   deviceName: String!
   deviceType: String!
   isActive: Boolean!

@@ -1,14 +1,14 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { RoomPreferences } from '@mui/icons-material';
 import { Box, Icon, Typography } from '@mui/material';
 import { teal } from '@mui/material/colors';
 
 import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
 import { ContentWrapper, LoginForm, ThemeButton } from '@/components';
+import { useThemeMode } from '@/hooks';
 
 export const Login = () => {
-  const themeMode = useSelector((state) => state.theme).mode;
+  const { themeMode } = useThemeMode();
 
   const setIconBorderColor = (mode) => {
     switch (mode) {

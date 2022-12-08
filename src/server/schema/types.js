@@ -16,6 +16,7 @@ const DeviceType = new GraphQLObjectType({
   name: 'Device',
   fields: () => ({
     id: { type: GraphQLID },
+    dateOfCreate: { type: GraphQLString },
     deviceName: { type: new GraphQLNonNull(GraphQLString) },
     deviceType: { type: new GraphQLNonNull(GraphQLString) },
     isActive: { type: new GraphQLNonNull(GraphQLBoolean) },

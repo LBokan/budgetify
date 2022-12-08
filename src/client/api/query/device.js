@@ -31,3 +31,12 @@ export const GET_ALL_DEVICES = gql`
     }
   }
 `;
+
+export const GET_ALL_DEVICE_TYPES = gql`
+  query Type {
+    getAllDeviceTypes {
+      id
+      name
+    }
+  }
+`;

@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material';
-import { blueGrey, green, grey, yellow } from '@mui/material/colors';
+import { blueGrey, green, grey, red, teal, yellow } from '@mui/material/colors';
 
 import '@/assets/styles/fonts/fonts.css';
 
@@ -18,6 +18,21 @@ const MuiButton = {
       color: grey[50],
       backgroundColor: green['A700'],
       boxShadow: `0 4px 4px ${blueGrey[900]}`
+    },
+    outlined: {
+      border: `1px solid ${grey[50]}`,
+      backgroundColor: 'transparent',
+      '&:hover': {
+        backgroundColor: yellow[900]
+      }
+    },
+    danger: {
+      color: grey[50],
+      backgroundColor: red[500],
+      '&:hover': {
+        color: teal[800],
+        backgroundColor: yellow[900]
+      }
     }
   }
 };
@@ -29,6 +44,9 @@ const MuiIconButton = {
       '&:hover': {
         color: yellow[900]
       }
+    },
+    colorInherit: {
+      color: grey[300]
     }
   }
 };
@@ -70,6 +88,32 @@ const MuiInputBase = {
       fontSize: '14px',
       color: grey[300],
       backgroundColor: blueGrey[600]
+    }
+  }
+};
+
+const MuiSelect = {
+  styleOverrides: {
+    root: {
+      padding: '0 8px',
+      maxHeight: '45px',
+      borderRadius: '10px',
+      fontSize: '14px',
+      color: grey[300],
+      backgroundColor: blueGrey[600]
+    },
+    icon: {
+      color: grey[300]
+    }
+  }
+};
+
+const MuiSkeleton = {
+  styleOverrides: {
+    rectangular: {
+      height: '45px',
+      borderRadius: '10px',
+      backgroundColor: yellow[900]
     }
   }
 };
@@ -127,6 +171,14 @@ const MuiDrawer = {
   }
 };
 
+const MuiAlert = {
+  styleOverrides: {
+    message: {
+      lineHeight: 1.3
+    }
+  }
+};
+
 const MuiPaginationItem = {
   styleOverrides: {
     text: {
@@ -162,7 +214,7 @@ export const darkTheme = createTheme({
       fontFamily: "'LexendDeca', sans-serif",
       fontWeight: '400',
       fontSize: '14px',
-      lineHeight: '1',
+      lineHeight: '1.2',
       color: grey[300]
     },
     h4: {
@@ -210,11 +262,14 @@ export const darkTheme = createTheme({
     MuiIcon,
     MuiListItemIcon,
     MuiInputBase,
+    MuiSelect,
+    MuiSkeleton,
     MuiInputLabel,
     MuiFormHelperText,
     MuiLink,
     MuiMenu,
     MuiDrawer,
+    MuiAlert,
     MuiPaginationItem
   }
 });

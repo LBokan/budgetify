@@ -31,17 +31,54 @@ const getCurrentWeekDaysArr = () => {
 const getCurrentWeekLogsArr = (logsArr) => {
   const weekDaysArr = getCurrentWeekDaysArr();
 
-  return logsArr.filter((log) => {
-    for (let i = 0; i < weekDaysArr.length; i++) {
-      if (
-        +moment(log.date).format('DD') == +moment(weekDaysArr[i]).format('DD')
-      ) {
-        return true;
-      }
-    }
+  let firstLogIndex = 0;
 
-    return false;
-  });
+  let currentWeekLogsArr = logsArr
+    .sort((a, b) => {
+      if (a.date < b.date) return -1;
+
+      return 1;
+    })
+    .filter((log, logIndex) => {
+      for (let i = 0; i < weekDaysArr.length; i++) {
+        if (moment(log.date).format('YYYY-MM-DD') == weekDaysArr[i]) {
+          if (logIndex == 0) {
+            firstLogIndex = i;
+          }
+
+          return true;
+        }
+      }
+
+      return false;
+    });
+
+  if (firstLogIndex != 0) {
+    currentWeekLogsArr = Array(firstLogIndex)
+      .fill(0)
+      .concat(currentWeekLogsArr);
+  }
+
+  return currentWeekLogsArr;
 };
 
-module.exports = { getCurrentWeekLogsArr };
+const createLogs = () => {
+  const dateToday = moment().get().format('YYYY-MM-DD');
+  const weekDaysArr = getCurrentWeekDaysArr();
+
+  return weekDaysArr
+    .map((day) => {
+      const randomCountOfLogs = Math.round(Math.random() * 15);
+
+      if (day > dateToday) return 0;
+
+      return {
+        date: `${day}T00:00:00.000+00:00`,
+        totalIssuesCount: randomCountOfLogs,
+        issues: [{ name: 'NEW issue', count: randomCountOfLogs }]
+      };
+    })
+    .filter((data) => data != 0);
+};
+
+module.exports = { getCurrentWeekLogsArr, createLogs };
