@@ -3,8 +3,8 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Box, Button } from '@mui/material';
 
 import { CREATE_DEVICE } from '@/api/mutation/device';
-import { GET_ALL_DEVICES, GET_ALL_DEVICE_TYPES } from '@/api/query/device';
-import { CreateDeviceModal, DeviceList } from '@/components';
+import { GET_ALL_DEVICES } from '@/api/query/device';
+import { CreateDeviceModal, DeviceList, NotificationBar } from '@/components';
 import { getQtyOfPages } from '@/helpers';
 
 export const Landing = () => {
@@ -23,12 +23,6 @@ export const Landing = () => {
       limit: limitPerPage
     }
   });
-
-  const {
-    loading: loadingDeviceTypes,
-    error: errorDeviceTypes,
-    data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
-  } = useQuery(GET_ALL_DEVICE_TYPES);
 
   const [createDevice] = useMutation(CREATE_DEVICE);
 
@@ -52,15 +46,14 @@ export const Landing = () => {
     closeCreateDeviceModal();
   };
 
-  if (errorDevicesData) throw errorDevicesData;
-  if (errorDeviceTypes) throw errorDeviceTypes;
-
   if (loadingDevicesData) return <div>Loading...</div>;
 
   return (
     <>
       <Box sx={{ width: '100%', textAlign: 'end' }}>
-        <Button onClick={openCreateDeviceModal}>Create device</Button>
+        <Button variant="contained" onClick={openCreateDeviceModal}>
+          Create device
+        </Button>
       </Box>
 
       {!!devicesData?.devices && !loadingDevicesData && (
@@ -72,14 +65,15 @@ export const Landing = () => {
         />
       )}
 
-      {!!deviceTypesData && !loadingDeviceTypes && (
-        <CreateDeviceModal
-          deviceTypesData={deviceTypesData}
-          isOpen={isOpenCreateDevice}
-          onClose={closeCreateDeviceModal}
-          onSubmit={createDeviceOnSubmit}
-        />
+      {!!errorDevicesData && (
+        <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
       )}
+
+      <CreateDeviceModal
+        isOpen={isOpenCreateDevice}
+        onClose={closeCreateDeviceModal}
+        onSubmit={createDeviceOnSubmit}
+      />
     </>
   );
 };

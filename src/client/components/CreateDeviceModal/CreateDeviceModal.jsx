@@ -1,4 +1,5 @@
 import React from 'react';
+import { useQuery } from '@apollo/client';
 import { Close } from '@mui/icons-material';
 import {
   Box,
@@ -10,9 +11,7 @@ import {
   IconButton,
   InputBase,
   InputLabel,
-  MenuItem,
   Modal,
-  Select,
   Stack,
   Typography
 } from '@mui/material';
@@ -20,10 +19,14 @@ import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
+import { GET_ALL_DEVICE_TYPES } from '@/api/query/device';
 import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
+import { getDeviceTypesOptions } from '@/helpers/selectHelpers';
 import { useThemeMode } from '@/hooks';
 
 import { ConfirmationModal } from '../ConfirmationModal';
+import { NotificationBar } from '../NotificationBar';
+import { SelectControlled } from '../SelectControlled';
 
 import { setBgColor, setBorder } from './styles';
 
@@ -36,16 +39,17 @@ const validationSchema = yup.object({
     .required('Type of device is required')
 });
 
-export const CreateDeviceModal = ({
-  deviceTypesData,
-  isOpen,
-  onClose,
-  onSubmit
-}) => {
+export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
     React.useState(false);
 
   const { themeMode } = useThemeMode();
+
+  const {
+    loading: loadingDeviceTypes,
+    error: errorDeviceTypes,
+    data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
+  } = useQuery(GET_ALL_DEVICE_TYPES);
 
   const formik = useFormik({
     initialValues: {
@@ -76,177 +80,154 @@ export const CreateDeviceModal = ({
 
   return (
     <>
-      <Modal open={isOpen}>
-        <Stack
-          component="form"
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            p: '40px',
-            pb: '80px',
-            maxWidth: '500px',
-            width: '100%',
-            border: setBorder(themeMode),
-            borderRadius: '10px',
-            boxShadow: 24,
-            bgcolor: setBgColor(themeMode),
-            overflow: 'hidden'
-          }}
-          onSubmit={formik.handleSubmit}
-        >
-          <IconButton
+      {!!deviceTypesData && (
+        <Modal open={isOpen}>
+          <Stack
+            component="form"
             sx={{
               position: 'absolute',
-              top: '10px',
-              right: '10px'
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              p: '40px',
+              pb: '80px',
+              maxWidth: '500px',
+              width: '100%',
+              border: setBorder(themeMode),
+              borderRadius: '10px',
+              boxShadow: 24,
+              bgcolor: setBgColor(themeMode),
+              overflow: 'hidden'
             }}
-            onClick={formik.dirty ? openConfirmationModal : resetFormOnClose}
-            aria-label="Close create device modal"
+            onSubmit={formik.handleSubmit}
           >
-            <Close />
-          </IconButton>
-
-          <Typography variant="h2" sx={{ fontSize: '18px' }}>
-            Add device
-          </Typography>
-
-          <FormControl
-            sx={{
-              position: 'relative',
-              mt: '25px',
-              pb: '40px'
-            }}
-            fullWidth
-          >
-            <InputLabel
-              htmlFor="deviceName"
-              required
-              size="small"
-              sx={{ top: '2px' }}
-              error={
-                formik.touched.deviceName && Boolean(formik.errors.deviceName)
-              }
-            >
-              Name
-            </InputLabel>
-            <InputBase
-              id="deviceName"
-              size="medium"
-              sx={{ minHeight: '45px' }}
-              value={formik.values.deviceName}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.deviceName && Boolean(formik.errors.deviceName)
-              }
-            />
-            <FormHelperText
+            <IconButton
               sx={{
                 position: 'absolute',
-                bottom: '20px'
+                top: '10px',
+                right: '10px'
               }}
-              error={
-                formik.touched.deviceName && Boolean(formik.errors.deviceName)
-              }
+              onClick={formik.dirty ? openConfirmationModal : resetFormOnClose}
+              aria-label="Close create device modal"
             >
-              {formik.touched.deviceName && formik.errors.deviceName}
-            </FormHelperText>
-          </FormControl>
+              <Close />
+            </IconButton>
 
-          <FormControl
-            sx={{
-              position: 'relative',
-              pb: '40px'
-            }}
-            fullWidth
-          >
-            <InputLabel
-              htmlFor="deviceType"
-              required
-              size="small"
-              sx={{ top: '2px' }}
-              error={
-                formik.touched.deviceType && Boolean(formik.errors.deviceType)
-              }
+            <Typography variant="h2" sx={{ fontSize: '18px' }}>
+              Add device
+            </Typography>
+
+            <FormControl
+              sx={{
+                position: 'relative',
+                mt: '25px',
+                pb: '40px'
+              }}
+              fullWidth
             >
-              Type of device
-            </InputLabel>
-            <Select
-              id="deviceType"
+              <InputLabel
+                htmlFor="deviceName"
+                required
+                size="small"
+                sx={{ top: '2px' }}
+                error={
+                  formik.touched.deviceName && Boolean(formik.errors.deviceName)
+                }
+              >
+                Name
+              </InputLabel>
+              <InputBase
+                id="deviceName"
+                size="medium"
+                sx={{ minHeight: '45px' }}
+                value={formik.values.deviceName}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.deviceName && Boolean(formik.errors.deviceName)
+                }
+              />
+              <FormHelperText
+                sx={{
+                  position: 'absolute',
+                  bottom: '20px'
+                }}
+                error={
+                  formik.touched.deviceName && Boolean(formik.errors.deviceName)
+                }
+              >
+                {formik.touched.deviceName && formik.errors.deviceName}
+              </FormHelperText>
+            </FormControl>
+
+            <SelectControlled
               name="deviceType"
-              size="medium"
-              sx={{ minHeight: '45px' }}
               value={formik.values.deviceType}
               onChange={formik.handleChange}
-              error={
+              dataLoading={loadingDeviceTypes}
+              isErrorData={
                 formik.touched.deviceType && Boolean(formik.errors.deviceType)
               }
-            >
-              {deviceTypesData.map((type) => (
-                <MenuItem key={type.id} value={type.name}>
-                  {type.name}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText
-              sx={{ position: 'absolute', bottom: '20px' }}
-              error={
-                formik.touched.deviceType && Boolean(formik.errors.deviceType)
-              }
-            >
-              {formik.touched.deviceType && formik.errors.deviceType}
-            </FormHelperText>
-          </FormControl>
-
-          <FormControl
-            fullWidth
-            sx={{
-              position: 'relative',
-              pb: '40px'
-            }}
-          >
-            <FormControlLabel
-              label="Is active"
-              control={
-                <Checkbox
-                  checked={formik.values.isActive}
-                  name="isActive"
-                  onChange={formik.handleChange}
-                />
-              }
+              errorData={formik.touched.deviceType && formik.errors.deviceType}
+              listOfOptions={getDeviceTypesOptions(deviceTypesData)}
             />
-          </FormControl>
 
-          <Stack direction="row" justifyContent="flex-end">
-            <Button variant="contained" sx={{ height: '45px' }} type="submit">
-              Submit
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{ ml: '30px', height: '45px' }}
-              onClick={formik.dirty ? openConfirmationModal : resetFormOnClose}
+            <FormControl
+              fullWidth
+              sx={{
+                position: 'relative',
+                pb: '40px'
+              }}
             >
-              Cancel
-            </Button>
-          </Stack>
+              <FormControlLabel
+                label="Is active"
+                control={
+                  <Checkbox
+                    checked={formik.values.isActive}
+                    name="isActive"
+                    onChange={formik.handleChange}
+                  />
+                }
+              />
+            </FormControl>
 
-          <Box
-            component="img"
-            sx={{
-              position: 'absolute',
-              bottom: '0',
-              left: '0',
-              width: '100%',
-              maxHeight: '40px'
-            }}
-            src={
-              themeMode === 'light' ? loginWavesLightImage : loginWavesDarkImage
-            }
-            alt="Waves image"
-          />
-        </Stack>
-      </Modal>
+            <Stack direction="row" justifyContent="flex-end">
+              <Button variant="contained" sx={{ height: '45px' }} type="submit">
+                Submit
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{ ml: '30px', height: '45px' }}
+                onClick={
+                  formik.dirty ? openConfirmationModal : resetFormOnClose
+                }
+              >
+                Cancel
+              </Button>
+            </Stack>
+
+            <Box
+              component="img"
+              sx={{
+                position: 'absolute',
+                bottom: '0',
+                left: '0',
+                width: '100%',
+                maxHeight: '40px'
+              }}
+              src={
+                themeMode === 'light'
+                  ? loginWavesLightImage
+                  : loginWavesDarkImage
+              }
+              alt="Waves image"
+            />
+          </Stack>
+        </Modal>
+      )}
+
+      {!!errorDeviceTypes && (
+        <NotificationBar text={errorDeviceTypes.message} typeOfBar="error" />
+      )}
 
       <ConfirmationModal
         isOpen={isOpenConfirmationModal}
@@ -260,8 +241,6 @@ export const CreateDeviceModal = ({
 };
 
 CreateDeviceModal.propTypes = {
-  deviceTypesData: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string))
-    .isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired

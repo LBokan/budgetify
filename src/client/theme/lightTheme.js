@@ -44,6 +44,9 @@ const MuiIconButton = {
       '&:hover': {
         color: yellow[700]
       }
+    },
+    colorInherit: {
+      color: grey[50]
     }
   }
 };
@@ -105,6 +108,16 @@ const MuiSelect = {
   }
 };
 
+const MuiSkeleton = {
+  styleOverrides: {
+    root: {
+      height: '45px',
+      borderRadius: '10px',
+      backgroundColor: yellow[700]
+    }
+  }
+};
+
 const MuiInputLabel = {
   styleOverrides: {
     root: {
@@ -145,6 +158,14 @@ const MuiDrawer = {
       justifyContent: 'space-between',
       padding: '95px 15px 25px',
       minWidth: '70px'
+    }
+  }
+};
+
+const MuiAlert = {
+  styleOverrides: {
+    message: {
+      lineHeight: 1.3
     }
   }
 };
@@ -225,9 +246,11 @@ export const lightTheme = createTheme({
     MuiListItemIcon,
     MuiInputBase,
     MuiSelect,
+    MuiSkeleton,
     MuiInputLabel,
     MuiFormHelperText,
     MuiLink,
-    MuiDrawer
+    MuiDrawer,
+    MuiAlert
   }
 });

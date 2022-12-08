@@ -9,5 +9,7 @@ export { DeviceList } from './DeviceList';
 export { Header } from './Header';
 export { LoginForm } from './LoginForm';
 export { LogsInfoMenu } from './LogsInfoMenu';
+export { NotificationBar } from './NotificationBar';
 export { RouterLink } from './RouterLink';
+export { SelectControlled } from './SelectControlled';
 export { ThemeButton } from './ThemeButton';
