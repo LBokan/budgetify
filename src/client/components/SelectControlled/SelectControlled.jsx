@@ -14,6 +14,7 @@ export const SelectControlled = ({
   size = 'medium',
   stylesObjSelect = {},
   value,
+  labelText = '',
   onChange,
   dataLoading,
   isErrorData = false,
@@ -30,15 +31,17 @@ export const SelectControlled = ({
     >
       {(!dataLoading && (
         <>
-          <InputLabel
-            htmlFor={name}
-            required
-            size="small"
-            sx={{ top: '2px' }}
-            error={isErrorData}
-          >
-            Type of device
-          </InputLabel>
+          {!!labelText && (
+            <InputLabel
+              htmlFor={name}
+              required
+              size="small"
+              sx={{ top: '2px' }}
+              error={isErrorData}
+            >
+              {labelText}
+            </InputLabel>
+          )}
 
           <Select
             id={name}
@@ -77,6 +80,7 @@ SelectControlled.propTypes = {
     PropTypes.oneOf([PropTypes.string, PropTypes.number])
   ),
   value: PropTypes.string.isRequired,
+  labelText: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   dataLoading: PropTypes.bool,
   isErrorData: PropTypes.bool,
