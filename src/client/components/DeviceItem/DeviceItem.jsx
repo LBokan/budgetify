@@ -1,10 +1,13 @@
 import React from 'react';
-import { ExpandMore } from '@mui/icons-material';
+import { useMutation } from '@apollo/client';
+import { Edit, ExpandMore } from '@mui/icons-material';
 import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { green, red } from '@mui/material/colors';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
+import { EDIT_DEVICE } from '@/api/mutation/device';
+import { GET_ALL_DEVICES } from '@/api/query/device';
 import {
   getCurrentWeekDaysArr,
   getDateToday,
@@ -13,6 +16,7 @@ import {
 import { useThemeMode } from '@/hooks';
 
 import { ChartLine } from '../ChartLine';
+import { EditDeviceModal } from '../EditDeviceModal';
 import { LogsInfoMenu } from '../LogsInfoMenu';
 
 import {
@@ -23,11 +27,18 @@ import {
 } from './styles';
 
 export const DeviceItem = ({ deviceData, maxLogsQty }) => {
+  const [chosenDeviceData, setChosenDeviceData] = React.useState({});
+  const [isOpenEditDevice, setIsOpenEditDevice] = React.useState(false);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const isOpenLogsMenu = Boolean(anchorEl);
 
   const { themeMode } = useThemeMode();
   const dateToday = getDateToday();
+
+  const [editDevice] = useMutation(EDIT_DEVICE, {
+    refetchQueries: [GET_ALL_DEVICES]
+  });
 
   const todayLogsArr = deviceData?.allDeviceLogs.filter(
     (log) => moment(log.date).format('YYYY-MM-DD') == dateToday
@@ -77,12 +88,33 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
     }
   };
 
-  const handleClick = (event) => {
+  const handleClickExpandMore = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleCloseExpandMore = () => {
     setAnchorEl(null);
+  };
+
+  const openEditDeviceModal = (deviceData) => {
+    setChosenDeviceData(deviceData);
+    setIsOpenEditDevice(true);
+  };
+
+  const editDeviceOnSubmit = (data) => {
+    editDevice({
+      variables: {
+        ...chosenDeviceData,
+        deviceName: data.deviceName,
+        deviceType: data.deviceType,
+        isActive: data.isActive
+      }
+    });
+    closeEditDeviceModal();
+  };
+
+  const closeEditDeviceModal = () => {
+    setIsOpenEditDevice(false);
   };
 
   return (
@@ -173,7 +205,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
               aria-controls={open ? 'logs-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick}
+              onClick={handleClickExpandMore}
               aria-label="Show more"
             >
               <ExpandMore sx={{ width: '100%', height: '100%' }} />
@@ -193,12 +225,40 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
         >
           <ChartLine data={dataCharts} options={optionsCharts} />
         </Box>
+
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            maxWidth: '5%',
+            width: '100%'
+          }}
+        >
+          <IconButton
+            sx={{
+              ml: '10px',
+              width: '40px',
+              maxHeight: '40px'
+            }}
+            onClick={() => openEditDeviceModal(deviceData)}
+            aria-label="Edit device"
+          >
+            <Edit sx={{ width: '100%', height: '100%' }} />
+          </IconButton>
+        </Box>
       </Stack>
+
+      <EditDeviceModal
+        deviceData={deviceData}
+        isOpen={isOpenEditDevice}
+        onClose={closeEditDeviceModal}
+        onSubmit={editDeviceOnSubmit}
+      />
 
       <LogsInfoMenu
         anchorEl={anchorEl}
-        open={open}
-        handleClose={handleClose}
+        open={isOpenLogsMenu}
+        handleClose={handleCloseExpandMore}
         logsData={todayLogsArr}
       />
     </>

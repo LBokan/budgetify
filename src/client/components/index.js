@@ -6,6 +6,7 @@ export { ContentWrapper } from './ContentWrapper';
 export { CreateDeviceModal } from './CreateDeviceModal';
 export { DeviceItem } from './DeviceItem';
 export { DeviceList } from './DeviceList';
+export { EditDeviceModal } from './EditDeviceModal';
 export { Header } from './Header';
 export { LoginForm } from './LoginForm';
 export { LogsInfoMenu } from './LogsInfoMenu';
