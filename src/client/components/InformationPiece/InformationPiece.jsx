@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 
 import { useThemeMode } from '@/hooks';
 
@@ -36,4 +37,9 @@ export const InformationPiece = ({ title = '', text }) => {
       </Typography>
     </Stack>
   );
+};
+
+InformationPiece.propTypes = {
+  title: PropTypes.string,
+  text: PropTypes.string.isRequired
 };
