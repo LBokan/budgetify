@@ -45,7 +45,8 @@ const DevicesResponseType = new GraphQLObjectType({
     devices: { type: new GraphQLList(DeviceType) },
     page_size: { type: GraphQLInt },
     page_number: { type: GraphQLInt },
-    total_count: { type: GraphQLInt }
+    total_count: { type: GraphQLInt },
+    active_count: { type: GraphQLInt }
   })
 });
 

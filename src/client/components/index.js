@@ -7,6 +7,7 @@ export { CreateDeviceModal } from './CreateDeviceModal';
 export { DeviceItem } from './DeviceItem';
 export { DeviceList } from './DeviceList';
 export { Header } from './Header';
+export { InformationPiece } from './InformationPiece';
 export { LoginForm } from './LoginForm';
 export { LogsInfoMenu } from './LogsInfoMenu';
 export { NotificationBar } from './NotificationBar';

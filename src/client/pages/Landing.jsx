@@ -1,10 +1,15 @@
 import React from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { Box, Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 
 import { CREATE_DEVICE } from '@/api/mutation/device';
 import { GET_ALL_DEVICES } from '@/api/query/device';
-import { CreateDeviceModal, DeviceList, NotificationBar } from '@/components';
+import {
+  CreateDeviceModal,
+  DeviceList,
+  InformationPiece,
+  NotificationBar
+} from '@/components';
 import { getQtyOfPages } from '@/helpers';
 
 export const Landing = () => {
@@ -50,11 +55,42 @@ export const Landing = () => {
 
   return (
     <>
-      <Box sx={{ width: '100%', textAlign: 'end' }}>
-        <Button variant="contained" onClick={openCreateDeviceModal}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-around"
+        sx={{ mt: '10px', px: '50px' }}
+      >
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="flex-start"
+          sx={{ width: '100%' }}
+        >
+          <InformationPiece
+            title="Total devices:"
+            text={`${devicesData?.total_count}`}
+          />
+
+          <InformationPiece
+            title="Active devices:"
+            text={`${devicesData?.active_count}`}
+          />
+
+          <InformationPiece
+            title="Inactive devices:"
+            text={`${devicesData?.total_count - devicesData?.active_count}`}
+          />
+        </Stack>
+
+        <Button
+          variant="contained"
+          sx={{ width: '200px', height: '45px' }}
+          onClick={openCreateDeviceModal}
+        >
           Create device
         </Button>
-      </Box>
+      </Stack>
 
       {!!devicesData?.devices && !loadingDevicesData && (
         <DeviceList

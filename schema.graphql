@@ -13,6 +13,7 @@ type DevicesResponse {
   page_size: Int
   page_number: Int
   total_count: Int
+  active_count: Int
 }
 
 type Log {
