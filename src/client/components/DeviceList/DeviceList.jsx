@@ -80,6 +80,16 @@ export const DeviceList = ({
         >
           <Typography variant="h3">Week&apos;s logs</Typography>
         </Box>
+
+        <Box
+          sx={{
+            maxWidth: '5%',
+            width: '100%',
+            textAlign: 'center'
+          }}
+        >
+          <Typography variant="h3">Edit</Typography>
+        </Box>
       </Stack>
 
       {!devicesData.length ? (

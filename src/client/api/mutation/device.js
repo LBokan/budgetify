@@ -17,3 +17,23 @@ export const CREATE_DEVICE = gql`
     }
   }
 `;
+
+export const EDIT_DEVICE = gql`
+  mutation editDevice(
+    $id: ID
+    $deviceName: String!
+    $deviceType: String!
+    $isActive: Boolean!
+  ) {
+    editDevice(
+      id: $id
+      deviceName: $deviceName
+      deviceType: $deviceType
+      isActive: $isActive
+    ) {
+      deviceName
+      deviceType
+      isActive
+    }
+  }
+`;

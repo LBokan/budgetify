@@ -29,7 +29,8 @@ export const Landing = () => {
     }
   });
 
-  const [createDevice] = useMutation(CREATE_DEVICE);
+  const [createDevice, { error: errorCreateDevice }] =
+    useMutation(CREATE_DEVICE);
 
   const openCreateDeviceModal = () => {
     setIsOpenCreateDevice(true);
@@ -103,6 +104,10 @@ export const Landing = () => {
 
       {!!errorDevicesData && (
         <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
+      )}
+
+      {!!errorCreateDevice && (
+        <NotificationBar text={errorCreateDevice.message} typeOfBar="error" />
       )}
 
       <CreateDeviceModal
