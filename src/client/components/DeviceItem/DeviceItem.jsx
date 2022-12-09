@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 
 import { EDIT_DEVICE } from '@/api/mutation/device';
 import { GET_ALL_DEVICES } from '@/api/query/device';
+import { NotificationBar } from '@/components';
 import {
   getCurrentWeekDaysArr,
   getDateToday,
@@ -36,7 +37,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
   const { themeMode } = useThemeMode();
   const dateToday = getDateToday();
 
-  const [editDevice] = useMutation(EDIT_DEVICE, {
+  const [editDevice, { error: errorEditDevice }] = useMutation(EDIT_DEVICE, {
     refetchQueries: [GET_ALL_DEVICES]
   });
 
@@ -247,6 +248,10 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
           </IconButton>
         </Box>
       </Stack>
+
+      {!!errorEditDevice && (
+        <NotificationBar text={errorEditDevice.message} typeOfBar="error" />
+      )}
 
       <EditDeviceModal
         deviceData={deviceData}
