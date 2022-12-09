@@ -73,7 +73,7 @@ export const DeviceList = ({
 
         <Box
           sx={{
-            maxWidth: '20%',
+            maxWidth: '15%',
             width: '100%',
             textAlign: 'center'
           }}

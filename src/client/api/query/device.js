@@ -6,6 +6,7 @@ export const GET_ALL_DEVICES = gql`
       page_size
       page_number
       total_count
+      active_count
       devices {
         id
         deviceName

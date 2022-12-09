@@ -217,7 +217,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            maxWidth: '20%',
+            maxWidth: '15%',
             width: '100%',
             maxHeight: '120px',
             textAlign: 'center'
