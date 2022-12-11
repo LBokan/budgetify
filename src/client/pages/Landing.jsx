@@ -20,8 +20,7 @@ export const Landing = () => {
   const {
     loading: loadingDevicesData,
     error: errorDevicesData,
-    data: { getAllDevices: devicesData } = { getAllDevices: {} },
-    refetch: refetchDevicesData
+    data: { getAllDevices: devicesData } = { getAllDevices: {} }
   } = useQuery(GET_ALL_DEVICES, {
     variables: {
       offset,
@@ -29,8 +28,10 @@ export const Landing = () => {
     }
   });
 
-  const [createDevice, { error: errorCreateDevice }] =
-    useMutation(CREATE_DEVICE);
+  const [createDevice, { error: errorCreateDevice }] = useMutation(
+    CREATE_DEVICE,
+    { refetchQueries: [GET_ALL_DEVICES] }
+  );
 
   const openCreateDeviceModal = () => {
     setIsOpenCreateDevice(true);
@@ -46,8 +47,7 @@ export const Landing = () => {
         deviceName: data.deviceName,
         deviceType: data.deviceType,
         isActive: data.isActive
-      },
-      onCompleted: refetchDevicesData
+      }
     });
     closeCreateDeviceModal();
   };

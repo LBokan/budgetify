@@ -47,6 +47,22 @@ const MuiIconButton = {
     },
     colorInherit: {
       color: grey[50]
+    },
+    colorSuccess: {
+      color: grey[50],
+      backgroundColor: teal[800],
+      '&:hover': {
+        color: teal[800],
+        backgroundColor: yellow[700]
+      }
+    },
+    colorError: {
+      color: grey[50],
+      backgroundColor: red[700],
+      '&:hover': {
+        color: teal[800],
+        backgroundColor: yellow[700]
+      }
     }
   }
 };
