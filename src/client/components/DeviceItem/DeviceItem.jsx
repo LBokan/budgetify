@@ -1,14 +1,14 @@
 import React from 'react';
-import { useMutation } from '@apollo/client';
-import { Edit, ExpandMore } from '@mui/icons-material';
+import { useApolloClient, useMutation } from '@apollo/client';
+import { Delete, Edit, ExpandMore } from '@mui/icons-material';
 import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { green, red } from '@mui/material/colors';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
-import { EDIT_DEVICE } from '@/api/mutation/device';
+import { DELETE_DEVICE, EDIT_DEVICE } from '@/api/mutation/device';
 import { GET_ALL_DEVICES } from '@/api/query/device';
-import { NotificationBar } from '@/components';
+import { ConfirmationModal, NotificationBar } from '@/components';
 import {
   getCurrentWeekDaysArr,
   getDateToday,
@@ -30,6 +30,7 @@ import {
 export const DeviceItem = ({ deviceData, maxLogsQty }) => {
   const [chosenDeviceData, setChosenDeviceData] = React.useState({});
   const [isOpenEditDevice, setIsOpenEditDevice] = React.useState(false);
+  const [isOpenDeleteDevice, setIsOpenDeleteDevice] = React.useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isOpenLogsMenu = Boolean(anchorEl);
@@ -37,9 +38,18 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
   const { themeMode } = useThemeMode();
   const dateToday = getDateToday();
 
+  const client = useApolloClient();
+
   const [editDevice, { error: errorEditDevice }] = useMutation(EDIT_DEVICE, {
     refetchQueries: [GET_ALL_DEVICES]
   });
+
+  const [deleteDevice, { error: errorDeleteDevice }] = useMutation(
+    DELETE_DEVICE,
+    {
+      refetchQueries: [GET_ALL_DEVICES]
+    }
+  );
 
   const todayLogsArr = deviceData?.allDeviceLogs.filter(
     (log) => moment(log.date).format('YYYY-MM-DD') == dateToday
@@ -102,6 +112,19 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
     setIsOpenEditDevice(true);
   };
 
+  const openDeleteDeviceModal = (deviceData) => {
+    setChosenDeviceData(deviceData);
+    setIsOpenDeleteDevice(true);
+  };
+
+  const closeEditDeviceModal = () => {
+    setIsOpenEditDevice(false);
+  };
+
+  const closeDeleteDeviceModal = () => {
+    setIsOpenDeleteDevice(false);
+  };
+
   const editDeviceOnSubmit = (data) => {
     editDevice({
       variables: {
@@ -114,8 +137,16 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
     closeEditDeviceModal();
   };
 
-  const closeEditDeviceModal = () => {
-    setIsOpenEditDevice(false);
+  const deleteDeviceOnSubmit = () => {
+    deleteDevice({
+      variables: {
+        id: chosenDeviceData.id
+      },
+      onCompleted: () => {
+        client.resetStore();
+      }
+    });
+    closeDeleteDeviceModal();
   };
 
   return (
@@ -231,11 +262,12 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            maxWidth: '5%',
+            maxWidth: '10%',
             width: '100%'
           }}
         >
           <IconButton
+            color="success"
             sx={{
               ml: '10px',
               width: '40px',
@@ -246,6 +278,19 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
           >
             <Edit sx={{ width: '100%', height: '100%' }} />
           </IconButton>
+
+          <IconButton
+            color="error"
+            sx={{
+              ml: '10px',
+              width: '40px',
+              maxHeight: '40px'
+            }}
+            onClick={() => openDeleteDeviceModal(deviceData)}
+            aria-label="Delete device"
+          >
+            <Delete sx={{ width: '100%', height: '100%' }} />
+          </IconButton>
         </Box>
       </Stack>
 
@@ -253,11 +298,23 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
         <NotificationBar text={errorEditDevice.message} typeOfBar="error" />
       )}
 
+      {!!errorDeleteDevice && (
+        <NotificationBar text={errorDeleteDevice.message} typeOfBar="error" />
+      )}
+
       <EditDeviceModal
         deviceData={deviceData}
         isOpen={isOpenEditDevice}
         onClose={closeEditDeviceModal}
         onSubmit={editDeviceOnSubmit}
+      />
+
+      <ConfirmationModal
+        isOpen={isOpenDeleteDevice}
+        onClose={closeDeleteDeviceModal}
+        onSubmit={deleteDeviceOnSubmit}
+        title="Device deletion"
+        text="Are you sure you want to delete the device?"
       />
 
       <LogsInfoMenu

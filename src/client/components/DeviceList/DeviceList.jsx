@@ -14,7 +14,7 @@ export const DeviceList = ({
   chosenPageNumber,
   setOffset
 }) => {
-  const [page, setPage] = React.useState(chosenPageNumber + 1);
+  const [page, setPage] = React.useState(chosenPageNumber);
 
   const handleChange = (event, value) => {
     setOffset(value - 1);
@@ -83,13 +83,11 @@ export const DeviceList = ({
 
         <Box
           sx={{
-            maxWidth: '5%',
+            maxWidth: '10%',
             width: '100%',
             textAlign: 'center'
           }}
-        >
-          <Typography variant="h3">Edit</Typography>
-        </Box>
+        />
       </Stack>
 
       {!devicesData.length ? (

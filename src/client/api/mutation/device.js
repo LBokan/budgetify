@@ -37,3 +37,11 @@ export const EDIT_DEVICE = gql`
     }
   }
 `;
+
+export const DELETE_DEVICE = gql`
+  mutation deleteDevice($id: ID) {
+    deleteDevice(id: $id) {
+      id
+    }
+  }
+`;
