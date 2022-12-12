@@ -34,7 +34,7 @@ const Query = new GraphQLObjectType({
             .skip(args.offset * args.limit)
             .sort({ dateOfCreate: -1 }),
           page_size: args.limit,
-          page_number: args.offset,
+          page_number: args.offset + 1,
           total_count: Devices.count(),
           active_count: Devices.find({ isActive: true }).count()
         };

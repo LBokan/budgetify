@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { Button, Stack } from '@mui/material';
 
 import { CREATE_DEVICE } from '@/api/mutation/device';
@@ -16,6 +16,8 @@ export const Landing = () => {
   const [isOpenCreateDevice, setIsOpenCreateDevice] = React.useState(false);
   const [offset, setOffset] = React.useState(0);
   const limitPerPage = 3;
+
+  const client = useApolloClient();
 
   const {
     loading: loadingDevicesData,
@@ -47,6 +49,9 @@ export const Landing = () => {
         deviceName: data.deviceName,
         deviceType: data.deviceType,
         isActive: data.isActive
+      },
+      onCompleted: () => {
+        client.resetStore();
       }
     });
     closeCreateDeviceModal();
@@ -97,7 +102,7 @@ export const Landing = () => {
         <DeviceList
           devicesData={devicesData.devices}
           pagesQty={getQtyOfPages(devicesData?.total_count, limitPerPage) || 0}
-          chosenPageNumber={offset}
+          chosenPageNumber={devicesData.page_number}
           setOffset={setOffset}
         />
       )}

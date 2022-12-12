@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { Delete, Edit, ExpandMore } from '@mui/icons-material';
 import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { green, red } from '@mui/material/colors';
@@ -37,6 +37,8 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
 
   const { themeMode } = useThemeMode();
   const dateToday = getDateToday();
+
+  const client = useApolloClient();
 
   const [editDevice, { error: errorEditDevice }] = useMutation(EDIT_DEVICE, {
     refetchQueries: [GET_ALL_DEVICES]
@@ -139,6 +141,9 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
     deleteDevice({
       variables: {
         id: chosenDeviceData.id
+      },
+      onCompleted: () => {
+        client.resetStore();
       }
     });
     closeDeleteDeviceModal();

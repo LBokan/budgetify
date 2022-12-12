@@ -14,7 +14,7 @@ export const DeviceList = ({
   chosenPageNumber,
   setOffset
 }) => {
-  const [page, setPage] = React.useState(chosenPageNumber + 1);
+  const [page, setPage] = React.useState(chosenPageNumber);
 
   const handleChange = (event, value) => {
     setOffset(value - 1);
