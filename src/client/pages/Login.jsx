@@ -4,7 +4,7 @@ import { RoomPreferences } from '@mui/icons-material';
 import { Box, Button, Icon, Stack, Typography } from '@mui/material';
 import { teal } from '@mui/material/colors';
 
-import { CREATE_USER } from '@/api/mutation/user';
+import { REGISTRATION } from '@/api/mutation/user';
 import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
 import {
   ContentWrapper,
@@ -25,7 +25,7 @@ export const Login = () => {
 
   const { themeMode } = useThemeMode();
 
-  const [createUser, { error: errorCreateUser }] = useMutation(CREATE_USER);
+  const [createUser, { error: errorCreateUser }] = useMutation(REGISTRATION);
 
   const setBorderColor = (mode) => {
     switch (mode) {
