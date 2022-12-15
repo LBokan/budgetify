@@ -1,16 +1,33 @@
 import React from 'react';
+import { useMutation } from '@apollo/client';
 import { RoomPreferences } from '@mui/icons-material';
-import { Box, Icon, Typography } from '@mui/material';
+import { Box, Button, Icon, Stack, Typography } from '@mui/material';
 import { teal } from '@mui/material/colors';
 
+import { CREATE_USER } from '@/api/mutation/user';
 import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
-import { ContentWrapper, LoginForm, ThemeButton } from '@/components';
+import {
+  ContentWrapper,
+  CreateUserModal,
+  LoginForm,
+  NotificationBar,
+  ThemeButton
+} from '@/components';
 import { useThemeMode } from '@/hooks';
 
 export const Login = () => {
+  const [isOpenCreateUserModal, setIsOpenCreateUserModal] =
+    React.useState(false);
+  const [isOpenCreateUserError, setIsOpenCreateUserError] =
+    React.useState(false);
+  const [isOpenCreateUserSuccess, setIsOpenCreateUserSuccess] =
+    React.useState(false);
+
   const { themeMode } = useThemeMode();
 
-  const setIconBorderColor = (mode) => {
+  const [createUser, { error: errorCreateUser }] = useMutation(CREATE_USER);
+
+  const setBorderColor = (mode) => {
     switch (mode) {
       case 'light':
         return `${teal[800]}`;
@@ -27,41 +44,120 @@ export const Login = () => {
     position: 'absolute',
     top: 'auto',
     left: '-150px',
-    border: `2px solid ${setIconBorderColor(themeMode)}`
+    border: `2px solid ${setBorderColor(themeMode)}`
+  };
+
+  const openCreateUserModal = () => {
+    setIsOpenCreateUserModal(true);
+  };
+
+  const closeCreateUserModal = () => {
+    setIsOpenCreateUserModal(false);
+  };
+
+  const createUserOnSubmit = (data) => {
+    createUser({
+      variables: {
+        email: data.email,
+        password: data.password
+      },
+      onCompleted: () => {
+        setIsOpenCreateUserSuccess(true);
+      },
+      onError: () => {
+        setIsOpenCreateUserError(true);
+      }
+    });
+    closeCreateUserModal();
   };
 
   return (
-    <ContentWrapper type="main" isLoginPage>
-      <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-        <Icon sx={{ mr: '5px', width: '45px', height: '45px' }}>
-          <RoomPreferences
-            sx={{ width: '100%', height: '100%' }}
-            aria-label="SmartHome logo"
-          />
-        </Icon>
-        <Typography variant="h1" sx={{ fontSize: '46px' }}>
-          SmartHome
+    <>
+      <ContentWrapper type="main" isLoginPage>
+        <Stack
+          direction="row"
+          sx={{
+            position: 'relative'
+          }}
+        >
+          <Icon sx={{ mr: '5px', width: '45px', height: '45px' }}>
+            <RoomPreferences
+              sx={{ width: '100%', height: '100%' }}
+              aria-label="SmartHome logo"
+            />
+          </Icon>
+          <Typography variant="h1" sx={{ fontSize: '46px' }}>
+            SmartHome
+          </Typography>
+
+          <ThemeButton stylesObj={themeSwitcherStyles} />
+        </Stack>
+        <Typography variant="h3" sx={{ mt: '40px', mb: '35px' }}>
+          Sign in and start managing your house!
         </Typography>
 
-        <ThemeButton stylesObj={themeSwitcherStyles} />
-      </Box>
-      <Typography sx={{ mt: '40px', mb: '35px' }}>
-        Sign in and start managing your house!
-      </Typography>
+        <LoginForm />
 
-      <LoginForm />
+        <Stack
+          alignItems="center"
+          sx={{
+            position: 'relative',
+            zIndex: '1',
+            mt: '30px',
+            p: '20px 50px',
+            maxWidth: '400px',
+            width: '100%',
+            borderTop: `1px solid ${setBorderColor(themeMode)}`
+          }}
+        >
+          <Typography variant="h3">Don&apos;t have an account?</Typography>
 
-      <Box
-        component="img"
-        sx={{
-          position: 'absolute',
-          bottom: '0',
-          minWidth: '100%',
-          maxHeight: '111px'
-        }}
-        alt="Waves image"
-        src={themeMode === 'light' ? loginWavesLightImage : loginWavesDarkImage}
+          <Button
+            sx={{ mt: '10px', height: '40px' }}
+            variant="outlined"
+            fullWidth
+            onClick={openCreateUserModal}
+          >
+            Create a new user
+          </Button>
+        </Stack>
+
+        <Box
+          component="img"
+          sx={{
+            position: 'absolute',
+            bottom: '0',
+            minWidth: '100%',
+            maxHeight: '111px'
+          }}
+          alt="Waves image"
+          src={
+            themeMode === 'light' ? loginWavesLightImage : loginWavesDarkImage
+          }
+        />
+      </ContentWrapper>
+
+      {!!isOpenCreateUserError && (
+        <NotificationBar
+          text={errorCreateUser.message}
+          typeOfBar="error"
+          setIsClose={setIsOpenCreateUserError}
+        />
+      )}
+
+      {!!isOpenCreateUserSuccess && (
+        <NotificationBar
+          text={'User was created successfully'}
+          typeOfBar="success"
+          setIsClose={setIsOpenCreateUserSuccess}
+        />
+      )}
+
+      <CreateUserModal
+        isOpen={isOpenCreateUserModal}
+        onClose={closeCreateUserModal}
+        onSubmit={createUserOnSubmit}
       />
-    </ContentWrapper>
+    </>
   );
 };

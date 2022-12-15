@@ -4,6 +4,7 @@ export { ConfirmationModal } from './ConfirmationModal';
 export { ContentContainer } from './ContentContainer';
 export { ContentWrapper } from './ContentWrapper';
 export { CreateDeviceModal } from './CreateDeviceModal';
+export { CreateUserModal } from './CreateUserModal';
 export { DeviceItem } from './DeviceItem';
 export { DeviceList } from './DeviceList';
 export { EditDeviceModal } from './EditDeviceModal';

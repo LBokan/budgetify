@@ -12,6 +12,15 @@ const { getCurrentWeekLogsArr } = require('../helpers/databaseHelpers');
 
 const Logs = require('../models/log');
 
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  fields: () => ({
+    id: { type: GraphQLID },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: GraphQLString }
+  })
+});
+
 const DeviceType = new GraphQLObjectType({
   name: 'Device',
   fields: () => ({
@@ -84,4 +93,10 @@ const TypeType = new GraphQLObjectType({
   })
 });
 
-module.exports = { DeviceType, DevicesResponseType, LogType, TypeType };
+module.exports = {
+  UserType,
+  DeviceType,
+  DevicesResponseType,
+  LogType,
+  TypeType
+};
