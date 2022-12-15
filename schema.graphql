@@ -53,7 +53,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(email: String!, password: String!): User
+  registration(email: String!, password: String!): User
   createDevice(
     deviceName: String!
     deviceType: String!

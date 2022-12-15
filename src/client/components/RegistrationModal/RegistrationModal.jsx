@@ -35,7 +35,7 @@ const validationSchema = yup.object({
     .required('Password is required')
 });
 
-export const CreateUserModal = ({ isOpen, onClose, onSubmit }) => {
+export const RegistrationModal = ({ isOpen, onClose, onSubmit }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
     React.useState(false);
@@ -230,7 +230,7 @@ export const CreateUserModal = ({ isOpen, onClose, onSubmit }) => {
   );
 };
 
-CreateUserModal.propTypes = {
+RegistrationModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired

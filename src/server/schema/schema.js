@@ -75,7 +75,7 @@ const Query = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    createUser: {
+    registration: {
       type: UserType,
       args: {
         email: { type: new GraphQLNonNull(GraphQLString) },

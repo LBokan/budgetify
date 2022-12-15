@@ -8,24 +8,25 @@ import { REGISTRATION } from '@/api/mutation/user';
 import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
 import {
   ContentWrapper,
-  CreateUserModal,
   LoginForm,
   NotificationBar,
+  RegistrationModal,
   ThemeButton
 } from '@/components';
 import { useThemeMode } from '@/hooks';
 
 export const Login = () => {
-  const [isOpenCreateUserModal, setIsOpenCreateUserModal] =
+  const [isOpenRegistrationModal, setIsOpenRegistrationModal] =
     React.useState(false);
-  const [isOpenCreateUserError, setIsOpenCreateUserError] =
+  const [isOpenRegistrationError, setIsOpenRegistrationError] =
     React.useState(false);
-  const [isOpenCreateUserSuccess, setIsOpenCreateUserSuccess] =
+  const [isOpenRegistrationSuccess, setIsOpenRegistrationSuccess] =
     React.useState(false);
 
   const { themeMode } = useThemeMode();
 
-  const [createUser, { error: errorCreateUser }] = useMutation(REGISTRATION);
+  const [registration, { error: errorRegistration }] =
+    useMutation(REGISTRATION);
 
   const setBorderColor = (mode) => {
     switch (mode) {
@@ -47,28 +48,28 @@ export const Login = () => {
     border: `2px solid ${setBorderColor(themeMode)}`
   };
 
-  const openCreateUserModal = () => {
-    setIsOpenCreateUserModal(true);
+  const openRegistrationModal = () => {
+    setIsOpenRegistrationModal(true);
   };
 
-  const closeCreateUserModal = () => {
-    setIsOpenCreateUserModal(false);
+  const closeRegistrationModal = () => {
+    setIsOpenRegistrationModal(false);
   };
 
-  const createUserOnSubmit = (data) => {
-    createUser({
+  const registerOnSubmit = (data) => {
+    registration({
       variables: {
         email: data.email,
         password: data.password
       },
       onCompleted: () => {
-        setIsOpenCreateUserSuccess(true);
+        setIsOpenRegistrationSuccess(true);
       },
       onError: () => {
-        setIsOpenCreateUserError(true);
+        setIsOpenRegistrationError(true);
       }
     });
-    closeCreateUserModal();
+    closeRegistrationModal();
   };
 
   return (
@@ -116,7 +117,7 @@ export const Login = () => {
             sx={{ mt: '10px', height: '40px' }}
             variant="outlined"
             fullWidth
-            onClick={openCreateUserModal}
+            onClick={openRegistrationModal}
           >
             Create a new user
           </Button>
@@ -137,26 +138,26 @@ export const Login = () => {
         />
       </ContentWrapper>
 
-      {!!isOpenCreateUserError && (
+      {!!isOpenRegistrationError && (
         <NotificationBar
-          text={errorCreateUser.message}
+          text={errorRegistration.message}
           typeOfBar="error"
-          setIsClose={setIsOpenCreateUserError}
+          setIsClose={setIsOpenRegistrationError}
         />
       )}
 
-      {!!isOpenCreateUserSuccess && (
+      {!!isOpenRegistrationSuccess && (
         <NotificationBar
           text={'User was created successfully'}
           typeOfBar="success"
-          setIsClose={setIsOpenCreateUserSuccess}
+          setIsClose={setIsOpenRegistrationSuccess}
         />
       )}
 
-      <CreateUserModal
-        isOpen={isOpenCreateUserModal}
-        onClose={closeCreateUserModal}
-        onSubmit={createUserOnSubmit}
+      <RegistrationModal
+        isOpen={isOpenRegistrationModal}
+        onClose={closeRegistrationModal}
+        onSubmit={registerOnSubmit}
       />
     </>
   );
