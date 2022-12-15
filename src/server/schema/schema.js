@@ -75,9 +75,12 @@ const Query = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    registration: {
+    signUp: {
       type: UserType,
       args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        surname: { type: new GraphQLNonNull(GraphQLString) },
+        mobileNumber: { type: GraphQLString },
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) }
       },
@@ -93,6 +96,9 @@ const Mutation = new GraphQLObjectType({
 
           .then((hashedPassword) => {
             const user = new Users({
+              name: args.name,
+              surname: args.surname,
+              mobileNumber: args.mobileNumber,
               email: args.email,
               password: hashedPassword
             });

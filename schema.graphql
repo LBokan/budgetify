@@ -1,5 +1,8 @@
 type User {
   id: ID
+  name: String!
+  surname: String!
+  mobileNumber: String
   email: String!
   password: String
 }
@@ -53,7 +56,13 @@ type Query {
 }
 
 type Mutation {
-  registration(email: String!, password: String!): User
+  signUp(
+    name: String!
+    surname: String!
+    mobileNumber: String
+    email: String!
+    password: String!
+  ): User
   createDevice(
     deviceName: String!
     deviceType: String!

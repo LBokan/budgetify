@@ -4,29 +4,25 @@ import { RoomPreferences } from '@mui/icons-material';
 import { Box, Button, Icon, Stack, Typography } from '@mui/material';
 import { teal } from '@mui/material/colors';
 
-import { REGISTRATION } from '@/api/mutation/user';
+import { SIGN_UP } from '@/api/mutation/user';
 import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
 import {
   ContentWrapper,
   LoginForm,
   NotificationBar,
-  RegistrationModal,
+  SignUpModal,
   ThemeButton
 } from '@/components';
 import { useThemeMode } from '@/hooks';
 
 export const Login = () => {
-  const [isOpenRegistrationModal, setIsOpenRegistrationModal] =
-    React.useState(false);
-  const [isOpenRegistrationError, setIsOpenRegistrationError] =
-    React.useState(false);
-  const [isOpenRegistrationSuccess, setIsOpenRegistrationSuccess] =
-    React.useState(false);
+  const [isOpenSignUpModal, setIsOpenSignUpModal] = React.useState(false);
+  const [isOpenSignUpError, setIsOpenSignUpError] = React.useState(false);
+  const [isOpenSignUpSuccess, setIsOpenSignUpSuccess] = React.useState(false);
 
   const { themeMode } = useThemeMode();
 
-  const [registration, { error: errorRegistration }] =
-    useMutation(REGISTRATION);
+  const [signUp, { error: errorSignUp }] = useMutation(SIGN_UP);
 
   const setBorderColor = (mode) => {
     switch (mode) {
@@ -48,28 +44,32 @@ export const Login = () => {
     border: `2px solid ${setBorderColor(themeMode)}`
   };
 
-  const openRegistrationModal = () => {
-    setIsOpenRegistrationModal(true);
+  const openSignUpModal = () => {
+    setIsOpenSignUpModal(true);
   };
 
-  const closeRegistrationModal = () => {
-    setIsOpenRegistrationModal(false);
+  const closeSignUpModal = () => {
+    setIsOpenSignUpModal(false);
   };
 
-  const registerOnSubmit = (data) => {
-    registration({
+  const signUpOnSubmit = (data, resetForm) => {
+    signUp({
       variables: {
+        name: data.name,
+        surname: data.surname,
+        mobileNumber: data.mobileNumber || null,
         email: data.email,
         password: data.password
       },
       onCompleted: () => {
-        setIsOpenRegistrationSuccess(true);
+        setIsOpenSignUpSuccess(true);
+        closeSignUpModal();
+        resetForm();
       },
       onError: () => {
-        setIsOpenRegistrationError(true);
+        setIsOpenSignUpError(true);
       }
     });
-    closeRegistrationModal();
   };
 
   return (
@@ -117,9 +117,9 @@ export const Login = () => {
             sx={{ mt: '10px', height: '40px' }}
             variant="outlined"
             fullWidth
-            onClick={openRegistrationModal}
+            onClick={openSignUpModal}
           >
-            Create a new user
+            Sign up
           </Button>
         </Stack>
 
@@ -138,26 +138,26 @@ export const Login = () => {
         />
       </ContentWrapper>
 
-      {!!isOpenRegistrationError && (
+      {!!isOpenSignUpError && (
         <NotificationBar
-          text={errorRegistration.message}
+          text={errorSignUp.message}
           typeOfBar="error"
-          setIsClose={setIsOpenRegistrationError}
+          setIsClose={setIsOpenSignUpError}
         />
       )}
 
-      {!!isOpenRegistrationSuccess && (
+      {!!isOpenSignUpSuccess && (
         <NotificationBar
-          text={'User was created successfully'}
+          text={'Sign up was successful'}
           typeOfBar="success"
-          setIsClose={setIsOpenRegistrationSuccess}
+          setIsClose={setIsOpenSignUpSuccess}
         />
       )}
 
-      <RegistrationModal
-        isOpen={isOpenRegistrationModal}
-        onClose={closeRegistrationModal}
-        onSubmit={registerOnSubmit}
+      <SignUpModal
+        isOpen={isOpenSignUpModal}
+        onClose={closeSignUpModal}
+        onSubmit={signUpOnSubmit}
       />
     </>
   );

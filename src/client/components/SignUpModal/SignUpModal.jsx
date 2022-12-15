@@ -24,18 +24,35 @@ import { ConfirmationModal } from '../ConfirmationModal';
 
 import { setBgColor, setBorder, setIconColor } from './styles';
 
+const mobileNumberRegExp =
+  /^[+]?[(]?[1-9]{1,2}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{3}[-s.]?[0-9]{3}$/;
+
 const validationSchema = yup.object({
+  name: yup.string('Enter your name').trim().required('Name is required'),
+  surname: yup
+    .string('Enter your surname')
+    .trim()
+    .required('Surname is required'),
+  mobileNumber: yup
+    .string('Enter your mobile number')
+    .trim()
+    .matches(
+      mobileNumberRegExp,
+      'Mobile number is not valid (format: +XX-XXX-XXX-XXX)'
+    ),
   email: yup
     .string('Enter your email')
+    .trim()
     .email('Enter a valid email')
     .required('Email is required'),
   password: yup
     .string('Enter your password')
+    .trim()
     .min(8, 'Password should be of minimum 8 characters length')
     .required('Password is required')
 });
 
-export const RegistrationModal = ({ isOpen, onClose, onSubmit }) => {
+export const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
     React.useState(false);
@@ -44,13 +61,15 @@ export const RegistrationModal = ({ isOpen, onClose, onSubmit }) => {
 
   const formik = useFormik({
     initialValues: {
+      name: '',
+      surname: '',
+      mobileNumber: '',
       email: '',
       password: ''
     },
     validationSchema: validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      onSubmit(values);
-      resetForm({ values: '' });
+    onSubmit: (values) => {
+      onSubmit(values, formik.handleReset);
     }
   });
 
@@ -102,14 +121,131 @@ export const RegistrationModal = ({ isOpen, onClose, onSubmit }) => {
               right: '10px'
             }}
             onClick={formik.dirty ? openConfirmationModal : resetFormOnClose}
-            aria-label="Close create device modal"
+            aria-label="Close sign up modal"
           >
             <Close />
           </IconButton>
 
           <Typography variant="h2" sx={{ mb: '35px', fontSize: '18px' }}>
-            Add new user
+            Sign up
           </Typography>
+
+          <Stack direction="row">
+            <FormControl
+              sx={{
+                position: 'relative',
+                mr: '20px',
+                pb: '40px'
+              }}
+              fullWidth
+            >
+              <InputLabel
+                htmlFor="name"
+                required
+                size="small"
+                sx={{ top: '2px' }}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+              >
+                Name
+              </InputLabel>
+              <InputBase
+                id="name"
+                size="medium"
+                sx={{ minHeight: '45px' }}
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+              />
+              <FormHelperText
+                sx={{
+                  position: 'absolute',
+                  bottom: '20px'
+                }}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+              >
+                {formik.touched.name && formik.errors.name}
+              </FormHelperText>
+            </FormControl>
+
+            <FormControl
+              sx={{
+                position: 'relative',
+                pb: '40px'
+              }}
+              fullWidth
+            >
+              <InputLabel
+                htmlFor="surname"
+                required
+                size="small"
+                sx={{ top: '2px' }}
+                error={formik.touched.surname && Boolean(formik.errors.surname)}
+              >
+                Surname
+              </InputLabel>
+              <InputBase
+                id="surname"
+                size="medium"
+                sx={{ minHeight: '45px' }}
+                value={formik.values.surname}
+                onChange={formik.handleChange}
+                error={formik.touched.surname && Boolean(formik.errors.surname)}
+              />
+              <FormHelperText
+                sx={{
+                  position: 'absolute',
+                  bottom: '20px'
+                }}
+                error={formik.touched.surname && Boolean(formik.errors.surname)}
+              >
+                {formik.touched.surname && formik.errors.surname}
+              </FormHelperText>
+            </FormControl>
+          </Stack>
+
+          <FormControl
+            sx={{
+              position: 'relative',
+              pb: '40px'
+            }}
+            fullWidth
+          >
+            <InputLabel
+              htmlFor="mobileNumber"
+              size="small"
+              sx={{ top: '2px' }}
+              error={
+                formik.touched.mobileNumber &&
+                Boolean(formik.errors.mobileNumber)
+              }
+            >
+              Mobile number
+            </InputLabel>
+            <InputBase
+              id="mobileNumber"
+              size="medium"
+              sx={{ minHeight: '45px' }}
+              placeholder="+XX-XXX-XXX-XXX"
+              value={formik.values.mobileNumber}
+              onChange={formik.handleChange}
+              error={
+                formik.touched.mobileNumber &&
+                Boolean(formik.errors.mobileNumber)
+              }
+            />
+            <FormHelperText
+              sx={{
+                position: 'absolute',
+                bottom: '20px'
+              }}
+              error={
+                formik.touched.mobileNumber &&
+                Boolean(formik.errors.mobileNumber)
+              }
+            >
+              {formik.touched.mobileNumber && formik.errors.mobileNumber}
+            </FormHelperText>
+          </FormControl>
 
           <FormControl
             sx={{
@@ -120,6 +256,7 @@ export const RegistrationModal = ({ isOpen, onClose, onSubmit }) => {
           >
             <InputLabel
               htmlFor="email"
+              required
               size="small"
               sx={{ top: '2px' }}
               error={formik.touched.email && Boolean(formik.errors.email)}
@@ -154,6 +291,7 @@ export const RegistrationModal = ({ isOpen, onClose, onSubmit }) => {
           >
             <InputLabel
               htmlFor="password"
+              required
               size="small"
               sx={{ top: '2px' }}
               error={formik.touched.password && Boolean(formik.errors.password)}
@@ -223,14 +361,14 @@ export const RegistrationModal = ({ isOpen, onClose, onSubmit }) => {
         isOpen={isOpenConfirmationModal}
         onClose={closeConfirmationModal}
         onSubmit={resetFormOnClose}
-        text="Do you really want to cancel the adding of a new user? All you entered data will be lost"
+        text="Do you really want to cancel sign up process? All you entered data will be lost"
         variant="danger"
       />
     </>
   );
 };
 
-RegistrationModal.propTypes = {
+SignUpModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired

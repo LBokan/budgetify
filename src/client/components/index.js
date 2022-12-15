@@ -12,7 +12,7 @@ export { InformationPiece } from './InformationPiece';
 export { LoginForm } from './LoginForm';
 export { LogsInfoMenu } from './LogsInfoMenu';
 export { NotificationBar } from './NotificationBar';
-export { RegistrationModal } from './RegistrationModal';
 export { RouterLink } from './RouterLink';
 export { SelectControlled } from './SelectControlled';
+export { SignUpModal } from './SignUpModal';
 export { ThemeButton } from './ThemeButton';
