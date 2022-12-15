@@ -3,7 +3,11 @@ import { Close } from '@mui/icons-material';
 import { Alert, IconButton, Snackbar } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export const NotificationBar = ({ text, typeOfBar = 'info' }) => {
+export const NotificationBar = ({
+  text,
+  typeOfBar = 'info',
+  setIsClose = () => {}
+}) => {
   const [isOpenBar, setIsOpenBar] = React.useState(true);
 
   const handleClose = (event, reason) => {
@@ -11,6 +15,7 @@ export const NotificationBar = ({ text, typeOfBar = 'info' }) => {
       return;
     }
 
+    setIsClose(false);
     setIsOpenBar(false);
   };
 
@@ -47,5 +52,6 @@ export const NotificationBar = ({ text, typeOfBar = 'info' }) => {
 
 NotificationBar.propTypes = {
   text: PropTypes.string.isRequired,
-  typeOfBar: PropTypes.string
+  typeOfBar: PropTypes.string,
+  setIsClose: PropTypes.func
 };

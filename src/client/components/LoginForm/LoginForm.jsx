@@ -37,8 +37,9 @@ export const LoginForm = () => {
       password: ''
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       alert(JSON.stringify(values, null, 2));
+      resetForm({ values: '' });
     }
   });
 

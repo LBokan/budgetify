@@ -8,14 +8,17 @@ const {
   GraphQLNonNull,
   GraphQLList
 } = require('graphql');
+const bcrypt = require('bcrypt');
 
 const {
   DeviceType,
   DevicesResponseType,
   LogType,
-  TypeType
+  TypeType,
+  UserType
 } = require('./types');
 
+const Users = require('../models/user');
 const Devices = require('../models/device');
 const Logs = require('../models/log');
 const Types = require('../models/type');
@@ -72,6 +75,44 @@ const Query = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
+    signUp: {
+      type: UserType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        surname: { type: new GraphQLNonNull(GraphQLString) },
+        mobileNumber: { type: GraphQLString },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve: (parent, args) => {
+        return Users.findOne({ email: args.email })
+          .then((user) => {
+            if (user) {
+              throw new Error('A user with an email address already exists');
+            }
+
+            return bcrypt.hash(args.password, 12);
+          })
+
+          .then((hashedPassword) => {
+            const user = new Users({
+              name: args.name,
+              surname: args.surname,
+              mobileNumber: args.mobileNumber,
+              email: args.email,
+              password: hashedPassword
+            });
+
+            return user.save();
+          })
+          .then((result) => {
+            return { ...result._doc, password: null, _id: result.id };
+          })
+          .catch((error) => {
+            throw error;
+          });
+      }
+    },
     createDevice: {
       type: DeviceType,
       args: {

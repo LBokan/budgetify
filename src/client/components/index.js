@@ -14,4 +14,5 @@ export { LogsInfoMenu } from './LogsInfoMenu';
 export { NotificationBar } from './NotificationBar';
 export { RouterLink } from './RouterLink';
 export { SelectControlled } from './SelectControlled';
+export { SignUpModal } from './SignUpModal';
 export { ThemeButton } from './ThemeButton';
