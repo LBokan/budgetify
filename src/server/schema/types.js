@@ -8,9 +8,13 @@ const {
   GraphQLList
 } = require('graphql');
 
-const { getCurrentWeekLogsArr } = require('../helpers/databaseHelpers');
-
-const Logs = require('../models/log');
+const AuthDataType = new GraphQLObjectType({
+  name: 'AuthData',
+  fields: () => ({
+    userId: { type: GraphQLID },
+    token: { type: new GraphQLNonNull(GraphQLString) }
+  })
+});
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -20,7 +24,8 @@ const UserType = new GraphQLObjectType({
     surname: { type: new GraphQLNonNull(GraphQLString) },
     mobileNumber: { type: GraphQLString },
     email: { type: new GraphQLNonNull(GraphQLString) },
-    password: { type: GraphQLString }
+    password: { type: GraphQLString },
+    createdDevices: { type: new GraphQLList(new GraphQLNonNull(DeviceType)) }
   })
 });
 
@@ -33,20 +38,13 @@ const DeviceType = new GraphQLObjectType({
     deviceType: { type: new GraphQLNonNull(GraphQLString) },
     isActive: { type: new GraphQLNonNull(GraphQLBoolean) },
     allDeviceLogs: {
-      type: new GraphQLList(DeviceLogType),
-      resolve(parent) {
-        return new Promise((resolve) =>
-          resolve(Logs.find({ deviceId: parent.id }))
-        ).then((value) => value[0]?.deviceLogs);
-      }
+      type: new GraphQLList(DeviceLogType)
     },
     currentWeekLogs: {
-      type: new GraphQLList(DeviceLogType),
-      resolve(parent) {
-        return new Promise((resolve) =>
-          resolve(Logs.find({ deviceId: parent.id }))
-        ).then((value) => getCurrentWeekLogsArr(value[0]?.deviceLogs));
-      }
+      type: new GraphQLList(DeviceLogType)
+    },
+    creator: {
+      type: new GraphQLNonNull(UserType)
     }
   })
 });
@@ -97,6 +95,7 @@ const TypeType = new GraphQLObjectType({
 });
 
 module.exports = {
+  AuthDataType,
   UserType,
   DeviceType,
   DevicesResponseType,

@@ -4,7 +4,11 @@ const deviceSchema = new Schema({
   dateOfCreate: String,
   deviceName: String,
   deviceType: String,
-  isActive: Boolean
+  isActive: Boolean,
+  creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }
 });
 
 module.exports = model('Device', deviceSchema);

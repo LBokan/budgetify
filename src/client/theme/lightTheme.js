@@ -19,6 +19,13 @@ const MuiButton = {
       backgroundColor: green['A400'],
       boxShadow: `0 1px 4px ${grey[500]}`
     },
+    text: {
+      border: 'none',
+      backgroundColor: grey[300],
+      '&:hover': {
+        backgroundColor: yellow[700]
+      }
+    },
     outlined: {
       border: `1px solid ${teal[800]}`,
       backgroundColor: 'transparent',
