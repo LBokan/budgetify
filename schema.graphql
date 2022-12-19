@@ -1,3 +1,8 @@
+type AuthData {
+  userId: ID
+  token: String!
+}
+
 type User {
   id: ID
   name: String!
@@ -5,6 +10,7 @@ type User {
   mobileNumber: String
   email: String!
   password: String
+  createdDevices: [Device!]
 }
 
 type Device {
@@ -15,6 +21,7 @@ type Device {
   isActive: Boolean!
   allDeviceLogs: [DeviceLog]
   currentWeekLogs: [DeviceLog]
+  creator: [User!]
 }
 
 type DevicesResponse {
@@ -48,10 +55,11 @@ type Type {
 }
 
 type Query {
-  getAllDevices(offset: Int, limit: Int): [DevicesResponse]
-  getDevice(id: ID): [Device]
+  login(email: String!, password: String!): AuthData
+  getAllDevices(offset: Int, limit: Int): DevicesResponse
+  getDevice(id: ID): Device
   getAllLogs: [Log]
-  getDeviceLogs(id: ID): [Log]
+  getDeviceLogs(id: ID): Log
   getAllDeviceTypes: [Type]
 }
 

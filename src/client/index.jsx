@@ -6,13 +6,14 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { useThemeMode } from '@/hooks';
 
+import { apolloLink } from './helpers';
 import { store } from './store';
 import { darkTheme, lightTheme } from './theme';
 
 import './assets/styles/index.css';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:5000/graphql',
+  link: apolloLink,
   cache: new InMemoryCache()
 });
 

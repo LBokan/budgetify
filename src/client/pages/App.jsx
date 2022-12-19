@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import { PrivateRoute, PublicRoute } from '@/components';
 import { Layout } from '@/components/Layout';
 
 import { Devices } from './Devices';
@@ -12,10 +13,24 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute restricted redirectTo="/">
+              <Login />
+            </PublicRoute>
+          }
+        />
         {/* <Route path="*" element={<Fallback />} /> */}
 
-        <Route path="/" element={<Layout />}>
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<Landing />} />
           <Route path="devices" element={<Devices />} />
           <Route path="logs" element={<Logs />} />

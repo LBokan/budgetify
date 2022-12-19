@@ -11,6 +11,7 @@ import {
   InputLabel
 } from '@mui/material';
 import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
 import * as yup from 'yup';
 
 import { useThemeMode } from '@/hooks';
@@ -28,7 +29,7 @@ const validationSchema = yup.object({
     .required('Password is required')
 });
 
-export const LoginForm = () => {
+export const LoginForm = ({ onSubmit }) => {
   const { themeMode } = useThemeMode();
 
   const formik = useFormik({
@@ -38,7 +39,7 @@ export const LoginForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values, { resetForm }) => {
-      alert(JSON.stringify(values, null, 2));
+      onSubmit(values);
       resetForm({ values: '' });
     }
   });
@@ -144,4 +145,8 @@ export const LoginForm = () => {
       </Button>
     </Box>
   );
+};
+
+LoginForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired
 };

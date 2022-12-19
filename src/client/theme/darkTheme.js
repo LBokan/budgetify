@@ -17,7 +17,14 @@ const MuiButton = {
       borderRadius: '10px',
       color: grey[50],
       backgroundColor: green['A700'],
-      boxShadow: `0 4px 4px ${blueGrey[900]}`
+      boxShadow: `0 1px 4px ${blueGrey[900]}`
+    },
+    text: {
+      border: 'none',
+      backgroundColor: blueGrey[600],
+      '&:hover': {
+        backgroundColor: yellow[900]
+      }
     },
     outlined: {
       border: `1px solid ${grey[50]}`,

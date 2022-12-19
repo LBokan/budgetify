@@ -13,6 +13,8 @@ export { LoginForm } from './LoginForm';
 export { LogsInfoMenu } from './LogsInfoMenu';
 export { NotificationBar } from './NotificationBar';
 export { RouterLink } from './RouterLink';
+export { PrivateRoute, PublicRoute } from './Routes';
 export { SelectControlled } from './SelectControlled';
+export { SettingsModal } from './SettingsModal';
 export { SignUpModal } from './SignUpModal';
 export { ThemeButton } from './ThemeButton';

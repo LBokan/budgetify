@@ -9,45 +9,117 @@ const {
   GraphQLList
 } = require('graphql');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const {
   DeviceType,
   DevicesResponseType,
   LogType,
   TypeType,
-  UserType
+  UserType,
+  AuthDataType
 } = require('./types');
 
 const Users = require('../models/user');
 const Devices = require('../models/device');
 const Logs = require('../models/log');
 const Types = require('../models/type');
-const { createLogs } = require('../helpers/databaseHelpers');
+const {
+  createLogs,
+  getCurrentWeekLogsArr
+} = require('../helpers/databaseHelpers');
+const { getUserData } = require('../helpers/graphqlHelpers');
 
 const Query = new GraphQLObjectType({
   name: 'Query',
   fields: {
+    login: {
+      type: AuthDataType,
+      args: {
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      resolve: async (parent, args) => {
+        const userData = await Users.findOne({ email: args.email });
+
+        if (!userData) {
+          throw new Error('A user with an email address does not exist');
+        }
+
+        const isEqualPassword = await bcrypt.compare(
+          args.password,
+          userData.password
+        );
+
+        if (!isEqualPassword) {
+          throw new Error('The entered password is incorrect');
+        }
+
+        const token = await jwt.sign(
+          {
+            userId: userData.id,
+            email: userData.email
+          },
+          'smarthometokenkey',
+          { expiresIn: '1h' }
+        );
+
+        return {
+          userId: userData.id,
+          token: token
+        };
+      }
+    },
     getAllDevices: {
       type: DevicesResponseType,
       args: { offset: { type: GraphQLInt }, limit: { type: GraphQLInt } },
-      resolve(parent, args) {
+      resolve: async (parent, args, request) => {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
+        const devices = await Devices.find({
+          creator: request.userId
+        })
+          .limit(args.limit)
+          .skip(args.offset * args.limit)
+          .sort({ dateOfCreate: -1 });
+
+        const devicesData = devices.map((device) => {
+          return {
+            ...device._doc,
+            id: device.id,
+            allDeviceLogs: Logs.find({ deviceId: device.id }).then(
+              (value) => value[0]?.deviceLogs
+            ),
+            currentWeekLogs: Logs.find({ deviceId: device.id }).then((value) =>
+              getCurrentWeekLogsArr(value[0]?.deviceLogs)
+            ),
+            creator: getUserData.bind(this, device._doc.creator)
+          };
+        });
+
         return {
-          devices: Devices.find()
-            .limit(args.limit)
-            .skip(args.offset * args.limit)
-            .sort({ dateOfCreate: -1 }),
+          devices: devicesData,
           page_size: args.limit,
           page_number: args.offset + 1,
-          total_count: Devices.count(),
-          active_count: Devices.find({ isActive: true }).count()
+          total_count: Devices.find({
+            creator: request.userId
+          }).count(),
+          active_count: Devices.find({
+            creator: request.userId,
+            isActive: true
+          }).count()
         };
       }
     },
     getDevice: {
       type: DeviceType,
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
-        return Devices.findById(args.id);
+      resolve(parent, args, request) {
+        return Devices.find({
+          creator: request.userId
+        }).findById(args.id);
       }
     },
     getAllLogs: {
@@ -84,33 +156,26 @@ const Mutation = new GraphQLObjectType({
         email: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve: (parent, args) => {
-        return Users.findOne({ email: args.email })
-          .then((user) => {
-            if (user) {
-              throw new Error('A user with an email address already exists');
-            }
+      resolve: async (parent, args) => {
+        const userData = await Users.findOne({ email: args.email });
 
-            return bcrypt.hash(args.password, 12);
-          })
+        if (userData) {
+          throw new Error('A user with an email address already exists');
+        }
 
-          .then((hashedPassword) => {
-            const user = new Users({
-              name: args.name,
-              surname: args.surname,
-              mobileNumber: args.mobileNumber,
-              email: args.email,
-              password: hashedPassword
-            });
+        const hashedPassword = await bcrypt.hash(args.password, 12);
 
-            return user.save();
-          })
-          .then((result) => {
-            return { ...result._doc, password: null, _id: result.id };
-          })
-          .catch((error) => {
-            throw error;
-          });
+        const user = new Users({
+          name: args.name,
+          surname: args.surname,
+          mobileNumber: args.mobileNumber,
+          email: args.email,
+          password: hashedPassword
+        });
+
+        const result = await user.save();
+
+        return { ...result._doc, id: result.id, password: null };
       }
     },
     createDevice: {
@@ -120,14 +185,19 @@ const Mutation = new GraphQLObjectType({
         deviceType: { type: new GraphQLNonNull(GraphQLString) },
         isActive: { type: new GraphQLNonNull(GraphQLBoolean) }
       },
-      resolve: (parent, args) => {
+      resolve: async (parent, args, request) => {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
         const device = new Devices({
           dateOfCreate: Date.now().toString(),
           deviceName: args.deviceName,
           deviceType: args.deviceType,
           isActive: args.isActive,
           allDeviceLogs: [],
-          currentWeekLogs: []
+          currentWeekLogs: [],
+          creator: request.userId
         });
 
         const deviceLogs = new Logs({
@@ -135,9 +205,27 @@ const Mutation = new GraphQLObjectType({
           deviceId: device.id
         });
 
-        deviceLogs.save();
+        await deviceLogs.save();
 
-        return device.save();
+        const result = await device.save();
+
+        let createdDevice = {
+          ...result._doc,
+          id: result.id,
+          creator: getUserData.bind(this, result._doc.creator)
+        };
+
+        const creator = await Users.findById(request.userId);
+
+        if (!creator) {
+          throw new Error('A user not found');
+        }
+
+        creator.createdDevices.push(device);
+
+        await creator.save();
+
+        return createdDevice;
       }
     },
     editDevice: {
@@ -148,7 +236,11 @@ const Mutation = new GraphQLObjectType({
         deviceType: { type: new GraphQLNonNull(GraphQLString) },
         isActive: { type: new GraphQLNonNull(GraphQLBoolean) }
       },
-      resolve(parent, args) {
+      resolve(parent, args, request) {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
         return Devices.findByIdAndUpdate(
           args.id,
           {
@@ -167,7 +259,11 @@ const Mutation = new GraphQLObjectType({
       args: {
         id: { type: GraphQLID }
       },
-      resolve(parent, args) {
+      resolve(parent, args, request) {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
         return Devices.findByIdAndRemove(args.id);
       }
     }
