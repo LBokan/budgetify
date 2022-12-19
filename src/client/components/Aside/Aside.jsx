@@ -15,7 +15,7 @@ import {
   ListItemText
 } from '@mui/material';
 
-import { useThemeMode } from '@/hooks';
+import { useAutoLogout, useThemeMode } from '@/hooks';
 
 import { SettingsModal } from '../SettingsModal';
 import { ThemeButton } from '../ThemeButton';
@@ -25,6 +25,8 @@ export const Aside = () => {
   const [isOpenSettingsModal, setIsOpenSettingsModal] = React.useState(false);
 
   const { themeMode } = useThemeMode();
+
+  const autoLogout = useAutoLogout();
 
   const handleDrawer = () => {
     setIsOpenAside(!isOpenAside);
@@ -40,6 +42,8 @@ export const Aside = () => {
 
   return (
     <>
+      {autoLogout}
+
       <Drawer variant="permanent" open={isOpenAside}>
         <IconButton onClick={handleDrawer} aria-label="Toggle menu button">
           {isOpenAside ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
