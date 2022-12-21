@@ -9,7 +9,7 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem(LOCAL_STORAGE_API_KEY);
 
   return {
     headers: {

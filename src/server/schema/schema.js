@@ -259,10 +259,19 @@ const Mutation = new GraphQLObjectType({
       args: {
         id: { type: GraphQLID }
       },
-      resolve(parent, args, request) {
+      resolve: async (parent, args, request) => {
         if (!request.isAuth) {
           throw new Error('Unauthenticated');
         }
+        const userData = await Users.findById(request.userId);
+
+        userData.createdDevices = userData.createdDevices.filter(
+          (deviceId) => deviceId.toString() != args.id
+        );
+
+        userData.save();
+
+        await Logs.deleteOne({ deviceId: args.id });
 
         return Devices.findByIdAndRemove(args.id);
       }
