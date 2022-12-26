@@ -1,0 +1,1 @@
+export { FiltersDevices } from './FiltersDevices';

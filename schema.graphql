@@ -56,7 +56,15 @@ type Type {
 
 type Query {
   login(email: String!, password: String!): AuthData
-  getAllDevices(offset: Int, limit: Int): DevicesResponse
+  getAllDevices(
+    offset: Int
+    limit: Int
+    sortByName: Boolean
+    isSortDescending: Boolean
+    filterByName: String
+    filterByType: [String]
+    filterByStatus: [String]
+  ): DevicesResponse
   getDevice(id: ID): Device
   getAllLogs: [Log]
   getDeviceLogs(id: ID): Log

@@ -15,7 +15,6 @@ export const InformationPiece = ({ title = '', text }) => {
       alignItems="center"
       justifyContent="center"
       sx={{
-        mr: '50px',
         p: '10px 20px',
         maxWidth: '180px',
         width: '100%',

@@ -7,6 +7,7 @@ export { CreateDeviceModal } from './CreateDeviceModal';
 export { DeviceItem } from './DeviceItem';
 export { DeviceList } from './DeviceList';
 export { EditDeviceModal } from './EditDeviceModal';
+export { FiltersDevices } from './FiltersDevices';
 export { Header } from './Header';
 export { InformationPiece } from './InformationPiece';
 export { LoginForm } from './LoginForm';

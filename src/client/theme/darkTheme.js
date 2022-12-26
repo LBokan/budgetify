@@ -39,6 +39,10 @@ const MuiButton = {
       '&:hover': {
         color: teal[800],
         backgroundColor: yellow[900]
+      },
+      '&:disabled': {
+        backgroundColor: blueGrey[700],
+        boxShadow: 'none'
       }
     }
   }

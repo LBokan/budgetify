@@ -72,18 +72,57 @@ const Query = new GraphQLObjectType({
     },
     getAllDevices: {
       type: DevicesResponseType,
-      args: { offset: { type: GraphQLInt }, limit: { type: GraphQLInt } },
+      args: {
+        offset: { type: GraphQLInt },
+        limit: { type: GraphQLInt },
+        sortByName: { type: GraphQLBoolean },
+        isSortDescending: { type: GraphQLBoolean },
+        filterByName: { type: GraphQLString },
+        filterByType: { type: new GraphQLList(GraphQLString) },
+        filterByStatus: { type: new GraphQLList(GraphQLString) }
+      },
       resolve: async (parent, args, request) => {
         if (!request.isAuth) {
           throw new Error('Unauthenticated');
         }
 
+        const deviceTypes = await Types.find().sort({ name: 1 });
+
+        const sortObj = args.sortByName
+          ? {
+              deviceName: args.isSortDescending ? -1 : 1
+            }
+          : { dateOfCreate: -1 };
+
+        const deviceNameRegEx = args.filterByName ? `${args.filterByName}` : '';
+        const deviceTypesArr = args.filterByType?.length
+          ? args.filterByType
+          : deviceTypes.map((type) => type.name);
+        const deviceStatusesArr = args.filterByStatus?.length
+          ? args.filterByStatus.map((status) => {
+              switch (status.toLowerCase()) {
+                case 'active':
+                  return true;
+
+                case 'inactive':
+                  return false;
+
+                default:
+                  return null;
+              }
+            })
+          : [true, false];
+
         const devices = await Devices.find({
-          creator: request.userId
+          creator: request.userId,
+          deviceName: { $regex: deviceNameRegEx, $options: 'i' },
+          deviceType: deviceTypesArr,
+          isActive: deviceStatusesArr
         })
           .limit(args.limit)
           .skip(args.offset * args.limit)
-          .sort({ dateOfCreate: -1 });
+          .sort(sortObj)
+          .collation({ locale: 'en', caseLevel: true });
 
         const devicesData = devices.map((device) => {
           return {
@@ -104,11 +143,16 @@ const Query = new GraphQLObjectType({
           page_size: args.limit,
           page_number: args.offset + 1,
           total_count: Devices.find({
-            creator: request.userId
+            creator: request.userId,
+            deviceName: { $regex: deviceNameRegEx, $options: 'i' },
+            deviceType: deviceTypesArr,
+            isActive: deviceStatusesArr
           }).count(),
           active_count: Devices.find({
             creator: request.userId,
-            isActive: true
+            deviceName: { $regex: deviceNameRegEx, $options: 'i' },
+            deviceType: deviceTypesArr,
+            isActive: deviceStatusesArr.includes(true) ? true : null
           }).count()
         };
       }
