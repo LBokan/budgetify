@@ -1,5 +1,27 @@
 import { yellow } from '@mui/material/colors';
 
+export const setContainerWidth = (isShortView) => {
+  switch (isShortView) {
+    case true:
+      return '900px';
+
+    case false:
+    default:
+      return '100%';
+  }
+};
+
+export const setDirectionValue = (isShortView) => {
+  switch (isShortView) {
+    case true:
+      return 'row';
+
+    case false:
+    default:
+      return 'column';
+  }
+};
+
 export const setBgColor = (mode) => {
   switch (mode) {
     case 'light':

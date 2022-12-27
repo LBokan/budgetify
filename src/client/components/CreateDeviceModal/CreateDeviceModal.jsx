@@ -161,6 +161,7 @@ export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
 
             <SelectControlled
               name="deviceType"
+              isRequired
               value={formik.values.deviceType}
               labelText="Type of device"
               onChange={formik.handleChange}

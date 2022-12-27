@@ -34,7 +34,7 @@ export const isTokenValid = () => {
 
   const tokenUserData = jwtDecode(token);
 
-  return tokenUserData.exp < new Date().getTime();
+  return tokenUserData.exp > +new Date().getTime().toString().slice(0, 10);
 };
 
 export const handleLogout = () => {

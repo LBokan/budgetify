@@ -9,14 +9,18 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 
+import { setPaddingBottomValue } from './styles';
+
 export const SelectControlled = ({
   name,
   size = 'medium',
+  isRequired = false,
+  isMultiple = false,
   stylesObjSelect = {},
   value,
   labelText = '',
   onChange,
-  dataLoading,
+  dataLoading = false,
   isErrorData = false,
   errorData = '',
   listOfOptions
@@ -25,7 +29,7 @@ export const SelectControlled = ({
     <FormControl
       sx={{
         position: 'relative',
-        pb: '40px'
+        pb: setPaddingBottomValue(isMultiple)
       }}
       fullWidth
     >
@@ -34,7 +38,7 @@ export const SelectControlled = ({
           {!!labelText && (
             <InputLabel
               htmlFor={name}
-              required
+              required={isRequired}
               size="small"
               sx={{ top: '2px' }}
               error={isErrorData}
@@ -47,6 +51,7 @@ export const SelectControlled = ({
             id={name}
             name={name}
             size={size}
+            multiple={isMultiple}
             sx={{ minHeight: '45px', ...stylesObjSelect }}
             value={value}
             onChange={onChange}
@@ -76,10 +81,12 @@ export const SelectControlled = ({
 SelectControlled.propTypes = {
   name: PropTypes.string.isRequired,
   size: PropTypes.string,
+  isRequired: PropTypes.bool,
+  isMultiple: PropTypes.bool,
   stylesObjSelect: PropTypes.objectOf(
     PropTypes.oneOf([PropTypes.string, PropTypes.number])
   ),
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
   labelText: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   dataLoading: PropTypes.bool,

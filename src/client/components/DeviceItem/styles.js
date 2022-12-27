@@ -1,5 +1,26 @@
 import { blueGrey, grey, teal, yellow } from '@mui/material/colors';
 
+export const setContainerStyles = (isShortView) => {
+  switch (isShortView) {
+    case true:
+      return {
+        flexDirection: 'column',
+        mb: '20px',
+        mx: '10px',
+        width: '190px'
+      };
+
+    case false:
+    default:
+      return {
+        flexDirection: 'row',
+        mb: '10px',
+        mx: '0',
+        width: 'fullWidth'
+      };
+  }
+};
+
 export const setBgColor = (mode) => {
   switch (mode) {
     case 'light':

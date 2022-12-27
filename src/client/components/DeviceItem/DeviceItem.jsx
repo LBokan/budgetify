@@ -23,11 +23,12 @@ import { LogsInfoMenu } from '../LogsInfoMenu';
 import {
   setBgColor,
   setBoxShadowColor,
+  setContainerStyles,
   setGridXChartColor,
   setLineChartColor
 } from './styles';
 
-export const DeviceItem = ({ deviceData, maxLogsQty }) => {
+export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
   const [chosenDeviceData, setChosenDeviceData] = React.useState({});
   const [isOpenEditDevice, setIsOpenEditDevice] = React.useState(false);
   const [isOpenDeleteDevice, setIsOpenDeleteDevice] = React.useState(false);
@@ -152,15 +153,14 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
   return (
     <>
       <Stack
-        direction="row"
         alignItems="center"
         justifyContent="space-between"
-        spacing={1}
-        mt="10px"
+        spacing={2}
         p="10px 20px"
         borderRadius="10px"
         bgcolor={setBgColor(themeMode)}
         boxShadow={setBoxShadowColor(themeMode)}
+        sx={setContainerStyles(isShortView)}
       >
         <Box
           component="img"
@@ -171,7 +171,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
 
         <Box
           sx={{
-            maxWidth: '15%',
+            maxWidth: `${isShortView ? '100%' : '15%'}`,
             width: '100%'
           }}
         >
@@ -201,7 +201,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
 
         <Box
           sx={{
-            maxWidth: '5%',
+            maxWidth: `${isShortView ? '100%' : '5%'}`,
             width: '100%',
             textAlign: 'center'
           }}
@@ -214,49 +214,55 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
           </Typography>
         </Box>
 
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            maxWidth: '10%',
-            width: '100%'
-          }}
-        >
-          <Typography variant="h3">{todayLogsArr?.totalIssuesCount}</Typography>
-
-          {!!todayLogsArr?.totalIssuesCount && (
-            <IconButton
+        {!isShortView && (
+          <>
+            <Box
               sx={{
-                ml: '10px',
-                p: 0,
-                width: '20px',
-                height: '20px'
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                maxWidth: `${isShortView ? '100%' : '10%'}`,
+                width: '100%'
               }}
-              id="logs-button"
-              aria-controls={open ? 'logs-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? 'true' : undefined}
-              onClick={handleClickExpandMore}
-              aria-label="Show more"
             >
-              <ExpandMore sx={{ width: '100%', height: '100%' }} />
-            </IconButton>
-          )}
-        </Box>
+              <Typography variant="h3">
+                {todayLogsArr?.totalIssuesCount}
+              </Typography>
 
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            maxWidth: '15%',
-            width: '100%',
-            maxHeight: '120px',
-            textAlign: 'center'
-          }}
-        >
-          <ChartLine data={dataCharts} options={optionsCharts} />
-        </Box>
+              {!!todayLogsArr?.totalIssuesCount && (
+                <IconButton
+                  sx={{
+                    ml: '10px',
+                    p: 0,
+                    width: '20px',
+                    height: '20px'
+                  }}
+                  id="logs-button"
+                  aria-controls={open ? 'logs-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClickExpandMore}
+                  aria-label="Show more"
+                >
+                  <ExpandMore sx={{ width: '100%', height: '100%' }} />
+                </IconButton>
+              )}
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                maxWidth: '15%',
+                width: '100%',
+                maxHeight: '120px',
+                textAlign: 'center'
+              }}
+            >
+              <ChartLine data={dataCharts} options={optionsCharts} />
+            </Box>
+          </>
+        )}
 
         <Box
           sx={{
@@ -270,8 +276,8 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
             color="success"
             sx={{
               ml: '10px',
-              width: '40px',
-              maxHeight: '40px'
+              width: '35px',
+              maxHeight: '35px'
             }}
             onClick={() => openEditDeviceModal(deviceData)}
             aria-label="Edit device"
@@ -283,8 +289,8 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
             color="error"
             sx={{
               ml: '10px',
-              width: '40px',
-              maxHeight: '40px'
+              width: '35px',
+              maxHeight: '35px'
             }}
             onClick={() => openDeleteDeviceModal(deviceData)}
             aria-label="Delete device"
@@ -329,5 +335,6 @@ export const DeviceItem = ({ deviceData, maxLogsQty }) => {
 
 DeviceItem.propTypes = {
   deviceData: PropTypes.object.isRequired,
-  maxLogsQty: PropTypes.number.isRequired
+  maxLogsQty: PropTypes.number.isRequired,
+  isShortView: PropTypes.bool
 };
