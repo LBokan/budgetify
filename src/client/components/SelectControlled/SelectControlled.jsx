@@ -25,11 +25,14 @@ export const SelectControlled = ({
   errorData = '',
   listOfOptions
 }) => {
+  const hasPadding =
+    isMultiple || name.toLowerCase().includes('chart') ? false : true;
+
   return (
     <FormControl
       sx={{
         position: 'relative',
-        pb: setPaddingBottomValue(isMultiple)
+        pb: setPaddingBottomValue(hasPadding)
       }}
       fullWidth
     >

@@ -10,10 +10,12 @@ const {
 } = require('graphql');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
 const {
   DeviceType,
   DevicesResponseType,
+  DevicesResponseReportType,
   LogType,
   TypeType,
   UserType,
@@ -128,11 +130,19 @@ const Query = new GraphQLObjectType({
           return {
             ...device._doc,
             id: device.id,
-            allDeviceLogs: Logs.find({ deviceId: device.id }).then(
-              (value) => value[0]?.deviceLogs
+            allDeviceLogs: Logs.find({ deviceId: device.id }).then((value) =>
+              value[0]?.deviceLogs.sort((a, b) => {
+                if (a.date > b.date) return 1;
+
+                return -1;
+              })
             ),
             currentWeekLogs: Logs.find({ deviceId: device.id }).then((value) =>
-              getCurrentWeekLogsArr(value[0]?.deviceLogs)
+              getCurrentWeekLogsArr(value[0]?.deviceLogs).sort((a, b) => {
+                if (a.date > b.date) return 1;
+
+                return -1;
+              })
             ),
             creator: getUserData.bind(this, device._doc.creator)
           };
@@ -140,8 +150,8 @@ const Query = new GraphQLObjectType({
 
         return {
           devices: devicesData,
-          page_size: args.limit,
-          page_number: args.offset + 1,
+          page_size: args?.limit || Devices.find().count(),
+          page_number: args?.offset ? args.offset + 1 : 1,
           total_count: Devices.find({
             creator: request.userId,
             deviceName: { $regex: deviceNameRegEx, $options: 'i' },
@@ -151,6 +161,192 @@ const Query = new GraphQLObjectType({
           active_count: Devices.find({
             creator: request.userId,
             deviceName: { $regex: deviceNameRegEx, $options: 'i' },
+            deviceType: deviceTypesArr,
+            isActive: deviceStatusesArr.includes(true) ? true : null
+          }).count()
+        };
+      }
+    },
+    getReport: {
+      type: DevicesResponseReportType,
+      args: {
+        sortByName: { type: GraphQLBoolean },
+        isSortDescending: { type: GraphQLBoolean },
+        filterByName: { type: new GraphQLList(GraphQLString) },
+        filterByType: { type: new GraphQLList(GraphQLString) },
+        filterByStatus: { type: new GraphQLList(GraphQLString) },
+        filterByDateStart: { type: GraphQLString },
+        filterByDateEnd: { type: GraphQLString }
+      },
+      resolve: async (parent, args, request) => {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
+        const deviceTypes = await Types.find().sort({ name: 1 });
+
+        const sortObj = args.sortByName
+          ? {
+              deviceName: args.isSortDescending ? -1 : 1
+            }
+          : { dateOfCreate: 1 };
+
+        const deviceNameObj = {
+          isMultipleDataArray: args.filterByName?.length > 1,
+          data:
+            args.filterByName?.length == 1
+              ? `${args.filterByName[0]}`
+              : args.filterByName?.length > 1
+              ? args.filterByName
+              : ''
+        };
+        const deviceTypesArr = args.filterByType?.length
+          ? args.filterByType
+          : deviceTypes.map((type) => type.name);
+        const deviceStatusesArr = args.filterByStatus?.length
+          ? args.filterByStatus.map((status) => {
+              switch (status.toLowerCase()) {
+                case 'active':
+                  return true;
+
+                case 'inactive':
+                  return false;
+
+                default:
+                  return null;
+              }
+            })
+          : [true, false];
+
+        let devices = await Devices.find({
+          creator: request.userId,
+          deviceName: deviceNameObj.isMultipleDataArray
+            ? deviceNameObj.data
+            : { $regex: deviceNameObj.data, $options: 'i' },
+          deviceType: deviceTypesArr,
+          isActive: deviceStatusesArr
+        })
+          .sort(sortObj)
+          .collation({ locale: 'en', caseLevel: true });
+
+        const deviceChartLineData = devices.map((device) => ({
+          ...device._doc,
+          id: device.id,
+          allDeviceLogs: Logs.find({
+            deviceId: device.id
+          }).then((value) =>
+            value[0]?.deviceLogs
+              .filter((log) => {
+                const formattedDate = moment(log.date).format('YYYY-MM-DD');
+
+                return args.filterByDateStart && args.filterByDateEnd
+                  ? formattedDate >= args.filterByDateStart &&
+                      formattedDate <= args.filterByDateEnd
+                  : log;
+              })
+              .sort((a, b) => {
+                if (a.date > b.date) return 1;
+
+                return -1;
+              })
+          ),
+          creator: getUserData.bind(this, device._doc.creator)
+        }));
+
+        const devicesForChartBar = devices.filter((device) => {
+          const formattedDate = moment(+device.dateOfCreate).format(
+            'YYYY-MM-DD'
+          );
+
+          return (
+            formattedDate >= args.filterByDateStart &&
+            formattedDate <= args.filterByDateEnd
+          );
+        });
+
+        const getDeviceChartBarData = () => {
+          let qtyOfDevicesCreated = 1;
+          let dateChecked = '';
+          let chartBarArr = [];
+
+          devicesForChartBar.forEach((device, index) => {
+            const formattedDateCurrentDevice = moment(
+              +device.dateOfCreate
+            ).format('YYYY-MM-DD');
+            const formattedDateNextDevice = moment(
+              +devicesForChartBar[index + 1]?.dateOfCreate
+            ).format('YYYY-MM-DD');
+
+            if (!dateChecked) {
+              dateChecked = formattedDateCurrentDevice;
+            }
+
+            if (
+              dateChecked == formattedDateCurrentDevice &&
+              formattedDateCurrentDevice == formattedDateNextDevice
+            ) {
+              qtyOfDevicesCreated += 1;
+
+              return;
+            } else if (
+              qtyOfDevicesCreated >= 1 &&
+              formattedDateCurrentDevice != formattedDateNextDevice
+            ) {
+              chartBarArr.push({
+                dateOfCreate: dateChecked,
+                totalDevicesCreated: qtyOfDevicesCreated
+              });
+            }
+
+            dateChecked = '';
+            qtyOfDevicesCreated = 1;
+          });
+
+          return chartBarArr;
+        };
+
+        const deviceChartBarData = getDeviceChartBarData();
+
+        const deviceTableDate = devices.map((device) => ({
+          ...device._doc,
+          id: device.id,
+          allDeviceLogs: Logs.find({
+            deviceId: device.id
+          }).then((value) =>
+            value[0]?.deviceLogs
+              .filter((log) => {
+                const formattedDate = moment(log.date).format('YYYY-MM-DD');
+
+                return args.filterByDateStart && args.filterByDateEnd
+                  ? formattedDate >= args.filterByDateStart &&
+                      formattedDate <= args.filterByDateEnd
+                  : log;
+              })
+              .sort((a, b) => {
+                if (a.date > b.date) return 1;
+
+                return -1;
+              })
+          )
+        }));
+
+        return {
+          chart_line: deviceChartLineData,
+          chart_bar: deviceChartBarData,
+          table: deviceTableDate,
+          total_count: Devices.find({
+            creator: request.userId,
+            deviceName: deviceNameObj.isMultipleDataArray
+              ? deviceNameObj.data
+              : { $regex: deviceNameObj.data, $options: 'i' },
+            deviceType: deviceTypesArr,
+            isActive: deviceStatusesArr
+          }).count(),
+          active_count: Devices.find({
+            creator: request.userId,
+            deviceName: deviceNameObj.isMultipleDataArray
+              ? deviceNameObj.data
+              : { $regex: deviceNameObj.data, $options: 'i' },
             deviceType: deviceTypesArr,
             isActive: deviceStatusesArr.includes(true) ? true : null
           }).count()

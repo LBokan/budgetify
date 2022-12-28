@@ -17,7 +17,11 @@ const MuiButton = {
       borderRadius: '10px',
       color: teal[800],
       backgroundColor: green['A400'],
-      boxShadow: `0 1px 4px ${grey[500]}`
+      boxShadow: `0 1px 4px ${grey[500]}`,
+      '&:disabled': {
+        backgroundColor: grey[200],
+        boxShadow: 'none'
+      }
     },
     text: {
       border: 'none',
@@ -148,6 +152,7 @@ const MuiSkeleton = {
 const MuiInputLabel = {
   styleOverrides: {
     root: {
+      zIndex: '2',
       padding: '0 8px',
       borderRadius: '10px',
       fontSize: '14px',
@@ -177,10 +182,31 @@ const MuiLink = {
   }
 };
 
+const MuiTable = {
+  styleOverrides: {
+    root: {
+      padding: '10px',
+      borderCollapse: 'separate',
+      borderRadius: '10px',
+      overflow: 'hidden'
+    }
+  }
+};
+
+const MuiTableCell = {
+  styleOverrides: {
+    root: {
+      border: `1px solid ${teal[900]}`,
+      color: teal[800],
+      fontSize: '12px'
+    }
+  }
+};
+
 const MuiDrawer = {
   styleOverrides: {
     paper: {
-      zIndex: '1',
+      zIndex: '8',
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: '95px 15px 25px',
@@ -277,6 +303,8 @@ export const lightTheme = createTheme({
     MuiInputLabel,
     MuiFormHelperText,
     MuiLink,
+    MuiTable,
+    MuiTableCell,
     MuiDrawer,
     MuiAlert
   }

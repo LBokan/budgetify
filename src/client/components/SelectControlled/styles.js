@@ -1,10 +1,10 @@
-export const setPaddingBottomValue = (isMultiple) => {
-  switch (isMultiple) {
+export const setPaddingBottomValue = (hasPadding) => {
+  switch (hasPadding) {
     case true:
-      return '0';
+      return '40px';
 
     case false:
     default:
-      return '40px';
+      return '0';
   }
 };

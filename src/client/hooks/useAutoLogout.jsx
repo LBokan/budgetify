@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { handleLogout } from '@/helpers/authorization';
+import { handleLogout } from '@/helpers';
 
 export const useAutoLogout = () => {
   const logoutTimerIdRef = useRef(null);

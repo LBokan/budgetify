@@ -49,6 +49,14 @@ const DeviceType = new GraphQLObjectType({
   })
 });
 
+const DevicesChartBarReportType = new GraphQLObjectType({
+  name: 'DevicesChartBarReport',
+  fields: () => ({
+    dateOfCreate: { type: GraphQLString },
+    totalDevicesCreated: { type: GraphQLInt }
+  })
+});
+
 const DevicesResponseType = new GraphQLObjectType({
   name: 'DevicesResponse',
   fields: () => ({
@@ -57,6 +65,17 @@ const DevicesResponseType = new GraphQLObjectType({
     page_number: { type: GraphQLInt },
     total_count: { type: GraphQLInt },
     active_count: { type: GraphQLInt }
+  })
+});
+
+const DevicesResponseReportType = new GraphQLObjectType({
+  name: 'DevicesResponseReport',
+  fields: () => ({
+    chart_line: { type: new GraphQLList(DeviceType) },
+    chart_bar: { type: new GraphQLList(DevicesChartBarReportType) },
+    total_count: { type: GraphQLInt },
+    active_count: { type: GraphQLInt },
+    table: { type: new GraphQLList(DeviceType) }
   })
 });
 
@@ -99,6 +118,8 @@ module.exports = {
   UserType,
   DeviceType,
   DevicesResponseType,
+  DevicesChartBarReportType,
+  DevicesResponseReportType,
   LogType,
   TypeType
 };

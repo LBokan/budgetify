@@ -10,6 +10,7 @@ import { DELETE_DEVICE, EDIT_DEVICE } from '@/api/mutation/device';
 import { GET_ALL_DEVICES } from '@/api/query/device';
 import { ConfirmationModal, NotificationBar } from '@/components';
 import {
+  getChartLineDatasetData,
   getCurrentWeekDaysArr,
   getDateToday,
   getDeviceTypeImage
@@ -61,7 +62,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
     datasets: [
       {
         label: 'Logs',
-        data: deviceData?.currentWeekLogs.map((log) => log.totalIssuesCount),
+        data: getChartLineDatasetData(null, deviceData, true),
         borderWidth: 2,
         borderColor: setLineChartColor(themeMode),
         pointBorderWidth: 1,
@@ -100,6 +101,10 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
     }
   };
 
+  const resetCache = () => {
+    client.resetStore();
+  };
+
   const handleClickExpandMore = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -133,6 +138,9 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
         deviceName: data.deviceName,
         deviceType: data.deviceType,
         isActive: data.isActive
+      },
+      onCompleted: () => {
+        resetCache();
       }
     });
     closeEditDeviceModal();
@@ -144,7 +152,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
         id: chosenDeviceData.id
       },
       onCompleted: () => {
-        client.resetStore();
+        resetCache();
       }
     });
     closeDeleteDeviceModal();
