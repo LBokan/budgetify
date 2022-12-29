@@ -19,8 +19,6 @@ export const Layout = () => {
           <Outlet />
         </ContentContainer>
       </ContentWrapper>
-
-      <ContentWrapper type="footer">FOOTER</ContentWrapper>
     </>
   );
 };

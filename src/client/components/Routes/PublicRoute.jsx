@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { isTokenValid } from '@/helpers/authorization';
+import { isTokenValid } from '@/helpers';
 
 export const PublicRoute = ({
   children,

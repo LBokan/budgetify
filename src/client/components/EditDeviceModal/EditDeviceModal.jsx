@@ -21,7 +21,7 @@ import * as yup from 'yup';
 
 import { GET_ALL_DEVICE_TYPES } from '@/api/query/device';
 import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
-import { getDeviceTypesOptions } from '@/helpers/selectHelpers';
+import { getDeviceTypesOptions } from '@/helpers';
 import { useThemeMode } from '@/hooks';
 
 import { ConfirmationModal } from '../ConfirmationModal';

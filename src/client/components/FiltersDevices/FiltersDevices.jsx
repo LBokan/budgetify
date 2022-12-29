@@ -11,10 +11,7 @@ import PropTypes from 'prop-types';
 
 import { GET_ALL_DEVICE_TYPES } from '@/api/query/device';
 import { NotificationBar } from '@/components';
-import {
-  getDeviceStatusOptions,
-  getDeviceTypesOptions
-} from '@/helpers/selectHelpers';
+import { getDeviceStatusOptions, getDeviceTypesOptions } from '@/helpers';
 
 import { SelectControlled } from '../SelectControlled';
 
@@ -28,32 +25,14 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
     data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
   } = useQuery(GET_ALL_DEVICE_TYPES);
 
-  const handleInput = (event, isReset = false) => {
-    if (isReset) {
-      setFiltersOnChange((prevState) => ({
-        ...prevState,
-        deviceNameFilter: ''
-      }));
-
-      return;
-    } else {
-      setFiltersOnChange((prevState) => ({
-        ...prevState,
-        deviceNameFilter: event.target.value
-      }));
-    }
+  const handleInput = (event) => {
+    setFiltersOnChange((prevState) => ({
+      ...prevState,
+      deviceName: event.target.value
+    }));
   };
 
-  const handleSelect = (event, typeOfFilter, isReset = false) => {
-    if (isReset) {
-      setFiltersOnChange((prevState) => ({
-        ...prevState,
-        [typeOfFilter]: []
-      }));
-
-      return;
-    }
-
+  const handleSelect = (event, typeOfFilter) => {
     const selectedValue = event.target.value;
 
     setFiltersOnChange((prevState) => ({
@@ -67,9 +46,9 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
 
   const toggleIsResetButtonDisabled = () => {
     if (
-      filtersData.deviceNameFilter ||
-      filtersData.deviceTypeFilter.length ||
-      filtersData.deviceStatusFilter.length
+      filtersData.deviceName ||
+      filtersData.deviceTypes.length ||
+      filtersData.deviceStatuses.length
     ) {
       setIsResetButtonDisabled(false);
     } else {
@@ -78,23 +57,26 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
   };
 
   const resetFiltersOnClick = () => {
-    handleInput(null, true);
-    handleSelect(null, 'deviceTypeFilter', true);
-    handleSelect(null, 'deviceStatusFilter', true);
+    setFiltersOnChange((prevState) => ({
+      ...prevState,
+      deviceName: '',
+      deviceTypes: [],
+      deviceStatuses: []
+    }));
   };
 
   React.useEffect(() => {
     setFiltersOnChange({
-      deviceNameFilter: filtersData.deviceNameFilter,
-      deviceTypeFilter: filtersData.deviceTypeFilter,
-      deviceStatusFilter: filtersData.deviceStatusFilter
+      deviceName: filtersData.deviceName,
+      deviceTypes: filtersData.deviceTypes,
+      deviceStatuses: filtersData.deviceStatuses
     });
 
     toggleIsResetButtonDisabled();
   }, [
-    filtersData.deviceNameFilter,
-    filtersData.deviceTypeFilter,
-    filtersData.deviceStatusFilter
+    filtersData.deviceName,
+    filtersData.deviceTypes,
+    filtersData.deviceStatuses
   ]);
 
   return (
@@ -106,7 +88,6 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
           alignItems="center"
           justifyContent="space-between"
           spacing={5}
-          mb="20px"
         >
           <FormControl
             sx={{
@@ -121,7 +102,7 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
               id="deviceName"
               size="medium"
               sx={{ minHeight: '45px' }}
-              value={filtersData.deviceNameFilter}
+              value={filtersData.deviceName}
               onChange={handleInput}
             />
           </FormControl>
@@ -129,9 +110,9 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
           <SelectControlled
             name="deviceType"
             isMultiple
-            value={filtersData.deviceTypeFilter}
+            value={filtersData.deviceTypes}
             labelText="Type of device"
-            onChange={(event) => handleSelect(event, 'deviceTypeFilter')}
+            onChange={(event) => handleSelect(event, 'deviceTypes')}
             dataLoading={loadingDeviceTypes}
             listOfOptions={getDeviceTypesOptions(deviceTypesData)}
           />
@@ -139,9 +120,9 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
           <SelectControlled
             name="deviceStatus"
             isMultiple
-            value={filtersData.deviceStatusFilter}
+            value={filtersData.deviceStatuses}
             labelText="Status of device"
-            onChange={(event) => handleSelect(event, 'deviceStatusFilter')}
+            onChange={(event) => handleSelect(event, 'deviceStatuses')}
             listOfOptions={getDeviceStatusOptions()}
           />
 
@@ -165,9 +146,9 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
 
 FiltersDevices.propTypes = {
   filtersData: PropTypes.shape({
-    deviceNameFilter: PropTypes.string,
-    deviceTypeFilter: PropTypes.arrayOf(PropTypes.string),
-    deviceStatusFilter: PropTypes.arrayOf(PropTypes.string)
+    deviceName: PropTypes.string,
+    deviceTypes: PropTypes.arrayOf(PropTypes.string),
+    deviceStatuses: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   setFiltersOnChange: PropTypes.func.isRequired
 };

@@ -20,9 +20,9 @@ export const Devices = () => {
     isIncreasing: false
   });
   const [filters, setFilters] = React.useState({
-    deviceNameFilter: '',
-    deviceTypeFilter: [],
-    deviceStatusFilter: []
+    deviceName: '',
+    deviceTypes: [],
+    deviceStatuses: []
   });
   const [isOpenCreateDevice, setIsOpenCreateDevice] = React.useState(false);
 
@@ -41,9 +41,9 @@ export const Devices = () => {
       limit: limitPerPage,
       sortByName: sortByName.isActive,
       isSortDescending: !sortByName.isIncreasing,
-      filterByName: filters.deviceNameFilter,
-      filterByType: filters.deviceTypeFilter,
-      filterByStatus: filters.deviceStatusFilter
+      filterByName: filters.deviceName,
+      filterByType: filters.deviceTypes,
+      filterByStatus: filters.deviceStatuses
     }
   });
 
@@ -131,9 +131,9 @@ export const Devices = () => {
                   !sortByName.isActive ? (
                     <Sort />
                   ) : sortByName.isIncreasing ? (
-                    <ArrowUpward />
-                  ) : (
                     <ArrowDownward />
+                  ) : (
+                    <ArrowUpward />
                   )
                 }
                 onClick={sortByNameOnClick}

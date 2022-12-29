@@ -24,12 +24,25 @@ type Device {
   creator: [User!]
 }
 
+type DevicesChartBarReport {
+  dateOfCreate: String
+  totalDevicesCreated: Int
+}
+
 type DevicesResponse {
   devices: [Device]
   page_size: Int
   page_number: Int
   total_count: Int
   active_count: Int
+}
+
+type DevicesResponseReport {
+  chart_line: [Device]
+  chart_bar: [DevicesChartBarReport]
+  total_count: Int
+  active_count: Int
+  table: [Device]
 }
 
 type Log {
@@ -65,6 +78,15 @@ type Query {
     filterByType: [String]
     filterByStatus: [String]
   ): DevicesResponse
+  getReport(
+    sortByName: Boolean
+    isSortDescending: Boolean
+    filterByName: String
+    filterByType: [String]
+    filterByStatus: [String]
+    filterByDateStart: String
+    filterByDateEnd: String
+  ): DevicesResponseReport
   getDevice(id: ID): Device
   getAllLogs: [Log]
   getDeviceLogs(id: ID): Log

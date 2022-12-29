@@ -2,7 +2,6 @@ import React from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { RoomPreferences } from '@mui/icons-material';
 import { Box, Button, Icon, Stack, Typography } from '@mui/material';
-import { teal } from '@mui/material/colors';
 
 import { SIGN_UP } from '@/api/mutation/user';
 import { LOGIN } from '@/api/query/authorization';
@@ -14,8 +13,10 @@ import {
   SignUpModal,
   ThemeButton
 } from '@/components';
-import { handleLogin } from '@/helpers/authorization';
+import { handleLogin } from '@/helpers';
 import { useThemeMode } from '@/hooks';
+
+import { setBorderColor } from './styles';
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = React.useState('');
@@ -42,19 +43,6 @@ export const Login = () => {
   });
 
   const [signUp, { error: errorSignUp }] = useMutation(SIGN_UP);
-
-  const setBorderColor = (mode) => {
-    switch (mode) {
-      case 'light':
-        return `${teal[800]}`;
-
-      case 'dark':
-        return `${teal[100]}`;
-
-      default:
-        return '#fff';
-    }
-  };
 
   const themeSwitcherStyles = {
     position: 'absolute',

@@ -14,13 +14,11 @@ const getUserData = async (userId) => {
 const getDevicesData = async (devicesId) => {
   const devicesData = await Devices.find({ id: { $in: devicesId } });
 
-  return devicesData.map((device) => {
-    return {
-      ...device._doc,
-      id: device.id,
-      creator: getUserData.bind(this, device.creator)
-    };
-  });
+  return devicesData.map((device) => ({
+    ...device._doc,
+    id: device.id,
+    creator: getUserData.bind(this, device.creator)
+  }));
 };
 
 module.exports = {

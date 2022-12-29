@@ -3,7 +3,7 @@ import { Close, Logout } from '@mui/icons-material';
 import { Button, IconButton, Modal, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
-import { handleLogout } from '@/helpers/authorization';
+import { handleLogout } from '@/helpers';
 import { useThemeMode } from '@/hooks';
 
 import { ConfirmationModal } from '../ConfirmationModal';
