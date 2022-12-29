@@ -32,7 +32,8 @@ export const TableReport = ({ devicesData }) => {
             <TableCell
               sx={{
                 ...setTableHeaderStyles(themeMode),
-                borderTopLeftRadius: '10px'
+                borderTopLeftRadius: '10px',
+                borderBottomLeftRadius: '10px'
               }}
             >
               Name of log
@@ -41,7 +42,8 @@ export const TableReport = ({ devicesData }) => {
             <TableCell
               sx={{
                 ...setTableHeaderStyles(themeMode),
-                borderTopRightRadius: '10px'
+                borderTopRightRadius: '10px',
+                borderBottomRightRadius: '10px'
               }}
             >
               Date

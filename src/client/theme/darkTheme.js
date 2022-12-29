@@ -204,7 +204,6 @@ const MuiTable = {
 const MuiTableCell = {
   styleOverrides: {
     root: {
-      border: `1px solid ${grey[400]}`,
       color: grey[300],
       fontSize: '12px'
     }

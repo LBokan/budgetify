@@ -128,7 +128,7 @@ export const Logs = () => {
 
               <ChartBar
                 data={getChartBarData(devicesReportData.chart_bar)}
-                options={getChartBarOptions()}
+                options={getChartBarOptions(setGridXChartColor, themeMode)}
               />
             </Stack>
           </Stack>

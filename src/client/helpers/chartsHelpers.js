@@ -163,11 +163,31 @@ export const getChartBarDataset = (devicesData) => [
   }
 ];
 
-export const getChartBarOptions = () => ({
+export const getChartBarOptions = (setGridXChartColor, themeMode) => ({
   layout: {
     padding: 5
   },
   animation: false,
+  scales: {
+    y: {
+      border: {
+        color: setGridXChartColor(themeMode),
+        width: 1
+      },
+      ticks: {
+        color: setGridXChartColor(themeMode)
+      }
+    },
+    x: {
+      border: {
+        color: setGridXChartColor(themeMode),
+        width: 1
+      },
+      ticks: {
+        color: setGridXChartColor(themeMode)
+      }
+    }
+  },
   plugins: {
     legend: { display: false }
   }
