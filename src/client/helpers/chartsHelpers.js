@@ -114,7 +114,7 @@ export const getChartLineDatasetData = (
 
 export const getChartLineOptions = (
   devicesData,
-  setGridXChartColor,
+  setGridChartColor,
   themeMode
 ) => ({
   scales: {
@@ -122,20 +122,20 @@ export const getChartLineOptions = (
       suggestedMin: 0,
       suggestedMax: getMaxLogsQty(devicesData),
       border: {
-        color: setGridXChartColor(themeMode),
+        color: setGridChartColor(themeMode),
         width: 1
       },
       ticks: {
-        color: setGridXChartColor(themeMode)
+        color: setGridChartColor(themeMode)
       }
     },
     x: {
       border: {
-        color: setGridXChartColor(themeMode),
+        color: setGridChartColor(themeMode),
         width: 1
       },
       ticks: {
-        color: setGridXChartColor(themeMode),
+        color: setGridChartColor(themeMode),
         callback(value) {
           return `${moment(this.getLabelForValue(value)).format('MM/DD')}`;
         }
@@ -163,7 +163,7 @@ export const getChartBarDataset = (devicesData) => [
   }
 ];
 
-export const getChartBarOptions = (setGridXChartColor, themeMode) => ({
+export const getChartBarOptions = (setGridChartColor, themeMode) => ({
   layout: {
     padding: 5
   },
@@ -171,20 +171,20 @@ export const getChartBarOptions = (setGridXChartColor, themeMode) => ({
   scales: {
     y: {
       border: {
-        color: setGridXChartColor(themeMode),
+        color: setGridChartColor(themeMode),
         width: 1
       },
       ticks: {
-        color: setGridXChartColor(themeMode)
+        color: setGridChartColor(themeMode)
       }
     },
     x: {
       border: {
-        color: setGridXChartColor(themeMode),
+        color: setGridChartColor(themeMode),
         width: 1
       },
       ticks: {
-        color: setGridXChartColor(themeMode)
+        color: setGridChartColor(themeMode)
       }
     }
   },

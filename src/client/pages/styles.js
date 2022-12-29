@@ -26,7 +26,7 @@ export const setBgColor = (mode) => {
   }
 };
 
-export const setGridXChartColor = (mode) => {
+export const setGridChartColor = (mode) => {
   switch (mode) {
     case 'light':
       return teal[900];

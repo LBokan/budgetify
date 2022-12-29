@@ -26,7 +26,7 @@ import { useThemeMode } from '@/hooks';
 import {
   setBgColor,
   setChartDoughnutBorderColor,
-  setGridXChartColor
+  setGridChartColor
 } from './styles';
 
 export const Logs = () => {
@@ -109,7 +109,7 @@ export const Logs = () => {
                 data={getChartLineData(devicesReportData.chart_line)}
                 options={getChartLineOptions(
                   devicesReportData.chart_line,
-                  setGridXChartColor,
+                  setGridChartColor,
                   themeMode
                 )}
               />
@@ -128,7 +128,7 @@ export const Logs = () => {
 
               <ChartBar
                 data={getChartBarData(devicesReportData.chart_bar)}
-                options={getChartBarOptions(setGridXChartColor, themeMode)}
+                options={getChartBarOptions(setGridChartColor, themeMode)}
               />
             </Stack>
           </Stack>
