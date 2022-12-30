@@ -21,6 +21,7 @@ import { loginWavesDarkImage, loginWavesLightImage } from '@/assets/img';
 import { useThemeMode } from '@/hooks';
 
 import { ConfirmationModal } from '../ConfirmationModal';
+import { ProgressBar } from '../ProgressBar';
 
 import { setBgColor, setBorder, setIconColor } from './styles';
 
@@ -52,7 +53,12 @@ const validationSchema = yup.object({
     .required('Password is required')
 });
 
-export const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
+export const SignUpModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isLoading = false
+}) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
     React.useState(false);
@@ -97,21 +103,19 @@ export const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
       <Modal open={isOpen}>
         <Stack
           component="form"
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            p: '40px',
-            pb: '80px',
-            maxWidth: '500px',
-            width: '100%',
-            border: setBorder(themeMode),
-            borderRadius: '10px',
-            boxShadow: 24,
-            bgcolor: setBgColor(themeMode),
-            overflow: 'hidden'
-          }}
+          position="absolute"
+          top="50%"
+          left="50%"
+          p="40px"
+          pb="80px"
+          maxWidth="500px"
+          width="100%"
+          border={setBorder(themeMode)}
+          borderRadius="10px"
+          boxShadow={24}
+          bgcolor={setBgColor(themeMode)}
+          overflow="hidden"
+          sx={{ transform: 'translate(-50%, -50%)' }}
           onSubmit={formik.handleSubmit}
         >
           <IconButton
@@ -328,8 +332,13 @@ export const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
           </FormControl>
 
           <Stack direction="row" justifyContent="flex-end">
-            <Button variant="contained" sx={{ height: '45px' }} type="submit">
-              Submit
+            <Button
+              variant="contained"
+              sx={{ minWidth: '100px', height: '45px' }}
+              type="submit"
+            >
+              {(isLoading && <ProgressBar size="20px" color="inherit" />) ||
+                'Submit'}
             </Button>
             <Button
               variant="outlined"
@@ -371,5 +380,6 @@ export const SignUpModal = ({ isOpen, onClose, onSubmit }) => {
 SignUpModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool
 };

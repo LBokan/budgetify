@@ -42,16 +42,17 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
 
   const client = useApolloClient();
 
-  const [editDevice, { error: errorEditDevice }] = useMutation(EDIT_DEVICE, {
+  const [editDevice, { loading: loadingEditDevice, error: errorEditDevice }] =
+    useMutation(EDIT_DEVICE, {
+      refetchQueries: [GET_ALL_DEVICES]
+    });
+
+  const [
+    deleteDevice,
+    { loading: loadingDeleteDevice, error: errorDeleteDevice }
+  ] = useMutation(DELETE_DEVICE, {
     refetchQueries: [GET_ALL_DEVICES]
   });
-
-  const [deleteDevice, { error: errorDeleteDevice }] = useMutation(
-    DELETE_DEVICE,
-    {
-      refetchQueries: [GET_ALL_DEVICES]
-    }
-  );
 
   const todayLogsArr = deviceData?.allDeviceLogs.filter(
     (log) => moment(log.date).format('YYYY-MM-DD') == dateToday
@@ -321,6 +322,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
         isOpen={isOpenEditDevice}
         onClose={closeEditDeviceModal}
         onSubmit={editDeviceOnSubmit}
+        isLoading={loadingEditDevice}
       />
 
       <ConfirmationModal
@@ -329,6 +331,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
         onSubmit={deleteDeviceOnSubmit}
         title="Device deletion"
         text="Are you sure you want to delete the device?"
+        isLoading={loadingDeleteDevice}
       />
 
       <LogsInfoMenu

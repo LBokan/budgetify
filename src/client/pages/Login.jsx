@@ -21,28 +21,25 @@ import { setBorderColor } from './styles';
 export const Login = () => {
   const [loginEmail, setLoginEmail] = React.useState('');
   const [loginPassword, setLoginPassword] = React.useState('');
-  const [isOpenLoginError, setIsOpenLoginError] = React.useState(false);
 
   const [isOpenSignUpModal, setIsOpenSignUpModal] = React.useState(false);
-  const [isOpenSignUpError, setIsOpenSignUpError] = React.useState(false);
   const [isOpenSignUpSuccess, setIsOpenSignUpSuccess] = React.useState(false);
 
   const { themeMode } = useThemeMode();
 
-  const [loginOnClick, { error: errorLoginData }] = useLazyQuery(LOGIN, {
-    variables: {
-      email: loginEmail,
-      password: loginPassword
-    },
-    onCompleted: (data) => {
-      handleLogin(data.login.token);
-    },
-    onError: () => {
-      setIsOpenLoginError(true);
-    }
-  });
+  const [loginOnClick, { loading: loadingLoginData, error: errorLoginData }] =
+    useLazyQuery(LOGIN, {
+      variables: {
+        email: loginEmail,
+        password: loginPassword
+      },
+      onCompleted: (data) => {
+        handleLogin(data.login.token);
+      }
+    });
 
-  const [signUp, { error: errorSignUp }] = useMutation(SIGN_UP);
+  const [signUp, { loading: loadingSignUp, error: errorSignUp }] =
+    useMutation(SIGN_UP);
 
   const themeSwitcherStyles = {
     position: 'absolute',
@@ -79,9 +76,6 @@ export const Login = () => {
         setIsOpenSignUpSuccess(true);
         closeSignUpModal();
         resetForm();
-      },
-      onError: () => {
-        setIsOpenSignUpError(true);
       }
     });
   };
@@ -89,12 +83,7 @@ export const Login = () => {
   return (
     <>
       <ContentWrapper type="main" isLoginPage>
-        <Stack
-          direction="row"
-          sx={{
-            position: 'relative'
-          }}
-        >
+        <Stack position="relative" direction="row">
           <Icon sx={{ mr: '5px', width: '45px', height: '45px' }}>
             <RoomPreferences
               sx={{ width: '100%', height: '100%' }}
@@ -115,19 +104,18 @@ export const Login = () => {
           onSubmit={loginOnSubmit}
           setLoginEmail={setLoginEmail}
           setLoginPassword={setLoginPassword}
+          isLoading={loadingLoginData}
         />
 
         <Stack
+          position="relative"
+          zIndex="1"
           alignItems="center"
-          sx={{
-            position: 'relative',
-            zIndex: '1',
-            mt: '30px',
-            p: '20px 50px',
-            maxWidth: '400px',
-            width: '100%',
-            borderTop: `1px solid ${setBorderColor(themeMode)}`
-          }}
+          mt="30px"
+          p="20px 50px"
+          maxWidth="400px"
+          width="100%"
+          borderTop={`1px solid ${setBorderColor(themeMode)}`}
         >
           <Typography variant="h3">Don&apos;t have an account?</Typography>
 
@@ -156,20 +144,12 @@ export const Login = () => {
         />
       </ContentWrapper>
 
-      {!!isOpenLoginError && (
-        <NotificationBar
-          text={errorLoginData.message}
-          typeOfBar="error"
-          setIsCloseBar={setIsOpenLoginError}
-        />
+      {!!errorLoginData && (
+        <NotificationBar text={errorLoginData.message} typeOfBar="error" />
       )}
 
-      {!!isOpenSignUpError && (
-        <NotificationBar
-          text={errorSignUp.message}
-          typeOfBar="error"
-          setIsCloseBar={setIsOpenSignUpError}
-        />
+      {!!errorSignUp && (
+        <NotificationBar text={errorSignUp.message} typeOfBar="error" />
       )}
 
       {!!isOpenSignUpSuccess && (
@@ -184,6 +164,7 @@ export const Login = () => {
         isOpen={isOpenSignUpModal}
         onClose={closeSignUpModal}
         onSubmit={signUpOnSubmit}
+        isLoading={loadingSignUp}
       />
     </>
   );

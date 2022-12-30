@@ -4,7 +4,7 @@ import { Button, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
 
 import { GET_ALL_DEVICE_TYPES, GET_ALL_DEVICES } from '@/api/query/device';
-import { NotificationBar } from '@/components';
+import { NotificationBar, ProgressBar } from '@/components';
 import {
   getDateToday,
   getDeviceNamesOptions,
@@ -39,8 +39,8 @@ export const FiltersLogs = ({
   });
 
   const {
-    loading: loadingDeviceTypes,
-    error: errorDeviceTypes,
+    loading: loadingDeviceTypesData,
+    error: errorDeviceTypesData,
     data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
   } = useQuery(GET_ALL_DEVICE_TYPES);
 
@@ -132,7 +132,7 @@ export const FiltersLogs = ({
 
   return (
     <>
-      {!!devicesData && !!deviceTypesData && (
+      {(!!devicesData && !!deviceTypesData && (
         <Stack component="form" direction="column" spacing={2}>
           <Stack
             direction="row"
@@ -156,7 +156,7 @@ export const FiltersLogs = ({
               value={filtersData.deviceTypes}
               labelText="Type of device"
               onChange={(event) => handleSelect(event, 'deviceTypes')}
-              dataLoading={loadingDeviceTypes}
+              dataLoading={loadingDeviceTypesData}
               listOfOptions={getDeviceTypesOptions(deviceTypesData)}
             />
           </Stack>
@@ -219,14 +219,17 @@ export const FiltersLogs = ({
             </Button>
           </Stack>
         </Stack>
-      )}
+      )) || <ProgressBar />}
 
       {!!errorDevicesData && (
         <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
       )}
 
-      {!!errorDeviceTypes && (
-        <NotificationBar text={errorDeviceTypes.message} typeOfBar="error" />
+      {!!errorDeviceTypesData && (
+        <NotificationBar
+          text={errorDeviceTypesData.message}
+          typeOfBar="error"
+        />
       )}
     </>
   );

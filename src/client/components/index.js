@@ -16,6 +16,7 @@ export { InformationPiece } from './InformationPiece';
 export { LoginForm } from './LoginForm';
 export { LogsInfoMenu } from './LogsInfoMenu';
 export { NotificationBar } from './NotificationBar';
+export { ProgressBar } from './ProgressBar';
 export { ReportDataCheck } from './ReportDataCheck';
 export { RouterLink } from './RouterLink';
 export { PrivateRoute, PublicRoute } from './Routes';

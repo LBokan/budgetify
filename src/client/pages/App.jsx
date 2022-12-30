@@ -5,6 +5,7 @@ import { PrivateRoute, PublicRoute } from '@/components';
 import { Layout } from '@/components/Layout';
 
 import { Devices } from './Devices';
+import { Fallback } from './Fallback';
 import { Landing } from './Landing';
 import { Login } from './Login';
 import { Logs } from './Logs';
@@ -21,7 +22,7 @@ const App = () => {
             </PublicRoute>
           }
         />
-        {/* <Route path="*" element={<Fallback />} /> */}
+        <Route path="*" element={<Fallback />} />
 
         <Route
           path="/"

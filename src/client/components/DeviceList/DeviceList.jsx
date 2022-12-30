@@ -31,7 +31,7 @@ export const DeviceList = ({
   const maxLogsQty = getMaxLogsQty(devicesData);
 
   return (
-    <Stack sx={{ width: setContainerWidth(isShortView) }}>
+    <Stack width={setContainerWidth(isShortView)}>
       {!isShortView && (
         <Stack
           direction="row"

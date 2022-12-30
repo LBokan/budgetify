@@ -10,6 +10,7 @@ import {
   ChartLine,
   FiltersLogs,
   NotificationBar,
+  ProgressBar,
   ReportDataCheck,
   TableReport
 } from '@/components';
@@ -81,124 +82,126 @@ export const Logs = () => {
         closeChartOnReset={closeChartOnReset}
       />
 
-      {(isOpenChart && !!devicesReportData && !loadingDevicesReportData && (
-        <Stack
-          direction="column"
-          mt="40px"
-          p="20px"
-          borderRadius="10px"
-          bgcolor={setBgColor(themeMode)}
-        >
+      {(!isOpenChart && <ReportDataCheck filtersData={filters} />) ||
+        (loadingDevicesReportData && <ProgressBar isFullPage />) ||
+        (!!devicesReportData && (
           <Stack
-            direction="row"
-            justifyContent="space-around"
-            alignItems="flex-start"
+            direction="column"
+            mt="40px"
+            p="20px"
+            borderRadius="10px"
+            bgcolor={setBgColor(themeMode)}
           >
             <Stack
-              direction="column"
-              justifyContent="flex-start"
-              alignItems="center"
-              maxWidth="40%"
-              width="100%"
+              direction="row"
+              justifyContent="space-around"
+              alignItems="flex-start"
             >
-              <Typography variant="h3" sx={{ mb: '20px' }}>
-                Quantity of logs per date
-              </Typography>
-
-              <ChartLine
-                data={getChartLineData(devicesReportData.chart_line)}
-                options={getChartLineOptions(
-                  devicesReportData.chart_line,
-                  setGridChartColor,
-                  themeMode
-                )}
-              />
-            </Stack>
-
-            <Stack
-              direction="column"
-              justifyContent="flex-start"
-              alignItems="center"
-              maxWidth="40%"
-              width="100%"
-            >
-              <Typography variant="h3" sx={{ mb: '20px' }}>
-                Quantity of created devices
-              </Typography>
-
-              <ChartBar
-                data={getChartBarData(devicesReportData.chart_bar)}
-                options={getChartBarOptions(setGridChartColor, themeMode)}
-              />
-            </Stack>
-          </Stack>
-
-          <Stack direction="row" justifyContent="space-around" mt="40px">
-            <Stack
-              direction="column"
-              justifyContent="flex-start"
-              alignItems="center"
-              maxWidth="30%"
-              width="100%"
-            >
-              <Typography variant="h3" sx={{ mb: '20px' }}>
-                Quantity of active/inactive devices
-              </Typography>
-
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mb: '10px',
-                  width: '100%'
-                }}
+              <Stack
+                direction="column"
+                justifyContent="flex-start"
+                alignItems="center"
+                maxWidth="40%"
+                width="100%"
               >
-                <Typography
-                  variant="h4"
-                  sx={{ fontWeight: 700 }}
-                >{`Total: ${devicesReportData.total_count}`}</Typography>
-                <Typography
-                  variant="h4"
-                  sx={{ ml: '15px', color: green[700] }}
-                >{`Active: ${devicesReportData.active_count}`}</Typography>
-                <Typography variant="h4" sx={{ ml: '15px', color: red[900] }}>
-                  {`Inactive: ${
-                    devicesReportData.total_count -
-                    devicesReportData.active_count
-                  }`}
+                <Typography variant="h3" sx={{ mb: '20px' }}>
+                  Quantity of logs per date
                 </Typography>
-              </Box>
 
-              <ChartDoughnut
-                data={getChartDoughnutData(
-                  devicesReportData,
-                  setChartDoughnutBorderColor,
-                  themeMode
-                )}
-                options={getChartDoughnutOptions()}
-                stylesObj={{
-                  maxHeight: '150px'
-                }}
-              />
+                <ChartLine
+                  data={getChartLineData(devicesReportData.chart_line)}
+                  options={getChartLineOptions(
+                    devicesReportData.chart_line,
+                    setGridChartColor,
+                    themeMode
+                  )}
+                />
+              </Stack>
+
+              <Stack
+                direction="column"
+                justifyContent="flex-start"
+                alignItems="center"
+                maxWidth="40%"
+                width="100%"
+              >
+                <Typography variant="h3" sx={{ mb: '20px' }}>
+                  Quantity of created devices
+                </Typography>
+
+                <ChartBar
+                  data={getChartBarData(devicesReportData.chart_bar)}
+                  options={getChartBarOptions(setGridChartColor, themeMode)}
+                />
+              </Stack>
             </Stack>
 
-            <Stack
-              direction="column"
-              justifyContent="flex-start"
-              alignItems="center"
-              maxWidth="40%"
-              width="100%"
-            >
-              <Typography variant="h3" sx={{ mb: '20px' }}>
-                Device logs decoding
-              </Typography>
+            <Stack direction="row" justifyContent="space-around" mt="40px">
+              <Stack
+                direction="column"
+                justifyContent="flex-start"
+                alignItems="center"
+                maxWidth="30%"
+                width="100%"
+              >
+                <Typography variant="h3" sx={{ mb: '20px' }}>
+                  Quantity of active/inactive devices
+                </Typography>
 
-              <TableReport devicesData={devicesReportData.table} />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mb: '10px',
+                    width: '100%'
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: 700 }}
+                  >{`Total: ${devicesReportData.total_count}`}</Typography>
+                  <Typography
+                    variant="h4"
+                    sx={{ ml: '15px', color: green[700] }}
+                  >{`Active: ${devicesReportData.active_count}`}</Typography>
+                  <Typography variant="h4" sx={{ ml: '15px', color: red[900] }}>
+                    {`Inactive: ${
+                      devicesReportData.total_count -
+                      devicesReportData.active_count
+                    }`}
+                  </Typography>
+                </Box>
+
+                <ChartDoughnut
+                  data={getChartDoughnutData(
+                    devicesReportData,
+                    setChartDoughnutBorderColor,
+                    themeMode
+                  )}
+                  options={getChartDoughnutOptions()}
+                  stylesObj={{
+                    maxHeight: '150px'
+                  }}
+                />
+              </Stack>
+
+              <Stack
+                direction="column"
+                justifyContent="flex-start"
+                alignItems="center"
+                maxWidth="40%"
+                width="100%"
+              >
+                <Typography variant="h3" sx={{ mb: '20px' }}>
+                  Device logs decoding
+                </Typography>
+
+                <TableReport devicesData={devicesReportData.table} />
+              </Stack>
             </Stack>
           </Stack>
-        </Stack>
-      )) || <ReportDataCheck filtersData={filters} />}
+        ))}
 
       {!!errorDevicesReportData && (
         <NotificationBar

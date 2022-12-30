@@ -26,6 +26,7 @@ import { useThemeMode } from '@/hooks';
 
 import { ConfirmationModal } from '../ConfirmationModal';
 import { NotificationBar } from '../NotificationBar';
+import { ProgressBar } from '../ProgressBar';
 import { SelectControlled } from '../SelectControlled';
 
 import { setBgColor, setBorder } from './styles';
@@ -39,15 +40,20 @@ const validationSchema = yup.object({
     .required('Type of device is required')
 });
 
-export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
+export const CreateDeviceModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isLoading = false
+}) => {
   const [isOpenConfirmationModal, setIsOpenConfirmationModal] =
     React.useState(false);
 
   const { themeMode } = useThemeMode();
 
   const {
-    loading: loadingDeviceTypes,
-    error: errorDeviceTypes,
+    loading: loadingDeviceTypesData,
+    error: errorDeviceTypesData,
     data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
   } = useQuery(GET_ALL_DEVICE_TYPES);
 
@@ -80,26 +86,24 @@ export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
 
   return (
     <>
-      {!!deviceTypesData && (
-        <Modal open={isOpen}>
+      <Modal open={isOpen}>
+        {(!!deviceTypesData && (
           <Stack
             component="form"
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              p: '40px',
-              pb: '80px',
-              maxWidth: '500px',
-              width: '100%',
-              border: setBorder(themeMode),
-              borderRadius: '10px',
-              boxShadow: 24,
-              bgcolor: setBgColor(themeMode),
-              overflow: 'hidden'
-            }}
+            position="absolute"
+            top="50%"
+            left="50%"
+            p="40px"
+            pb="80px"
+            maxWidth="500px"
+            width="100%"
+            border={setBorder(themeMode)}
+            borderRadius="10px"
+            boxShadow={24}
+            bgcolor={setBgColor(themeMode)}
+            overflow="hidden"
             onSubmit={formik.handleSubmit}
+            sx={{ transform: 'translate(-50%, -50%)' }}
           >
             <IconButton
               sx={{
@@ -165,7 +169,7 @@ export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
               value={formik.values.deviceType}
               labelText="Type of device"
               onChange={formik.handleChange}
-              dataLoading={loadingDeviceTypes}
+              dataLoading={loadingDeviceTypesData}
               isErrorData={
                 formik.touched.deviceType && Boolean(formik.errors.deviceType)
               }
@@ -193,8 +197,13 @@ export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
             </FormControl>
 
             <Stack direction="row" justifyContent="flex-end">
-              <Button variant="contained" sx={{ height: '45px' }} type="submit">
-                Submit
+              <Button
+                variant="contained"
+                sx={{ minWidth: '100px', height: '45px' }}
+                type="submit"
+              >
+                {(isLoading && <ProgressBar size="20px" color="inherit" />) ||
+                  'Submit'}
               </Button>
               <Button
                 variant="outlined"
@@ -224,11 +233,14 @@ export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
               alt="Waves image"
             />
           </Stack>
-        </Modal>
-      )}
+        )) || <ProgressBar isFullPage />}
+      </Modal>
 
-      {!!errorDeviceTypes && (
-        <NotificationBar text={errorDeviceTypes.message} typeOfBar="error" />
+      {!!errorDeviceTypesData && (
+        <NotificationBar
+          text={errorDeviceTypesData.message}
+          typeOfBar="error"
+        />
       )}
 
       <ConfirmationModal
@@ -245,5 +257,6 @@ export const CreateDeviceModal = ({ isOpen, onClose, onSubmit }) => {
 CreateDeviceModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool
 };

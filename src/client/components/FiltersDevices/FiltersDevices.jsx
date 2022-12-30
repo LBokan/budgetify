@@ -10,7 +10,7 @@ import {
 import PropTypes from 'prop-types';
 
 import { GET_ALL_DEVICE_TYPES } from '@/api/query/device';
-import { NotificationBar } from '@/components';
+import { NotificationBar, ProgressBar } from '@/components';
 import { getDeviceStatusOptions, getDeviceTypesOptions } from '@/helpers';
 
 import { SelectControlled } from '../SelectControlled';
@@ -20,8 +20,8 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
     React.useState(true);
 
   const {
-    loading: loadingDeviceTypes,
-    error: errorDeviceTypes,
+    loading: loadingDeviceTypesData,
+    error: errorDeviceTypesData,
     data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
   } = useQuery(GET_ALL_DEVICE_TYPES);
 
@@ -81,7 +81,7 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
 
   return (
     <>
-      {!!deviceTypesData && (
+      {(!!deviceTypesData && (
         <Stack
           component="form"
           direction="row"
@@ -113,7 +113,7 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
             value={filtersData.deviceTypes}
             labelText="Type of device"
             onChange={(event) => handleSelect(event, 'deviceTypes')}
-            dataLoading={loadingDeviceTypes}
+            dataLoading={loadingDeviceTypesData}
             listOfOptions={getDeviceTypesOptions(deviceTypesData)}
           />
 
@@ -135,10 +135,13 @@ export const FiltersDevices = ({ filtersData, setFiltersOnChange }) => {
             Reset
           </Button>
         </Stack>
-      )}
+      )) || <ProgressBar />}
 
-      {!!errorDeviceTypes && (
-        <NotificationBar text={errorDeviceTypes.message} typeOfBar="error" />
+      {!!errorDeviceTypesData && (
+        <NotificationBar
+          text={errorDeviceTypesData.message}
+          typeOfBar="error"
+        />
       )}
     </>
   );

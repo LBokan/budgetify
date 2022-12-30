@@ -8,7 +8,8 @@ import {
   CreateDeviceModal,
   DeviceList,
   InformationPiece,
-  NotificationBar
+  NotificationBar,
+  ProgressBar
 } from '@/components';
 import { getQtyOfPages } from '@/helpers';
 
@@ -30,10 +31,10 @@ export const Landing = () => {
     }
   });
 
-  const [createDevice, { error: errorCreateDevice }] = useMutation(
-    CREATE_DEVICE,
-    { refetchQueries: [GET_ALL_DEVICES] }
-  );
+  const [
+    createDevice,
+    { loading: loadingCreateDevice, error: errorCreateDevice }
+  ] = useMutation(CREATE_DEVICE, { refetchQueries: [GET_ALL_DEVICES] });
 
   const openCreateDeviceModal = () => {
     setIsOpenCreateDevice(true);
@@ -57,38 +58,40 @@ export const Landing = () => {
     closeCreateDeviceModal();
   };
 
-  if (loadingDevicesData) return <div>Loading...</div>;
-
   return (
     <>
-      {!!devicesData?.devices && !loadingDevicesData && (
+      {!!devicesData && (
         <>
           <Stack
             direction="row"
             alignItems="center"
             justifyContent="space-around"
-            sx={{ mt: '10px', px: '50px' }}
+            mt="10px"
+            px="50px"
           >
             <Stack
               direction="row"
               alignItems="center"
               justifyContent="flex-start"
               spacing={3}
-              sx={{ width: '100%' }}
+              width="100%"
             >
               <InformationPiece
                 title="Total devices:"
                 text={`${devicesData?.total_count}`}
+                isLoading={loadingDevicesData}
               />
 
               <InformationPiece
                 title="Active devices:"
                 text={`${devicesData?.active_count}`}
+                isLoading={loadingDevicesData}
               />
 
               <InformationPiece
                 title="Inactive devices:"
                 text={`${devicesData?.total_count - devicesData?.active_count}`}
+                isLoading={loadingDevicesData}
               />
             </Stack>
 
@@ -101,14 +104,16 @@ export const Landing = () => {
             </Button>
           </Stack>
 
-          <DeviceList
-            devicesData={devicesData.devices}
-            pagesQty={
-              getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
-            }
-            chosenPageNumber={devicesData.page_number}
-            setOffset={setOffset}
-          />
+          {(loadingDevicesData && <ProgressBar isFullPage />) || (
+            <DeviceList
+              devicesData={devicesData.devices}
+              pagesQty={
+                getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
+              }
+              chosenPageNumber={devicesData.page_number}
+              setOffset={setOffset}
+            />
+          )}
         </>
       )}
 
@@ -124,6 +129,7 @@ export const Landing = () => {
         isOpen={isOpenCreateDevice}
         onClose={closeCreateDeviceModal}
         onSubmit={createDeviceOnSubmit}
+        isLoading={loadingCreateDevice}
       />
     </>
   );

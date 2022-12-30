@@ -58,7 +58,7 @@ export const TableReport = ({ devicesData }) => {
             </TableCell>
           </TableRow>
 
-          {devicesData[page - 1].allDeviceLogs.map((log) => {
+          {devicesData[page - 1]?.allDeviceLogs.map((log) => {
             return log.issues.map((issue, index) => {
               return (
                 <TableRow key={index}>

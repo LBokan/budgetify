@@ -10,7 +10,8 @@ import {
   DeviceList,
   FiltersDevices,
   InformationPiece,
-  NotificationBar
+  NotificationBar,
+  ProgressBar
 } from '@/components';
 import { getQtyOfPages } from '@/helpers';
 
@@ -47,10 +48,10 @@ export const Devices = () => {
     }
   });
 
-  const [createDevice, { error: errorCreateDevice }] = useMutation(
-    CREATE_DEVICE,
-    { refetchQueries: [GET_ALL_DEVICES] }
-  );
+  const [
+    createDevice,
+    { loading: loadingCreateDevice, error: errorCreateDevice }
+  ] = useMutation(CREATE_DEVICE, { refetchQueries: [GET_ALL_DEVICES] });
 
   const sortByNameOnClick = () => {
     setSortByName({
@@ -92,7 +93,7 @@ export const Devices = () => {
     <>
       <FiltersDevices filtersData={filters} setFiltersOnChange={setFilters} />
 
-      {!!devicesData?.devices && !loadingDevicesData && (
+      {!!devicesData && (
         <Stack
           direction="row"
           alignItems="flex-start"
@@ -145,16 +146,19 @@ export const Devices = () => {
             <InformationPiece
               title="Total devices:"
               text={`${devicesData?.total_count}`}
+              isLoading={loadingDevicesData}
             />
 
             <InformationPiece
               title="Active devices:"
               text={`${devicesData?.active_count}`}
+              isLoading={loadingDevicesData}
             />
 
             <InformationPiece
               title="Inactive devices:"
               text={`${devicesData?.total_count - devicesData?.active_count}`}
+              isLoading={loadingDevicesData}
             />
 
             <Button
@@ -166,15 +170,17 @@ export const Devices = () => {
             </Button>
           </Stack>
 
-          <DeviceList
-            devicesData={devicesData.devices}
-            pagesQty={
-              getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
-            }
-            chosenPageNumber={devicesData.page_number}
-            setOffset={setOffset}
-            isShortView
-          />
+          {(loadingDevicesData && <ProgressBar isFullPage />) || (
+            <DeviceList
+              devicesData={devicesData.devices}
+              pagesQty={
+                getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
+              }
+              chosenPageNumber={devicesData.page_number}
+              setOffset={setOffset}
+              isShortView
+            />
+          )}
         </Stack>
       )}
 
@@ -190,6 +196,7 @@ export const Devices = () => {
         isOpen={isOpenCreateDevice}
         onClose={closeCreateDeviceModal}
         onSubmit={createDeviceOnSubmit}
+        isLoading={loadingCreateDevice}
       />
     </>
   );

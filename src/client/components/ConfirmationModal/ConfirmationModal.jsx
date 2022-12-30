@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 import { useThemeMode } from '@/hooks';
 
+import { ProgressBar } from '../ProgressBar';
+
 import { setBgColor, setBorder, setTextStyles } from './styles';
 
 export const ConfirmationModal = ({
@@ -13,27 +15,26 @@ export const ConfirmationModal = ({
   onSubmit,
   title = '',
   text,
-  variant = 'contained'
+  variant = 'contained',
+  isLoading = false
 }) => {
   const { themeMode } = useThemeMode();
 
   return (
     <Modal open={isOpen}>
       <Stack
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          p: '50px 40px',
-          maxWidth: '350px',
-          width: '100%',
-          border: setBorder(themeMode),
-          borderRadius: '10px',
-          boxShadow: 24,
-          bgcolor: setBgColor(themeMode),
-          overflow: 'hidden'
-        }}
+        position="absolute"
+        top="50%"
+        left="50%"
+        p="50px 40px"
+        maxWidth="350px"
+        width="100%"
+        border={setBorder(themeMode)}
+        borderRadius="10px"
+        boxShadow={24}
+        bgcolor={setBgColor(themeMode)}
+        overflow="hidden"
+        sx={{ transform: 'translate(-50%, -50%)' }}
       >
         <IconButton
           sx={{
@@ -57,9 +58,10 @@ export const ConfirmationModal = ({
           {text}
         </Typography>
 
-        <Stack direction="row" justifyContent="flex-end" sx={{ mt: '25px' }}>
+        <Stack direction="row" justifyContent="flex-end" mt="25px">
           <Button variant={variant} sx={{ height: '40px' }} onClick={onSubmit}>
-            Yes
+            {(isLoading && <ProgressBar size="20px" color="inherit" />) ||
+              'Yes'}
           </Button>
           <Button
             variant="outlined"
@@ -80,5 +82,6 @@ ConfirmationModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   title: PropTypes.string,
   text: PropTypes.string.isRequired,
-  variant: PropTypes.string
+  variant: PropTypes.string,
+  isLoading: PropTypes.bool
 };
