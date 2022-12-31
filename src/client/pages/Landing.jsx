@@ -15,6 +15,10 @@ import { getQtyOfPages } from '@/helpers';
 
 export const Landing = () => {
   const [isOpenCreateDevice, setIsOpenCreateDevice] = React.useState(false);
+
+  const [isOpenCreateDeviceSuccess, setIsOpenCreateDeviceSuccess] =
+    React.useState(false);
+
   const [offset, setOffset] = React.useState(0);
   const limitPerPage = 3;
 
@@ -53,6 +57,7 @@ export const Landing = () => {
       },
       onCompleted: () => {
         client.resetStore();
+        setIsOpenCreateDeviceSuccess(true);
       }
     });
     closeCreateDeviceModal();
@@ -123,6 +128,14 @@ export const Landing = () => {
 
       {!!errorCreateDevice && (
         <NotificationBar text={errorCreateDevice.message} typeOfBar="error" />
+      )}
+
+      {!!isOpenCreateDeviceSuccess && (
+        <NotificationBar
+          text={'Creation of the device was successful'}
+          typeOfBar="success"
+          setIsOpenBarOnComplete={setIsOpenCreateDeviceSuccess}
+        />
       )}
 
       <CreateDeviceModal

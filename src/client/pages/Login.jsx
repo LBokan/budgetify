@@ -156,7 +156,7 @@ export const Login = () => {
         <NotificationBar
           text={'Sign up was successful'}
           typeOfBar="success"
-          setIsCloseBar={setIsOpenSignUpSuccess}
+          setIsOpenBarOnComplete={setIsOpenSignUpSuccess}
         />
       )}
 

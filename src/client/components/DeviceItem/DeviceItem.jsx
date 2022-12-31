@@ -29,7 +29,12 @@ import {
   setLineChartColor
 } from './styles';
 
-export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
+export const DeviceItem = ({
+  deviceData,
+  maxLogsQty,
+  isShortView = false,
+  openSuccessBar = () => {}
+}) => {
   const [chosenDeviceData, setChosenDeviceData] = React.useState({});
   const [isOpenEditDevice, setIsOpenEditDevice] = React.useState(false);
   const [isOpenDeleteDevice, setIsOpenDeleteDevice] = React.useState(false);
@@ -142,6 +147,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
       },
       onCompleted: () => {
         resetCache();
+        openSuccessBar('Edit');
       }
     });
     closeEditDeviceModal();
@@ -154,6 +160,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
       },
       onCompleted: () => {
         resetCache();
+        openSuccessBar('Delete');
       }
     });
     closeDeleteDeviceModal();
@@ -347,5 +354,6 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
 DeviceItem.propTypes = {
   deviceData: PropTypes.object.isRequired,
   maxLogsQty: PropTypes.number.isRequired,
-  isShortView: PropTypes.bool
+  isShortView: PropTypes.bool,
+  openSuccessBar: PropTypes.func
 };
