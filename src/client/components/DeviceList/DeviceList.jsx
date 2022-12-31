@@ -99,7 +99,7 @@ export const DeviceList = ({
         </Stack>
       )}
 
-      {!devicesData.length ? (
+      {!devicesData?.length ? (
         <Box
           sx={{
             mt: '30px',
@@ -114,7 +114,7 @@ export const DeviceList = ({
           justifyContent="center"
           flexWrap="wrap"
         >
-          {devicesData.map((device) => (
+          {devicesData?.map((device) => (
             <DeviceItem
               key={device.id}
               deviceData={device}

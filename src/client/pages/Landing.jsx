@@ -106,11 +106,11 @@ export const Landing = () => {
 
           {(loadingDevicesData && <ProgressBar isFullPage />) || (
             <DeviceList
-              devicesData={devicesData.devices}
+              devicesData={devicesData?.devices}
               pagesQty={
                 getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
               }
-              chosenPageNumber={devicesData.page_number}
+              chosenPageNumber={devicesData?.page_number}
               setOffset={setOffset}
             />
           )}

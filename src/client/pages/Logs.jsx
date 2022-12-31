@@ -109,9 +109,9 @@ export const Logs = () => {
                 </Typography>
 
                 <ChartLine
-                  data={getChartLineData(devicesReportData.chart_line)}
+                  data={getChartLineData(devicesReportData?.chart_line)}
                   options={getChartLineOptions(
-                    devicesReportData.chart_line,
+                    devicesReportData?.chart_line,
                     setGridChartColor,
                     themeMode
                   )}
@@ -130,7 +130,7 @@ export const Logs = () => {
                 </Typography>
 
                 <ChartBar
-                  data={getChartBarData(devicesReportData.chart_bar)}
+                  data={getChartBarData(devicesReportData?.chart_bar)}
                   options={getChartBarOptions(setGridChartColor, themeMode)}
                 />
               </Stack>
@@ -160,15 +160,15 @@ export const Logs = () => {
                   <Typography
                     variant="h4"
                     sx={{ fontWeight: 700 }}
-                  >{`Total: ${devicesReportData.total_count}`}</Typography>
+                  >{`Total: ${devicesReportData?.total_count}`}</Typography>
                   <Typography
                     variant="h4"
                     sx={{ ml: '15px', color: green[700] }}
-                  >{`Active: ${devicesReportData.active_count}`}</Typography>
+                  >{`Active: ${devicesReportData?.active_count}`}</Typography>
                   <Typography variant="h4" sx={{ ml: '15px', color: red[900] }}>
                     {`Inactive: ${
-                      devicesReportData.total_count -
-                      devicesReportData.active_count
+                      devicesReportData?.total_count -
+                      devicesReportData?.active_count
                     }`}
                   </Typography>
                 </Box>
@@ -197,7 +197,7 @@ export const Logs = () => {
                   Device logs decoding
                 </Typography>
 
-                <TableReport devicesData={devicesReportData.table} />
+                <TableReport devicesData={devicesReportData?.table} />
               </Stack>
             </Stack>
           </Stack>

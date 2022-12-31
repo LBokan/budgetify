@@ -31,7 +31,7 @@ export const getCurrentWeekDaysArr = () => {
   return weekDaysArr;
 };
 
-export const getSetDatesLogsArr = (devicesData, isChartBar = false) => {
+export const getSetDatesLogsArr = (devicesData = [], isChartBar = false) => {
   let setDatesLogsArr = [];
   const dateToday = getDateToday();
 
@@ -54,7 +54,7 @@ export const getSetDatesLogsArr = (devicesData, isChartBar = false) => {
   return setDatesLogsArr.sort();
 };
 
-export const getMaxLogsQty = (devicesData) => {
+export const getMaxLogsQty = (devicesData = []) => {
   let maxLogsQty = 0;
 
   devicesData.forEach((device) => {
@@ -75,7 +75,7 @@ export const getChartLineData = (devicesData) => ({
   datasets: [...getChartLineDataset(devicesData)]
 });
 
-export const getChartLineDataset = (devicesData) =>
+export const getChartLineDataset = (devicesData = []) =>
   devicesData.map((device) => ({
     label: device.deviceName,
     data: getChartLineDatasetData(devicesData, device),
@@ -149,7 +149,7 @@ export const getChartBarData = (devicesData) => ({
   datasets: [...getChartBarDataset(devicesData)]
 });
 
-export const getChartBarDataset = (devicesData) => [
+export const getChartBarDataset = (devicesData = []) => [
   {
     label: ['Devices quantity'],
     data: devicesData.map((devicesInfo) => devicesInfo.totalDevicesCreated),
@@ -209,7 +209,7 @@ export const getChartDoughnutData = (
 });
 
 export const getChartDoughnutDataset = (
-  devicesData,
+  devicesData = [],
   setChartDoughnutBorderColor,
   themeMode
 ) => [

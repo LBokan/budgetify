@@ -6,7 +6,7 @@ import { useThemeMode } from '@/hooks';
 
 import { setBgColor, setBoxShadowColor } from './styles';
 
-export const ContentWrapper = ({ children, type = 'div', isLoginPage }) => {
+export const ContentWrapper = ({ children, type = 'div', isPublicPage }) => {
   const { themeMode } = useThemeMode();
 
   type = type.toLocaleLowerCase();
@@ -14,10 +14,14 @@ export const ContentWrapper = ({ children, type = 'div', isLoginPage }) => {
   const properties = {
     position: 'relative',
     display: 'flex',
-    flexDirection: isLoginPage ? 'column' : 'row',
-    alignItems: type === 'header' || isLoginPage ? 'center' : 'flex-start',
+    flexDirection: isPublicPage ? 'column' : 'row',
+    alignItems: type === 'header' || isPublicPage ? 'center' : 'flex-start',
     justifyContent:
-      type === 'header' ? 'space-between' : isLoginPage ? 'center' : 'flex-end',
+      type === 'header'
+        ? 'space-between'
+        : isPublicPage
+        ? 'center'
+        : 'flex-end',
     width: '100%',
     backgroundColor: setBgColor(themeMode, type)
   };
@@ -52,5 +56,5 @@ export const ContentWrapper = ({ children, type = 'div', isLoginPage }) => {
 ContentWrapper.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.string,
-  isLoginPage: PropTypes.bool
+  isPublicPage: PropTypes.bool
 };

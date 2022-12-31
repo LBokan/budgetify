@@ -172,11 +172,11 @@ export const Devices = () => {
 
           {(loadingDevicesData && <ProgressBar isFullPage />) || (
             <DeviceList
-              devicesData={devicesData.devices}
+              devicesData={devicesData?.devices}
               pagesQty={
                 getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
               }
-              chosenPageNumber={devicesData.page_number}
+              chosenPageNumber={devicesData?.page_number}
               setOffset={setOffset}
               isShortView
             />
@@ -188,7 +188,7 @@ export const Devices = () => {
         <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
       )}
 
-      {!!errorDevicesData && (
+      {!!errorCreateDevice && (
         <NotificationBar text={errorCreateDevice.message} typeOfBar="error" />
       )}
 

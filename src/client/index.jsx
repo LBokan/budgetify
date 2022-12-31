@@ -6,6 +6,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { useThemeMode } from '@/hooks';
 
+import { ErrorBoundary } from './components';
 import { apolloLink } from './helpers';
 import { store } from './store';
 import { darkTheme, lightTheme } from './theme';
@@ -24,9 +25,11 @@ const Root = () => {
 
   return (
     <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <App />
-      </React.Suspense>
+      <ErrorBoundary>
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <App />
+        </React.Suspense>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

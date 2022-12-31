@@ -15,7 +15,7 @@ import { useThemeMode } from '@/hooks';
 
 import { setTableHeaderStyles } from './styles';
 
-export const TableReport = ({ devicesData }) => {
+export const TableReport = ({ devicesData = [] }) => {
   const [page, setPage] = React.useState(1);
 
   const { themeMode } = useThemeMode();

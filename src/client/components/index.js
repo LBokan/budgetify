@@ -9,6 +9,7 @@ export { CreateDeviceModal } from './CreateDeviceModal';
 export { DeviceItem } from './DeviceItem';
 export { DeviceList } from './DeviceList';
 export { EditDeviceModal } from './EditDeviceModal';
+export { ErrorBoundary } from './ErrorBoundary';
 export { FiltersDevices } from './FiltersDevices';
 export { FiltersLogs } from './FiltersLogs';
 export { Header } from './Header';

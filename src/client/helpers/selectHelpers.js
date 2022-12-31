@@ -1,11 +1,11 @@
-export const getDeviceNamesOptions = (devicesData) =>
-  (devicesData || []).map((device) => ({
+export const getDeviceNamesOptions = (devicesData = []) =>
+  devicesData.map((device) => ({
     id: device.id,
     label: device.deviceName
   }));
 
-export const getDeviceTypesOptions = (deviceTypesData) =>
-  (deviceTypesData || []).map((deviceType) => ({
+export const getDeviceTypesOptions = (deviceTypesData = []) =>
+  deviceTypesData.map((deviceType) => ({
     id: deviceType.id,
     label: deviceType.name
   }));
@@ -19,7 +19,7 @@ export const getDeviceStatusOptions = () => {
   }));
 };
 
-export const getMinDate = (devicesData) => {
+export const getMinDate = (devicesData = []) => {
   let minDate = 9999999999999;
 
   devicesData.forEach((device) => {

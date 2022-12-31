@@ -27,7 +27,7 @@ export const Login = () => {
 
   const { themeMode } = useThemeMode();
 
-  const [loginOnClick, { loading: loadingLoginData, error: errorLoginData }] =
+  const [login, { loading: loadingLoginData, error: errorLoginData }] =
     useLazyQuery(LOGIN, {
       variables: {
         email: loginEmail,
@@ -52,7 +52,7 @@ export const Login = () => {
     setLoginEmail(data.email);
     setLoginPassword(data.password);
 
-    loginOnClick();
+    login();
   };
 
   const openSignUpModal = () => {
@@ -82,7 +82,7 @@ export const Login = () => {
 
   return (
     <>
-      <ContentWrapper type="main" isLoginPage>
+      <ContentWrapper type="main" isPublicPage>
         <Stack position="relative" direction="row">
           <Icon sx={{ mr: '5px', width: '45px', height: '45px' }}>
             <RoomPreferences

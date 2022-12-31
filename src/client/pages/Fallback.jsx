@@ -6,7 +6,7 @@ import { ContentWrapper } from '@/components';
 
 export const Fallback = () => {
   return (
-    <ContentWrapper type="main" isLoginPage>
+    <ContentWrapper type="main" isPublicPage>
       <Typography variant="h1" sx={{ fontSize: '32px' }}>
         Page does not exist
       </Typography>
