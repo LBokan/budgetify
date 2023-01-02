@@ -27,8 +27,11 @@ export const Devices = () => {
   });
   const [isOpenCreateDevice, setIsOpenCreateDevice] = React.useState(false);
 
-  const [isOpenCreateDeviceSuccess, setIsOpenCreateDeviceSuccess] =
-    React.useState(false);
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
 
   const [offset, setOffset] = React.useState(0);
   const limitPerPage = 8;
@@ -37,7 +40,6 @@ export const Devices = () => {
 
   const {
     loading: loadingDevicesData,
-    error: errorDevicesData,
     data: { getAllDevices: devicesData } = { getAllDevices: {} }
   } = useQuery(GET_ALL_DEVICES, {
     variables: {
@@ -48,13 +50,31 @@ export const Devices = () => {
       filterByName: filters.deviceName,
       filterByType: filters.deviceTypes,
       filterByStatus: filters.deviceStatuses
+    },
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
     }
   });
 
-  const [
-    createDevice,
-    { loading: loadingCreateDevice, error: errorCreateDevice }
-  ] = useMutation(CREATE_DEVICE, { refetchQueries: [GET_ALL_DEVICES] });
+  const [createDevice, { loading: loadingCreateDevice }] = useMutation(
+    CREATE_DEVICE,
+    {
+      refetchQueries: [GET_ALL_DEVICES],
+      onError: (error) => {
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'error',
+          text: error.message
+        }));
+      }
+    }
+  );
 
   const sortByNameOnClick = () => {
     setSortByName({
@@ -87,10 +107,24 @@ export const Devices = () => {
       },
       onCompleted: () => {
         client.resetStore();
-        setIsOpenCreateDeviceSuccess(true);
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'success',
+          text: 'Creation of the device was successful'
+        }));
       }
     });
     closeCreateDeviceModal();
+  };
+
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
   };
 
   return (
@@ -188,19 +222,11 @@ export const Devices = () => {
         </Stack>
       )}
 
-      {!!errorDevicesData && (
-        <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
-      )}
-
-      {!!errorCreateDevice && (
-        <NotificationBar text={errorCreateDevice.message} typeOfBar="error" />
-      )}
-
-      {!!isOpenCreateDeviceSuccess && (
+      {!!notificationBar.isOpen && (
         <NotificationBar
-          text={'Creation of the device was successful'}
-          typeOfBar="success"
-          setIsOpenBarOnComplete={setIsOpenCreateDeviceSuccess}
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
         />
       )}
 

@@ -20,10 +20,11 @@ export const DeviceList = ({
   setOffset,
   isShortView = false
 }) => {
-  const [isOpenEditDeviceSuccess, setIsOpenEditDeviceSuccess] =
-    React.useState(false);
-  const [isOpenDeleteDeviceSuccess, setIsOpenDeleteDeviceSuccess] =
-    React.useState(false);
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
 
   const [page, setPage] = React.useState(chosenPageNumber);
 
@@ -38,16 +39,35 @@ export const DeviceList = ({
   const openSuccessBar = (typeOfAction) => {
     switch (typeOfAction.toLowerCase()) {
       case 'edit':
-        setIsOpenEditDeviceSuccess(true);
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'success',
+          text: 'Editing of the device was successful'
+        }));
         break;
 
       case 'delete':
-        setIsOpenDeleteDeviceSuccess(true);
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'success',
+          text: 'Deletion of the device was successful'
+        }));
         break;
 
       default:
         return;
     }
+  };
+
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
   };
 
   return (
@@ -160,19 +180,11 @@ export const DeviceList = ({
         )}
       </Stack>
 
-      {!!isOpenEditDeviceSuccess && (
+      {!!notificationBar.isOpen && (
         <NotificationBar
-          text={'Editing of the device was successful'}
-          typeOfBar="success"
-          setIsOpenBarOnComplete={setIsOpenEditDeviceSuccess}
-        />
-      )}
-
-      {!!isOpenDeleteDeviceSuccess && (
-        <NotificationBar
-          text={'Deletion of the device was successful'}
-          typeOfBar="success"
-          setIsOpenBarOnComplete={setIsOpenDeleteDeviceSuccess}
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
         />
       )}
     </>

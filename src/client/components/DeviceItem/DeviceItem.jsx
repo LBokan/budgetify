@@ -39,6 +39,12 @@ export const DeviceItem = ({
   const [isOpenEditDevice, setIsOpenEditDevice] = React.useState(false);
   const [isOpenDeleteDevice, setIsOpenDeleteDevice] = React.useState(false);
 
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isOpenLogsMenu = Boolean(anchorEl);
 
@@ -47,17 +53,35 @@ export const DeviceItem = ({
 
   const client = useApolloClient();
 
-  const [editDevice, { loading: loadingEditDevice, error: errorEditDevice }] =
-    useMutation(EDIT_DEVICE, {
-      refetchQueries: [GET_ALL_DEVICES]
-    });
+  const [editDevice, { loading: loadingEditDevice }] = useMutation(
+    EDIT_DEVICE,
+    {
+      refetchQueries: [GET_ALL_DEVICES],
+      onError: (error) => {
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'error',
+          text: error.message
+        }));
+      }
+    }
+  );
 
-  const [
-    deleteDevice,
-    { loading: loadingDeleteDevice, error: errorDeleteDevice }
-  ] = useMutation(DELETE_DEVICE, {
-    refetchQueries: [GET_ALL_DEVICES]
-  });
+  const [deleteDevice, { loading: loadingDeleteDevice }] = useMutation(
+    DELETE_DEVICE,
+    {
+      refetchQueries: [GET_ALL_DEVICES],
+      onError: (error) => {
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'error',
+          text: error.message
+        }));
+      }
+    }
+  );
 
   const todayLogsArr = deviceData?.allDeviceLogs.filter(
     (log) => moment(log.date).format('YYYY-MM-DD') == dateToday
@@ -164,6 +188,15 @@ export const DeviceItem = ({
       }
     });
     closeDeleteDeviceModal();
+  };
+
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
   };
 
   return (
@@ -316,12 +349,12 @@ export const DeviceItem = ({
         </Box>
       </Stack>
 
-      {!!errorEditDevice && (
-        <NotificationBar text={errorEditDevice.message} typeOfBar="error" />
-      )}
-
-      {!!errorDeleteDevice && (
-        <NotificationBar text={errorDeleteDevice.message} typeOfBar="error" />
+      {!!notificationBar.isOpen && (
+        <NotificationBar
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
+        />
       )}
 
       <EditDeviceModal

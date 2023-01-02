@@ -28,21 +28,42 @@ export const FiltersLogs = ({
   const [isResetButtonDisabled, setIsResetButtonDisabled] =
     React.useState(true);
 
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
+
   const {
     loading: loadingDevicesData,
-    error: errorDevicesData,
     data: { getAllDevices: { devices: devicesData } } = { getAllDevices: {} }
   } = useQuery(GET_ALL_DEVICES, {
     variables: {
       sortByName: true
+    },
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
     }
   });
 
   const {
     loading: loadingDeviceTypesData,
-    error: errorDeviceTypesData,
     data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
-  } = useQuery(GET_ALL_DEVICE_TYPES);
+  } = useQuery(GET_ALL_DEVICE_TYPES, {
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
+    }
+  });
 
   const handleSelect = (event, typeOfFilter) => {
     const selectedValue = event.target.value;
@@ -108,6 +129,15 @@ export const FiltersLogs = ({
     }));
 
     closeChartOnReset();
+  };
+
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
   };
 
   React.useEffect(() => {
@@ -221,14 +251,11 @@ export const FiltersLogs = ({
         </Stack>
       )) || <ProgressBar />}
 
-      {!!errorDevicesData && (
-        <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
-      )}
-
-      {!!errorDeviceTypesData && (
+      {!!notificationBar.isOpen && (
         <NotificationBar
-          text={errorDeviceTypesData.message}
-          typeOfBar="error"
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
         />
       )}
     </>
