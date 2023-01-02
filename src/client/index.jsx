@@ -6,7 +6,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { useThemeMode } from '@/hooks';
 
-import { ErrorBoundary } from './components';
+import { ErrorBoundary, ProgressBar } from './components';
 import { apolloLink } from './helpers';
 import { store } from './store';
 import { darkTheme, lightTheme } from './theme';
@@ -26,7 +26,7 @@ const Root = () => {
   return (
     <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
       <ErrorBoundary>
-        <React.Suspense fallback={<div>Loading...</div>}>
+        <React.Suspense fallback={<ProgressBar isFullPage />}>
           <App />
         </React.Suspense>
       </ErrorBoundary>
