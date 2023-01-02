@@ -16,7 +16,6 @@ const {
   DeviceType,
   DevicesResponseType,
   DevicesResponseReportType,
-  LogType,
   TypeType,
   UserType,
   AuthDataType
@@ -69,6 +68,24 @@ const Query = new GraphQLObjectType({
         return {
           userId: userData.id,
           token: token
+        };
+      }
+    },
+    getUser: {
+      type: UserType,
+      args: {},
+      resolve: async (parent, args, request) => {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
+        const userData = await Users.findById(request.userId);
+
+        return {
+          name: userData.name,
+          surname: userData.surname,
+          mobileNumber: userData.mobileNumber,
+          email: userData.email
         };
       }
     },
@@ -353,28 +370,6 @@ const Query = new GraphQLObjectType({
         };
       }
     },
-    getDevice: {
-      type: DeviceType,
-      args: { id: { type: GraphQLID } },
-      resolve(parent, args, request) {
-        return Devices.find({
-          creator: request.userId
-        }).findById(args.id);
-      }
-    },
-    getAllLogs: {
-      type: new GraphQLList(LogType),
-      resolve() {
-        return Logs.find();
-      }
-    },
-    getDeviceLogs: {
-      type: LogType,
-      args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
-        return Logs.findById(args.id);
-      }
-    },
     getAllDeviceTypes: {
       type: new GraphQLList(TypeType),
       resolve() {
@@ -416,6 +411,51 @@ const Mutation = new GraphQLObjectType({
         const result = await user.save();
 
         return { ...result._doc, id: result.id, password: null };
+      }
+    },
+    editUser: {
+      type: UserType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        surname: { type: new GraphQLNonNull(GraphQLString) },
+        mobileNumber: { type: GraphQLString }
+      },
+      resolve: async (parent, args, request) => {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
+        return Users.findByIdAndUpdate(
+          request.userId,
+          {
+            $set: {
+              name: args.name,
+              surname: args.surname,
+              mobileNumber: args.mobileNumber
+            }
+          },
+          { new: true }
+        );
+      }
+    },
+    deleteUser: {
+      type: UserType,
+      args: {},
+      resolve: async (parent, args, request) => {
+        if (!request.isAuth) {
+          throw new Error('Unauthenticated');
+        }
+
+        const userData = await Users.findById(request.userId);
+
+        userData.createdDevices.forEach(async (deviceId) => {
+          const deletedDeviceId = deviceId.toString();
+
+          await Logs.deleteOne({ deviceId: deletedDeviceId });
+          await Devices.findByIdAndRemove(deletedDeviceId);
+        });
+
+        return Users.findByIdAndRemove(request.userId);
       }
     },
     createDevice: {

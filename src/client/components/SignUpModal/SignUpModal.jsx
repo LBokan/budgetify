@@ -26,7 +26,7 @@ import { ProgressBar } from '../ProgressBar';
 import { setBgColor, setBorder, setIconColor } from './styles';
 
 const mobileNumberRegExp =
-  /^[+]?[(]?[1-9]{1,2}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{3}[-s.]?[0-9]{3}$/;
+  /^[+]?[(]?[1-9]{2}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{3}[-s.]?[0-9]{3}$/;
 
 const validationSchema = yup.object({
   name: yup.string('Enter your name').trim().required('Name is required'),
