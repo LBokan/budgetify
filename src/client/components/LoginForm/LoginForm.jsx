@@ -16,6 +16,8 @@ import * as yup from 'yup';
 
 import { useThemeMode } from '@/hooks';
 
+import { ProgressBar } from '../ProgressBar';
+
 import { setIconColor } from './styles';
 
 const validationSchema = yup.object({
@@ -29,7 +31,7 @@ const validationSchema = yup.object({
     .required('Password is required')
 });
 
-export const LoginForm = ({ onSubmit }) => {
+export const LoginForm = ({ onSubmit, isLoading = false }) => {
   const { themeMode } = useThemeMode();
 
   const formik = useFormik({
@@ -141,12 +143,13 @@ export const LoginForm = ({ onSubmit }) => {
         fullWidth
         type="submit"
       >
-        Login
+        {(isLoading && <ProgressBar size="20px" color="inherit" />) || 'Login'}
       </Button>
     </Box>
   );
 };
 
 LoginForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool
 };

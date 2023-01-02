@@ -4,7 +4,7 @@ import { Button, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
 
 import { GET_ALL_DEVICE_TYPES, GET_ALL_DEVICES } from '@/api/query/device';
-import { NotificationBar } from '@/components';
+import { NotificationBar, ProgressBar } from '@/components';
 import {
   getDateToday,
   getDeviceNamesOptions,
@@ -28,21 +28,42 @@ export const FiltersLogs = ({
   const [isResetButtonDisabled, setIsResetButtonDisabled] =
     React.useState(true);
 
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
+
   const {
     loading: loadingDevicesData,
-    error: errorDevicesData,
     data: { getAllDevices: { devices: devicesData } } = { getAllDevices: {} }
   } = useQuery(GET_ALL_DEVICES, {
     variables: {
       sortByName: true
+    },
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
     }
   });
 
   const {
-    loading: loadingDeviceTypes,
-    error: errorDeviceTypes,
+    loading: loadingDeviceTypesData,
     data: { getAllDeviceTypes: deviceTypesData } = { getAllDeviceTypes: [] }
-  } = useQuery(GET_ALL_DEVICE_TYPES);
+  } = useQuery(GET_ALL_DEVICE_TYPES, {
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
+    }
+  });
 
   const handleSelect = (event, typeOfFilter) => {
     const selectedValue = event.target.value;
@@ -110,6 +131,15 @@ export const FiltersLogs = ({
     closeChartOnReset();
   };
 
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
+  };
+
   React.useEffect(() => {
     setFiltersOnChange((prevState) => ({
       ...prevState,
@@ -132,7 +162,7 @@ export const FiltersLogs = ({
 
   return (
     <>
-      {!!devicesData && !!deviceTypesData && (
+      {(!!devicesData && !!deviceTypesData && (
         <Stack component="form" direction="column" spacing={2}>
           <Stack
             direction="row"
@@ -156,7 +186,7 @@ export const FiltersLogs = ({
               value={filtersData.deviceTypes}
               labelText="Type of device"
               onChange={(event) => handleSelect(event, 'deviceTypes')}
-              dataLoading={loadingDeviceTypes}
+              dataLoading={loadingDeviceTypesData}
               listOfOptions={getDeviceTypesOptions(deviceTypesData)}
             />
           </Stack>
@@ -219,14 +249,14 @@ export const FiltersLogs = ({
             </Button>
           </Stack>
         </Stack>
-      )}
+      )) || <ProgressBar />}
 
-      {!!errorDevicesData && (
-        <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
-      )}
-
-      {!!errorDeviceTypes && (
-        <NotificationBar text={errorDeviceTypes.message} typeOfBar="error" />
+      {!!notificationBar.isOpen && (
+        <NotificationBar
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
+        />
       )}
     </>
   );

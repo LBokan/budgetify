@@ -20,7 +20,7 @@ export {
   getMaxLogsQty,
   getSetDatesLogsArr
 } from './chartsHelpers';
-export { LOCAL_STORAGE_API_KEY } from './constants';
+export { LOCAL_STORAGE_API_KEY, LOCAL_STORAGE_THEME } from './constants';
 export { getDeviceTypeImage } from './deviceItemHelpers';
 export { getQtyOfPages } from './helpers';
 export {

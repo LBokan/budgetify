@@ -10,7 +10,8 @@ import {
   DeviceList,
   FiltersDevices,
   InformationPiece,
-  NotificationBar
+  NotificationBar,
+  ProgressBar
 } from '@/components';
 import { getQtyOfPages } from '@/helpers';
 
@@ -26,6 +27,12 @@ export const Devices = () => {
   });
   const [isOpenCreateDevice, setIsOpenCreateDevice] = React.useState(false);
 
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
+
   const [offset, setOffset] = React.useState(0);
   const limitPerPage = 8;
 
@@ -33,7 +40,6 @@ export const Devices = () => {
 
   const {
     loading: loadingDevicesData,
-    error: errorDevicesData,
     data: { getAllDevices: devicesData } = { getAllDevices: {} }
   } = useQuery(GET_ALL_DEVICES, {
     variables: {
@@ -44,12 +50,30 @@ export const Devices = () => {
       filterByName: filters.deviceName,
       filterByType: filters.deviceTypes,
       filterByStatus: filters.deviceStatuses
+    },
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
     }
   });
 
-  const [createDevice, { error: errorCreateDevice }] = useMutation(
+  const [createDevice, { loading: loadingCreateDevice }] = useMutation(
     CREATE_DEVICE,
-    { refetchQueries: [GET_ALL_DEVICES] }
+    {
+      refetchQueries: [GET_ALL_DEVICES],
+      onError: (error) => {
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'error',
+          text: error.message
+        }));
+      }
+    }
   );
 
   const sortByNameOnClick = () => {
@@ -83,16 +107,31 @@ export const Devices = () => {
       },
       onCompleted: () => {
         client.resetStore();
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'success',
+          text: 'Creation of the device was successful'
+        }));
       }
     });
     closeCreateDeviceModal();
+  };
+
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
   };
 
   return (
     <>
       <FiltersDevices filtersData={filters} setFiltersOnChange={setFilters} />
 
-      {!!devicesData?.devices && !loadingDevicesData && (
+      {!!devicesData && (
         <Stack
           direction="row"
           alignItems="flex-start"
@@ -145,16 +184,19 @@ export const Devices = () => {
             <InformationPiece
               title="Total devices:"
               text={`${devicesData?.total_count}`}
+              isLoading={loadingDevicesData}
             />
 
             <InformationPiece
               title="Active devices:"
               text={`${devicesData?.active_count}`}
+              isLoading={loadingDevicesData}
             />
 
             <InformationPiece
               title="Inactive devices:"
               text={`${devicesData?.total_count - devicesData?.active_count}`}
+              isLoading={loadingDevicesData}
             />
 
             <Button
@@ -166,30 +208,33 @@ export const Devices = () => {
             </Button>
           </Stack>
 
-          <DeviceList
-            devicesData={devicesData.devices}
-            pagesQty={
-              getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
-            }
-            chosenPageNumber={devicesData.page_number}
-            setOffset={setOffset}
-            isShortView
-          />
+          {(loadingDevicesData && <ProgressBar isFullPage />) || (
+            <DeviceList
+              devicesData={devicesData?.devices}
+              pagesQty={
+                getQtyOfPages(devicesData?.total_count, limitPerPage) || 0
+              }
+              chosenPageNumber={devicesData?.page_number}
+              setOffset={setOffset}
+              isShortView
+            />
+          )}
         </Stack>
       )}
 
-      {!!errorDevicesData && (
-        <NotificationBar text={errorDevicesData.message} typeOfBar="error" />
-      )}
-
-      {!!errorDevicesData && (
-        <NotificationBar text={errorCreateDevice.message} typeOfBar="error" />
+      {!!notificationBar.isOpen && (
+        <NotificationBar
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
+        />
       )}
 
       <CreateDeviceModal
         isOpen={isOpenCreateDevice}
         onClose={closeCreateDeviceModal}
         onSubmit={createDeviceOnSubmit}
+        isLoading={loadingCreateDevice}
       />
     </>
   );

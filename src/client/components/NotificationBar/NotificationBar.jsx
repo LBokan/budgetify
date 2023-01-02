@@ -6,18 +6,17 @@ import PropTypes from 'prop-types';
 export const NotificationBar = ({
   text,
   typeOfBar = 'info',
-  setIsCloseBar = () => {}
+  setIsOpenBarOnComplete = () => {}
 }) => {
   const [isOpenBar, setIsOpenBar] = React.useState(true);
 
   const handleClose = (event, reason) => {
-    setIsCloseBar();
-
     if (reason === 'clickaway') {
       return;
     }
 
     setIsOpenBar(false);
+    setIsOpenBarOnComplete(false);
   };
 
   const actionElement = (
@@ -54,5 +53,5 @@ export const NotificationBar = ({
 NotificationBar.propTypes = {
   text: PropTypes.string.isRequired,
   typeOfBar: PropTypes.string,
-  setIsCloseBar: PropTypes.func
+  setIsOpenBarOnComplete: PropTypes.func
 };

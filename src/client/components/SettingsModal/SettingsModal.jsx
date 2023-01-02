@@ -28,20 +28,18 @@ export const SettingsModal = ({ isOpen, onClose }) => {
     <>
       <Modal open={isOpen}>
         <Stack
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            p: '50px 40px',
-            maxWidth: '500px',
-            width: '100%',
-            border: setBorder(themeMode),
-            borderRadius: '10px',
-            boxShadow: 24,
-            bgcolor: setBgColor(themeMode),
-            overflow: 'hidden'
-          }}
+          position="absolute"
+          top="50%"
+          left="50%"
+          p="50px 40px"
+          maxWidth="500px"
+          width="100%"
+          border={setBorder(themeMode)}
+          borderRadius="10px"
+          boxShadow={24}
+          bgcolor={setBgColor(themeMode)}
+          overflow="hidden"
+          sx={{ transform: 'translate(-50%, -50%)' }}
         >
           <IconButton
             sx={{

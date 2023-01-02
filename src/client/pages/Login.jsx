@@ -21,15 +21,18 @@ import { setBorderColor } from './styles';
 export const Login = () => {
   const [loginEmail, setLoginEmail] = React.useState('');
   const [loginPassword, setLoginPassword] = React.useState('');
-  const [isOpenLoginError, setIsOpenLoginError] = React.useState(false);
 
   const [isOpenSignUpModal, setIsOpenSignUpModal] = React.useState(false);
-  const [isOpenSignUpError, setIsOpenSignUpError] = React.useState(false);
-  const [isOpenSignUpSuccess, setIsOpenSignUpSuccess] = React.useState(false);
+
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
 
   const { themeMode } = useThemeMode();
 
-  const [loginOnClick, { error: errorLoginData }] = useLazyQuery(LOGIN, {
+  const [login, { loading: loadingLoginData }] = useLazyQuery(LOGIN, {
     variables: {
       email: loginEmail,
       password: loginPassword
@@ -37,12 +40,26 @@ export const Login = () => {
     onCompleted: (data) => {
       handleLogin(data.login.token);
     },
-    onError: () => {
-      setIsOpenLoginError(true);
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
     }
   });
 
-  const [signUp, { error: errorSignUp }] = useMutation(SIGN_UP);
+  const [signUp, { loading: loadingSignUp }] = useMutation(SIGN_UP, {
+    onError: (error) => {
+      setNotificationBar((prevState) => ({
+        ...prevState,
+        isOpen: true,
+        typeOfBar: 'error',
+        text: error.message
+      }));
+    }
+  });
 
   const themeSwitcherStyles = {
     position: 'absolute',
@@ -55,7 +72,7 @@ export const Login = () => {
     setLoginEmail(data.email);
     setLoginPassword(data.password);
 
-    loginOnClick();
+    login();
   };
 
   const openSignUpModal = () => {
@@ -76,25 +93,31 @@ export const Login = () => {
         password: data.password
       },
       onCompleted: () => {
-        setIsOpenSignUpSuccess(true);
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'success',
+          text: 'Sign up was successful'
+        }));
         closeSignUpModal();
         resetForm();
-      },
-      onError: () => {
-        setIsOpenSignUpError(true);
       }
     });
   };
 
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
+  };
+
   return (
     <>
-      <ContentWrapper type="main" isLoginPage>
-        <Stack
-          direction="row"
-          sx={{
-            position: 'relative'
-          }}
-        >
+      <ContentWrapper type="main" isPublicPage>
+        <Stack position="relative" direction="row">
           <Icon sx={{ mr: '5px', width: '45px', height: '45px' }}>
             <RoomPreferences
               sx={{ width: '100%', height: '100%' }}
@@ -115,19 +138,18 @@ export const Login = () => {
           onSubmit={loginOnSubmit}
           setLoginEmail={setLoginEmail}
           setLoginPassword={setLoginPassword}
+          isLoading={loadingLoginData}
         />
 
         <Stack
+          position="relative"
+          zIndex="1"
           alignItems="center"
-          sx={{
-            position: 'relative',
-            zIndex: '1',
-            mt: '30px',
-            p: '20px 50px',
-            maxWidth: '400px',
-            width: '100%',
-            borderTop: `1px solid ${setBorderColor(themeMode)}`
-          }}
+          mt="30px"
+          p="20px 50px"
+          maxWidth="400px"
+          width="100%"
+          borderTop={`1px solid ${setBorderColor(themeMode)}`}
         >
           <Typography variant="h3">Don&apos;t have an account?</Typography>
 
@@ -156,27 +178,11 @@ export const Login = () => {
         />
       </ContentWrapper>
 
-      {!!isOpenLoginError && (
+      {!!notificationBar.isOpen && (
         <NotificationBar
-          text={errorLoginData.message}
-          typeOfBar="error"
-          setIsCloseBar={setIsOpenLoginError}
-        />
-      )}
-
-      {!!isOpenSignUpError && (
-        <NotificationBar
-          text={errorSignUp.message}
-          typeOfBar="error"
-          setIsCloseBar={setIsOpenSignUpError}
-        />
-      )}
-
-      {!!isOpenSignUpSuccess && (
-        <NotificationBar
-          text={'Sign up was successful'}
-          typeOfBar="success"
-          setIsCloseBar={setIsOpenSignUpSuccess}
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
         />
       )}
 
@@ -184,6 +190,7 @@ export const Login = () => {
         isOpen={isOpenSignUpModal}
         onClose={closeSignUpModal}
         onSubmit={signUpOnSubmit}
+        isLoading={loadingSignUp}
       />
     </>
   );

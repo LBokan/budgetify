@@ -15,7 +15,7 @@ import { useThemeMode } from '@/hooks';
 
 import { setTableHeaderStyles } from './styles';
 
-export const TableReport = ({ devicesData }) => {
+export const TableReport = ({ devicesData = [] }) => {
   const [page, setPage] = React.useState(1);
 
   const { themeMode } = useThemeMode();
@@ -58,7 +58,7 @@ export const TableReport = ({ devicesData }) => {
             </TableCell>
           </TableRow>
 
-          {devicesData[page - 1].allDeviceLogs.map((log) => {
+          {devicesData[page - 1]?.allDeviceLogs.map((log) => {
             return log.issues.map((issue, index) => {
               return (
                 <TableRow key={index}>

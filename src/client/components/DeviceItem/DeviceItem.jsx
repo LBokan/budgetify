@@ -29,10 +29,21 @@ import {
   setLineChartColor
 } from './styles';
 
-export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
+export const DeviceItem = ({
+  deviceData,
+  maxLogsQty,
+  isShortView = false,
+  openSuccessBar = () => {}
+}) => {
   const [chosenDeviceData, setChosenDeviceData] = React.useState({});
   const [isOpenEditDevice, setIsOpenEditDevice] = React.useState(false);
   const [isOpenDeleteDevice, setIsOpenDeleteDevice] = React.useState(false);
+
+  const [notificationBar, setNotificationBar] = React.useState({
+    isOpen: false,
+    typeOfBar: '',
+    text: ''
+  });
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isOpenLogsMenu = Boolean(anchorEl);
@@ -42,14 +53,33 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
 
   const client = useApolloClient();
 
-  const [editDevice, { error: errorEditDevice }] = useMutation(EDIT_DEVICE, {
-    refetchQueries: [GET_ALL_DEVICES]
-  });
+  const [editDevice, { loading: loadingEditDevice }] = useMutation(
+    EDIT_DEVICE,
+    {
+      refetchQueries: [GET_ALL_DEVICES],
+      onError: (error) => {
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'error',
+          text: error.message
+        }));
+      }
+    }
+  );
 
-  const [deleteDevice, { error: errorDeleteDevice }] = useMutation(
+  const [deleteDevice, { loading: loadingDeleteDevice }] = useMutation(
     DELETE_DEVICE,
     {
-      refetchQueries: [GET_ALL_DEVICES]
+      refetchQueries: [GET_ALL_DEVICES],
+      onError: (error) => {
+        setNotificationBar((prevState) => ({
+          ...prevState,
+          isOpen: true,
+          typeOfBar: 'error',
+          text: error.message
+        }));
+      }
     }
   );
 
@@ -141,6 +171,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
       },
       onCompleted: () => {
         resetCache();
+        openSuccessBar('Edit');
       }
     });
     closeEditDeviceModal();
@@ -153,9 +184,19 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
       },
       onCompleted: () => {
         resetCache();
+        openSuccessBar('Delete');
       }
     });
     closeDeleteDeviceModal();
+  };
+
+  const resetNotificationBarData = (isOpen) => {
+    setNotificationBar((prevState) => ({
+      ...prevState,
+      isOpen: isOpen,
+      typeOfBar: '',
+      text: ''
+    }));
   };
 
   return (
@@ -308,12 +349,12 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
         </Box>
       </Stack>
 
-      {!!errorEditDevice && (
-        <NotificationBar text={errorEditDevice.message} typeOfBar="error" />
-      )}
-
-      {!!errorDeleteDevice && (
-        <NotificationBar text={errorDeleteDevice.message} typeOfBar="error" />
+      {!!notificationBar.isOpen && (
+        <NotificationBar
+          text={notificationBar.text}
+          typeOfBar={notificationBar.typeOfBar}
+          setIsOpenBarOnComplete={resetNotificationBarData}
+        />
       )}
 
       <EditDeviceModal
@@ -321,6 +362,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
         isOpen={isOpenEditDevice}
         onClose={closeEditDeviceModal}
         onSubmit={editDeviceOnSubmit}
+        isLoading={loadingEditDevice}
       />
 
       <ConfirmationModal
@@ -329,6 +371,7 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
         onSubmit={deleteDeviceOnSubmit}
         title="Device deletion"
         text="Are you sure you want to delete the device?"
+        isLoading={loadingDeleteDevice}
       />
 
       <LogsInfoMenu
@@ -344,5 +387,6 @@ export const DeviceItem = ({ deviceData, maxLogsQty, isShortView = false }) => {
 DeviceItem.propTypes = {
   deviceData: PropTypes.object.isRequired,
   maxLogsQty: PropTypes.number.isRequired,
-  isShortView: PropTypes.bool
+  isShortView: PropTypes.bool,
+  openSuccessBar: PropTypes.func
 };
