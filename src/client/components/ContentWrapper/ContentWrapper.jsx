@@ -31,7 +31,6 @@ export const ContentWrapper = ({ children, type = 'div', isPublicPage }) => {
       case 'main':
       case 'div':
         properties.flexGrow = '1';
-        properties.height = '100%';
         return properties;
 
       case 'header':

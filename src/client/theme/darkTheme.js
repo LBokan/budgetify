@@ -141,10 +141,13 @@ const MuiSelect = {
 
 const MuiSkeleton = {
   styleOverrides: {
-    rectangular: {
-      height: '45px',
+    root: {
+      height: '14px',
       borderRadius: '10px',
       backgroundColor: yellow[900]
+    },
+    rectangular: {
+      height: '45px'
     }
   }
 };

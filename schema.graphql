@@ -45,12 +45,6 @@ type DevicesResponseReport {
   table: [Device]
 }
 
-type Log {
-  id: ID
-  deviceId: String
-  deviceLogs: [DeviceLog]
-}
-
 type DeviceLog {
   date: String
   totalIssuesCount: Int
@@ -69,6 +63,7 @@ type Type {
 
 type Query {
   login(email: String!, password: String!): AuthData
+  getUser: User
   getAllDevices(
     offset: Int
     limit: Int
@@ -87,9 +82,6 @@ type Query {
     filterByDateStart: String
     filterByDateEnd: String
   ): DevicesResponseReport
-  getDevice(id: ID): Device
-  getAllLogs: [Log]
-  getDeviceLogs(id: ID): Log
   getAllDeviceTypes: [Type]
 }
 
@@ -101,6 +93,8 @@ type Mutation {
     email: String!
     password: String!
   ): User
+  editUser(name: String!, surname: String!, mobileNumber: String): User
+  deleteUser: User
   createDevice(
     deviceName: String!
     deviceType: String!

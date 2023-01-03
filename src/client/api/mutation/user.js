@@ -23,3 +23,21 @@ export const SIGN_UP = gql`
     }
   }
 `;
+
+export const EDIT_USER = gql`
+  mutation User($name: String!, $surname: String!, $mobileNumber: String) {
+    editUser(name: $name, surname: $surname, mobileNumber: $mobileNumber) {
+      name
+      surname
+      mobileNumber
+    }
+  }
+`;
+
+export const DELETE_USER = gql`
+  mutation User {
+    deleteUser {
+      id
+    }
+  }
+`;

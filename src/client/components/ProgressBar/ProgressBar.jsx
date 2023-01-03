@@ -11,6 +11,7 @@ export const ProgressBar = ({
     <Stack
       alignItems="center"
       justifyContent="center"
+      my="auto"
       width="100%"
       minHeight={isFullPage ? '50vh' : null}
     >

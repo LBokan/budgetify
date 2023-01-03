@@ -1,47 +1,53 @@
 import React from 'react';
-import { Avatar, Box, Typography } from '@mui/material';
+import { useQuery } from '@apollo/client';
+import { Avatar, Skeleton, Stack, Typography } from '@mui/material';
 
+import { GET_USER } from '@/api/query/user';
 import userImage from '@/assets/img/fromServer/cat.jpg';
 
+import { NotificationBar } from '../NotificationBar';
+
 export const UserInfo = () => {
-  const { data } = {
-    data: {
-      imageSrc: userImage,
-      fullName: 'Ivan Ivanov',
-      position: 'Software Engineer'
-    },
-    loading: false,
-    error: false
-  };
-  const { imageSrc, fullName, position } = data;
+  const {
+    loading: loadingUserData,
+    error: errorUserData,
+    data: { getUser: userData } = { getUser: {} }
+  } = useQuery(GET_USER);
 
   return (
-    <Box
-      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-    >
-      <Avatar
-        sx={{
-          mr: '10px',
-          width: '40px',
-          height: '40px'
-        }}
-        alt="Profile image"
-        src={imageSrc}
-      />
+    <>
+      {!!userData && (
+        <Stack direction="row" alignItems="center" justifyContent="center">
+          <Avatar
+            sx={{
+              mr: '10px',
+              width: '40px',
+              height: '40px'
+            }}
+            alt="Profile image"
+            src={userImage}
+          />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'center'
-        }}
-      >
-        <Typography variant="h3">{fullName}</Typography>
-        <Typography variant="subtitle1" sx={{ mt: '3px' }}>
-          {position}
-        </Typography>
-      </Box>
-    </Box>
+          <Stack alignItems="flex-start" justifyContent="center">
+            <Typography variant="h3">
+              {(!loadingUserData &&
+                `${userData?.name} ${userData?.surname}`) || (
+                <Skeleton sx={{ minWidth: '100px' }} />
+              )}
+            </Typography>
+
+            <Typography variant="subtitle1" sx={{ mt: '3px' }}>
+              {(!loadingUserData && userData?.email) || (
+                <Skeleton sx={{ minWidth: '100px' }} />
+              )}
+            </Typography>
+          </Stack>
+        </Stack>
+      )}
+
+      {!!errorUserData && (
+        <NotificationBar text={errorUserData.message} typeOfBar="error" />
+      )}
+    </>
   );
 };

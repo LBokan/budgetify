@@ -79,15 +79,6 @@ const DevicesResponseReportType = new GraphQLObjectType({
   })
 });
 
-const LogType = new GraphQLObjectType({
-  name: 'Log',
-  fields: () => ({
-    id: { type: GraphQLID },
-    deviceId: { type: GraphQLString },
-    deviceLogs: { type: new GraphQLList(DeviceLogType) }
-  })
-});
-
 const DeviceLogType = new GraphQLObjectType({
   name: 'DeviceLog',
   fields: () => ({
@@ -120,6 +111,5 @@ module.exports = {
   DevicesResponseType,
   DevicesChartBarReportType,
   DevicesResponseReportType,
-  LogType,
   TypeType
 };
